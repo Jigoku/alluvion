@@ -14,6 +14,14 @@
 # GNU General Public License for more details.
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+#NOTES
+# API information url:
+#    https://getstrike.net/api/
+
+# Maybe consider using this wrapper? 
+#    https://metacpan.org/pod/WebService::Strike
+
 use strict;
 use warnings;
 use FindBin qw($Bin);
@@ -29,7 +37,6 @@ my $VERSION = "0.0.9000";
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion-gtk.xml";
 
-my $api_hash = 'https://getstrike.net/api/v2/torrents/info/?hashes=';
 
 my (
 	$builder, 
@@ -55,32 +62,54 @@ sub main {
 	# draw the window
 	$window->show();
 
+	set_index_total();
+
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
 
+
+
+sub set_index_total {
+	my $label = $builder->get_object( 'label_indexed_total' );
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
+	
+	my $json_text = $response->decoded_content;
+	my $json =  JSON->new;
+	my $data = $json->decode($json_text);
+	
+	if ($response->is_success) {
+		for ($data) {
+			$label->set_markup("".$_->{message} . " indexed torrents");
+		}
+	} else {
+		die $response->status_line;
+	}
+	
+}
+
 sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
-	my $response = $ua->get($api_hash.$hash);
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 	
 	if ($response->is_success) {
 		#parse json api result
 		my $json_text = $response->decoded_content;
 		my $json =  JSON->new;
 		my $data = $json->decode($json_text);
-	
+		
 		for (@{$data->{torrents}}) {
-			$builder->get_object( 'label_torrent_hash' )->set_markup("<b>Info Hash:</b>\n".$_->{torrent_hash});
-			$builder->get_object( 'label_torrent_title' )->set_markup("<b>Torrent Title:</b>\n".$_->{torrent_title});
-			$builder->get_object( 'label_sub_category' )->set_markup("<b>Sub Category:</b>\n".$_->{sub_category});
-			$builder->get_object( 'label_torrent_category' )->set_markup("<b>Torrent Category:</b>\n".$_->{torrent_category});
-			$builder->get_object( 'label_seeds' )->set_markup("<b>Seeders:</b>\n".$_->{seeds});
-			$builder->get_object( 'label_leeches' )->set_markup("<b>Leechers:</b>\n".$_->{leeches});
-			$builder->get_object( 'label_file_count' )->set_markup("<b>File Count:</b>\n".$_->{file_count});
-			$builder->get_object( 'label_size' )->set_markup("<b>Filesize:</b>\n".($_->{size})." bytes");
-			$builder->get_object( 'label_uploader_username' )->set_markup("<b>Uploader:</b>\n".$_->{uploader_username});
-			$builder->get_object( 'label_upload_date' )->set_markup("<b>Upload Date:</b>\n".$_->{upload_date});
-			$builder->get_object( 'label_magnet_uri' )->set_markup("<b>Magnet URI:</b>\n".$_->{magnet_uri});
+			$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
+			$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
+			$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
+			$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
+			$builder->get_object( 'label_seeds' )->set_text($_->{seeds});
+			$builder->get_object( 'label_leeches' )->set_text($_->{leeches});
+			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
+			$builder->get_object( 'label_size' )->set_text(($_->{size})." bytes");
+			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
+			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
+			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
 		}
 	
 	} else {
