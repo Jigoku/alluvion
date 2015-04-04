@@ -4,10 +4,10 @@ use warnings;
 use Gtk2 qw(-init);
 use FindBin qw($Bin);
 
+my $VERSION = "0.0.9000";
+
 my $data = $Bin . "/data/";
-my $xml = $data . "strike-gtk.xml";
-print $xml ."\n";
-my $VERSION = "0.1";
+my $xml = $data . "alluvion-gtk.xml";
 
 my (
 	$builder, 
