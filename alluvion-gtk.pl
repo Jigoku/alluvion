@@ -68,10 +68,11 @@ sub main {
 	Gtk2->main(); gtk_main_quit();
 }
 
-
-
 sub set_index_total {
 	my $label = $builder->get_object( 'label_indexed_total' );
+	
+	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
+	
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
 	
 	my $json_text = $response->decoded_content;
@@ -99,6 +100,8 @@ sub on_button_hash_clicked {
 		return;
 	}
 	
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 03)"); return; }
+	
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 		
 	if ($response->is_success) {
@@ -124,7 +127,7 @@ sub on_button_hash_clicked {
 	
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Info hash not found\n(Error code 03)");
+			spawn_error("Error", "Info hash not found\n(Error code 04)");
 		}
 	}
 }
@@ -132,7 +135,9 @@ sub on_button_hash_clicked {
 
 
 sub on_button_query_clicked {
-	my $query = $builder->get_object( 'entry_query' )->get_text;#
+	my $query = $builder->get_object( 'entry_query' )->get_text;
+	
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 03)"); return; }
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query));
 	
 	my $json_text = $response->decoded_content;
@@ -167,7 +172,7 @@ sub on_button_query_clicked {
 		
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "No torrents found\n(Error code 04)");
+			spawn_error("Error", "No torrents found\n(Error code 05)");
 		}
 	
 	}
@@ -209,7 +214,6 @@ sub on_about_clicked {
 	# make sure it goes away when destroyed
 	$about->hide;
 }
-
 
 # create an error dialog
 sub spawn_error {
