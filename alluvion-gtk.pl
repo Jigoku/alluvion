@@ -165,7 +165,7 @@ sub on_button_query_clicked {
 			$n++;
 			add_separated_item(
 				$vbox, 
-				"$n. <b>".$_->{torrent_title}."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
+				"$n. <b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri}
 			);
 		}
@@ -176,6 +176,14 @@ sub on_button_query_clicked {
 		}
 	
 	}
+}
+
+sub convert_special_char {
+	# replaces any characters that complain
+	# about being set with set_markup
+	my $str = shift;
+	$str =~ s/&/&amp;/g;
+	return $str
 }
 
 sub xdgopen {
