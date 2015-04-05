@@ -92,15 +92,22 @@ sub set_index_total {
 
 sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 
+	# check for valid info hash before doing anything
+	if (! ($hash == 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
+		spawn_error("Error", "Invalid info hash\n(Error code 02)");
+		return;
+	}
 	
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
+		
 	if ($response->is_success) {
 		#parse json api result
 		my $json_text = $response->decoded_content;
 		my $json =  JSON->new;
 		my $data = $json->decode($json_text);
 
+		# apply data to labels
 		for (@{$data->{torrents}}) {
 			$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
 			$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
@@ -117,7 +124,7 @@ sub on_button_hash_clicked {
 	
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Info hash not found\n(Error code 02)");
+			spawn_error("Error", "Info hash not found\n(Error code 03)");
 		}
 	}
 }
@@ -143,32 +150,39 @@ sub on_button_query_clicked {
 	
 	if ($response->is_success) {
 		for ($data) { 
-			add_result_item(
-				$vbox, 
-				"<span size='large'><b>".$_->{results}." torrents found</b></span>"
-			);	
+			my $label = Gtk2::Label->new;
+			$label->set_markup("<span size='large'><b>".$_->{results}." torrents found</b></span>");
+			$vbox->add($label);
 		}
 		
 		my $n = 0;
 		for (@{$data->{torrents}}) {
 			$n++;
-			add_result_item(
+			add_separated_item(
 				$vbox, 
-				"$n. <b>".$_->{torrent_title}."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date}
+				"$n. <b>".$_->{torrent_title}."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
+				$_->{magnet_uri}
 			);
 		}
 		
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "No torrents found\n(Error code 03)");
+			spawn_error("Error", "No torrents found\n(Error code 04)");
 		}
 	
-}
-	
+	}
 }
 
-sub add_result_item($$) {
-	my ($vbox, $markup) = @_;
+sub xdgopen {
+	system("xdg-open '". shift ."'");
+}
+
+# adds a label with markup and separator to a vbox (For list of items)
+sub add_separated_item($$$) {
+	my ($vbox, $markup, $link) = @_;
+
+	# make label clickable
+	my $eventbox = Gtk2::EventBox->new;
 
 	# create new label for result
 	my $label = Gtk2::Label->new;
@@ -177,9 +191,14 @@ sub add_result_item($$) {
 	
 	my $hseparator = new Gtk2::HSeparator();
 	
-	# add result
-	$vbox->add($label);
+	# open manget_uri with xdg-open
+	$eventbox->signal_connect('button-press-event', sub { xdgopen($link) });
+	
+	# pack result
 	$vbox->add($hseparator);
+	$eventbox->add($label);
+	$vbox->add($eventbox);
+
 	$vbox->show_all;
 }
 
