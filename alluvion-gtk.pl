@@ -94,7 +94,7 @@ sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
 
 	# check for valid info hash before doing anything
-	if (! ($hash == 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
+	if ((length($hash) != 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
 		spawn_error("Error", "Invalid info hash\n(Error code 02)");
 		return;
 	}
