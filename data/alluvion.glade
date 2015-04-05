@@ -741,11 +741,14 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <widget class="GtkLabel" id="PLACEHOLDER1">
+                          <widget class="GtkVBox" id="vbox_query_results">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="ypad">1</property>
-                            <property name="label" translatable="yes">&lt;placeholder&gt;</property>
+                            <property name="border_width">5</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </widget>
                         </child>
                       </widget>

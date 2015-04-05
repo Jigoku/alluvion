@@ -131,20 +131,56 @@ sub on_button_query_clicked {
 	my $json_text = $response->decoded_content;
 	my $json =  JSON->new;
 	my $data = $json->decode($json_text);
+		
+	# get top level container
+	my $vbox = $builder->get_object('vbox_query_results');
+	
+	# remove previous results
+	my @children = $vbox->get_children();
+	foreach my $child (@children) {
+		$child->destroy;
+	}
 	
 	if ($response->is_success) {
-		for ($data) { print "Results: " . $_->{results} . "\n"; }
-		
-		for (@{$data->{torrents}}) {
-			print $_->{torrent_title} . "\n";
-			print "seeds: " . $_->{seeds} . " | leechers: " . $_->{leeches} . " | size: " . $_->{size}  . " | uploaded: " . $_->{upload_date} ."\n\n";
+		for ($data) { 
+			add_result_item(
+				$vbox, 
+				"<span size='large'><b>".$_->{results}." torrents found</b></span>"
+			);	
 		}
+		
+		my $n = 0;
+		for (@{$data->{torrents}}) {
+			$n++;
+			add_result_item(
+				$vbox, 
+				"$n. <b>".$_->{torrent_title}."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date}
+			);
+		}
+		
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
 			spawn_error("Error", "No torrents found\n(Error code 03)");
 		}
-	}
 	
+}
+	
+}
+
+sub add_result_item($$) {
+	my ($vbox, $markup) = @_;
+
+	# create new label for result
+	my $label = Gtk2::Label->new;
+	$label->set_markup($markup);
+	$label->set_alignment(0,.5);
+	
+	my $hseparator = new Gtk2::HSeparator();
+	
+	# add result
+	$vbox->add($label);
+	$vbox->add($hseparator);
+	$vbox->show_all;
 }
 
 sub on_about_clicked {
