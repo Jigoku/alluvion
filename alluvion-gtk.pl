@@ -125,6 +125,13 @@ sub on_button_hash_clicked {
 	}
 }
 
+
+sub on_button_query_clicked {
+	my $query = $builder->get_object( 'entry_query' )->get_text;
+	print $query . "\n";
+		return;
+}
+
 sub on_about_clicked {
 	# launch about dialog
 	my $about = $builder->get_object( 'aboutdialog' );
