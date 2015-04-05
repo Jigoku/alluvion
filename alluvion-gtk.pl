@@ -28,7 +28,7 @@ use FindBin qw($Bin);
 use Gtk2 qw(-init);
 use JSON;
 use LWP::UserAgent;
-#use URI::Escape;
+use URI::Escape;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(4);
@@ -84,7 +84,7 @@ sub set_index_total {
 		}
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error (01)", "Could not set index total\n(Error code 01)");
+			spawn_error("Error", "Could not set index total\n(Error code 01)");
 		}
 	}
 	
@@ -93,17 +93,13 @@ sub set_index_total {
 sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
+
 	
 	if ($response->is_success) {
 		#parse json api result
 		my $json_text = $response->decoded_content;
 		my $json =  JSON->new;
 		my $data = $json->decode($json_text);
-		
-		for ($data) {
-			print $_->{statuscode} . "\n";
-			print $_->{results} . "\n";
-		}
 
 		for (@{$data->{torrents}}) {
 			$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
@@ -129,9 +125,26 @@ sub on_button_hash_clicked {
 
 
 sub on_button_query_clicked {
-	my $query = $builder->get_object( 'entry_query' )->get_text;
-	print $query . "\n";
-		return;
+	my $query = $builder->get_object( 'entry_query' )->get_text;#
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query));
+	
+	my $json_text = $response->decoded_content;
+	my $json =  JSON->new;
+	my $data = $json->decode($json_text);
+	
+	if ($response->is_success) {
+		for ($data) { print "Results: " . $_->{results} . "\n"; }
+		
+		for (@{$data->{torrents}}) {
+			print $_->{torrent_title} . "\n";
+			print "seeds: " . $_->{seeds} . " | leechers: " . $_->{leeches} . " | size: " . $_->{size}  . " | uploaded: " . $_->{upload_date} ."\n\n";
+		}
+	} else {
+		if ($response->status_line =~ m/404 Not Found/) {
+			spawn_error("Error", "No torrents found\n(Error code 03)");
+		}
+	}
+	
 }
 
 sub on_about_clicked {
