@@ -40,7 +40,8 @@ my $xml = $data . "alluvion-gtk.xml";
 
 my (
 	$builder, 
-	$window 
+	$window,
+	$error
 
 );
 
@@ -57,6 +58,7 @@ sub main {
 
 	# get top level object
 	$window = $builder->get_object( 'window' );
+	$error = $builder->get_object( 'errordialog' );
 	$builder->connect_signals( undef );
 
 	# draw the window
@@ -83,7 +85,9 @@ sub set_index_total {
 			$label->set_markup("".$_->{message} . " indexed torrents");
 		}
 	} else {
-		die $response->status_line;
+		if ($response->status_line =~ m/404 Not Found/) {
+			spawn_error("Error (01)", "Could not set index total\n(Error code 01)");
+		}
 	}
 	
 }
@@ -98,6 +102,11 @@ sub on_button_hash_clicked {
 		my $json =  JSON->new;
 		my $data = $json->decode($json_text);
 		
+		for ($data) {
+			print $_->{statuscode} . "\n";
+			print $_->{results} . "\n";
+		}
+		# 156B69B8643BD11849A5D8F2122E13FBB61BD041
 		for (@{$data->{torrents}}) {
 			$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
 			$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
@@ -113,8 +122,10 @@ sub on_button_hash_clicked {
 		}
 	
 	} else {
-		die $response->status_line;
-}
+		if ($response->status_line =~ m/404 Not Found/) {
+			spawn_error("Error", "Info hash not found\n(Error code 02)");
+		}
+	}
 }
 
 sub on_about_clicked {
@@ -123,6 +134,24 @@ sub on_about_clicked {
 	$about->run;
 	# make sure it goes away when destroyed
 	$about->hide;
+}
+
+
+# create an error dialog
+sub spawn_error {
+	my ($title, $message) = @_;
+	 my $dialog = Gtk2::MessageDialog->new (
+		$window,
+		'destroy-with-parent',
+		'error',
+		'close',
+		$title
+	);
+	
+	$dialog->format_secondary_text($message);
+	
+	my $response = $dialog->run;
+	$dialog->destroy;
 }
 
 sub gtk_main_quit {
