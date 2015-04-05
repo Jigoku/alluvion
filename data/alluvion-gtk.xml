@@ -90,11 +90,33 @@
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <property name="transient_for">window</property>
-    <property name="program_name">alluvion</property>
+    <property name="program_name">Alluvion</property>
     <property name="version">0.0.9000 alpha</property>
-    <property name="license" translatable="yes">GPLv3</property>
+    <property name="copyright" translatable="yes">Copyright (C) Ricky K. Thomson 2015</property>
+    <property name="website">http://github.com/jigoku/alluvion</property>
+    <property name="license" translatable="yes">Copyright (C) 2015 Ricky K. Thomson
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+u should have received a copy of the GNU General Public License
+along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
+    <property name="authors">Ricky K. Thomson
+http://github.com/jigoku/</property>
+    <property name="artists">Alluvion icon provided by OpenClips:
+http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
+</property>
+    <property name="logo">alluvion_128.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="aboutdialog-vbox">
         <property name="visible">True</property>
@@ -121,9 +143,11 @@
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Alluvion</property>
     <property name="window_position">mouse</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
+    <property name="icon">alluvion_48.png</property>
     <signal handler="gtk_main_quit" name="destroy" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox_main">
