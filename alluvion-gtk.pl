@@ -28,6 +28,7 @@ use FindBin qw($Bin);
 use Gtk2 qw(-init);
 use JSON;
 use LWP::UserAgent;
+#use URI::Escape;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(4);
@@ -109,8 +110,8 @@ sub on_button_hash_clicked {
 			$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
 			$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
 			$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
-			$builder->get_object( 'label_seeds' )->set_text($_->{seeds});
-			$builder->get_object( 'label_leeches' )->set_text($_->{leeches});
+			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
+			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
 			$builder->get_object( 'label_size' )->set_text(($_->{size})." bytes");
 			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
@@ -124,6 +125,7 @@ sub on_button_hash_clicked {
 		}
 	}
 }
+
 
 
 sub on_button_query_clicked {
