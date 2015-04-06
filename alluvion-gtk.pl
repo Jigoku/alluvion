@@ -42,6 +42,7 @@ my $xml = $data . "alluvion-gtk.xml";
 my (
 	$builder, 
 	$window,
+	$filechooser,
 );
 
 main();
@@ -55,8 +56,9 @@ sub main {
  	# load glade XML
 	$builder->add_from_file( $xml );
 
-	# get top level object
+	# get top level objects
 	$window = $builder->get_object( 'window' );
+	$filechooser = $builder->get_object( 'filechooserdialog' );
 	$builder->connect_signals( undef );
 
 	# draw the window
@@ -235,10 +237,15 @@ sub add_separated_item($$$$$) {
 	# *.torrent
 	my $button_torrent = Gtk2::Button->new;
 		$button_torrent->set_label("save torrent");
-		$button_torrent->signal_connect('clicked', sub { print "DEBUG https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; });
-		# implement filechooser, save as, set folder location and store torrent there
-		# ....
-		#.... 
+		$button_torrent->signal_connect('clicked', 
+			sub { 
+				apply_filefilter("*.torrent", "torrent files", $filechooser);
+				apply_filefilter("*", "all files", $filechooser);
+				$filechooser->run; 
+				print "DEBUG (torrent to fetch) = https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; 
+			}
+		);
+
 		
 	# info hash
 	my $button_hash = Gtk2::Button->new;
@@ -266,12 +273,34 @@ sub add_separated_item($$$$$) {
 	$vbox->show_all;
 }
 
+
+
 sub on_about_clicked {
 	# launch about dialog
 	my $about = $builder->get_object( 'aboutdialog' );
 	$about->run;
 	# make sure it goes away when destroyed
 	$about->hide;
+}
+
+sub on_button_file_save_clicked {
+	$filechooser->hide;
+	print "DEBUG (selected filename to save as) = ". $filechooser->get_filename . "\n";
+}
+
+sub on_button_file_cancel_clicked {
+	$filechooser->hide;
+}
+
+
+sub apply_filefilter($$$) {
+	#create a file filter
+	my ($pattern, $name, $object) = @_;
+	
+	my $filter = Gtk2::FileFilter->new();
+	$filter->add_pattern($pattern);
+	$filter->set_name($name);
+	$object->add_filter($filter);
 }
 
 # create an error dialog
