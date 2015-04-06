@@ -169,7 +169,8 @@ sub on_button_query_clicked {
 			add_separated_item(
 				$vbox, #container to append
 				$n,	# number of item
-				"<b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . bytes2mb($_->{size}) ."MB | Uploaded: " . $_->{upload_date},
+				$_->{torrent_title},
+				"Seeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . bytes2mb($_->{size}) ."MB | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri},
 				$_->{torrent_hash}
 			);
@@ -209,53 +210,76 @@ sub xdgopen($) {
 
 # adds a label with markup and separator to a vbox (For list of items)
 sub add_separated_item($$$$$) {
-	my ($vbox, $n, $torrent_info, $magnet_uri, $hash) = @_;
+	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 
 	my $hseparator = new Gtk2::HSeparator();
 		$vbox->pack_start($hseparator, 0, 0, 5);
 	
 	my $hbox = Gtk2::HBox->new;
+		$hbox->set_homogeneous(0);
 		
 	# item number of result
 	my $number = Gtk2::Label->new;
 	$number->set_markup("<span size='large'><b>".$n."</b></span>");
 	$number->set_alignment(0,.5);
 		$hbox->pack_start ($number, 0, 0, 5);
+		
+		
+	my $vboxinfo = Gtk2::VBox->new;
 		$hbox->set_homogeneous(0);
 		
-	# create new label for result
+	# create new label for truncated title with tooltip
+	my $label_title = Gtk2::Label->new;
+	$label_title->set_markup("<b>".convert_special_char($torrent_title) ."</b>");
+	$label_title->set_width_chars(65); # label character limit before truncated
+	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
+	$label_title->set_alignment(0,.5);	
+		$vboxinfo->pack_start ($label_title, 0, 0, 0);
+		
+	my $tooltip_title = Gtk2::Tooltips->new;
+		$tooltip_title->set_tip( $label_title, $torrent_title );
+	
+	# create new label for aditional info
 	my $label = Gtk2::Label->new;
 	$label->set_markup($torrent_info);
 	$label->set_alignment(0,.5);	
-		$hbox->pack_start ($label, 0, 1, 5);
-
+		$vboxinfo->pack_start ($label, 0, 0, 0);
+		
 	# magnet uri
-	my $button_magnet = Gtk2::Button->new;
-		$button_magnet->set_label("open magnet");
+	my $button_magnet = Gtk2::Button->new_from_stock("gtk-execute");
+		#$button_magnet->set_label("open magnet");
 		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
 		
+	my $tooltip_magnet = Gtk2::Tooltips->new;
+		$tooltip_magnet->set_tip( $button_magnet, "Open magnet with xdg-open\n(your preffered torrent client)" );
+		
+		
 	# *.torrent
-	my $button_torrent = Gtk2::Button->new;
-		$button_torrent->set_label("save torrent");
+	my $button_torrent = Gtk2::Button->new_from_stock("gtk-save");
+		#$button_torrent->set_label("save torrent");
 		$button_torrent->signal_connect('clicked', 
 			sub { 
 				apply_filefilter("*.torrent", "torrent files", $filechooser);
 				apply_filefilter("*", "all files", $filechooser);
 				$filechooser->run; 
+				$filechooser->hide; 
 				print "DEBUG (torrent to fetch) = https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; 
 			}
 		);
-
+	my $tooltip_torrent = Gtk2::Tooltips->new;
+		$tooltip_torrent->set_tip( $button_torrent, "Save *.torrent file as..." );
 		
 	# info hash
-	my $button_hash = Gtk2::Button->new;
-		$button_hash->set_label("copy hash");
+	my $button_hash = Gtk2::Button->new_from_stock("gtk-copy");
+		#$button_hash->set_label("copy hash");
 		$button_hash->signal_connect('clicked', 
 			sub { 
 				my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
 				$clipboard->set_text($hash);
 			}
 		);
+	my $tooltip_hash = Gtk2::Tooltips->new;
+		$tooltip_hash->set_tip( $button_hash, "Copy info hash to clipboard" );
 		
 	# container for buttons
 	my $buttonbox = Gtk2::HBox->new;
@@ -265,6 +289,7 @@ sub add_separated_item($$$$$) {
 		$buttonbox->pack_end ($button_hash, 0, 0, 5);
 		
 	# add everything
+	$hbox->pack_start ($vboxinfo, 0, 0, 5);
 	$hbox->pack_end ($buttonbox, 0, 0, 5);
 	$vbox->pack_start ($hbox, 0, 0, 5);
 	$vbox->set_homogeneous(0);
