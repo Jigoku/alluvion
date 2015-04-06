@@ -165,8 +165,10 @@ sub on_button_query_clicked {
 			$n++;
 			add_separated_item(
 				$vbox, 
-				"$n. <b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
-				$_->{magnet_uri}
+				$n,
+				"<b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
+				$_->{magnet_uri},
+				$_->{torrent_hash}
 			);
 		}
 		
@@ -191,26 +193,64 @@ sub xdgopen {
 }
 
 # adds a label with markup and separator to a vbox (For list of items)
-sub add_separated_item($$$) {
-	my ($vbox, $markup, $link) = @_;
+sub add_separated_item($$$$$) {
+	my ($vbox, $n, $markup, $link, $hash) = @_;
 
 	# make label clickable
-	my $eventbox = Gtk2::EventBox->new;
-
+	#my $eventbox = Gtk2::EventBox->new;
+	
+	my $hseparator = new Gtk2::HSeparator();
+		$vbox->add($hseparator);
+	
+	my $hbox = Gtk2::HBox->new;
+		
+		
+	my $number = Gtk2::Label->new;
+	$number->set_markup("<span size='large'><b>".$n."</b></span>");
+	$number->set_alignment(0,.5);
+		$hbox->pack_start ($number, 0, 0, 5);
+		$hbox->set_homogeneous(0);
 	# create new label for result
 	my $label = Gtk2::Label->new;
 	$label->set_markup($markup);
-	$label->set_alignment(0,.5);
+	$label->set_alignment(0,.5);	
+		$hbox->pack_start ($label, 0, 1, 5);
+
+	my $button_magnet = Gtk2::Button->new;
+		$button_magnet->set_label("open magnet");
+		$button_magnet->signal_connect('clicked', sub { xdgopen($link); });
+		
+	my $button_torrent = Gtk2::Button->new;
+		$button_torrent->set_label("save torrent");
+		$button_torrent->signal_connect('clicked', sub { print "DEBUG https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; });
+		
+	my $button_hash = Gtk2::Button->new;
+		$button_hash->set_label("copy hash");
+		$button_hash->signal_connect('clicked', sub { print "DEBUG " .$hash ."\n"; });
+		
+	my $buttonbox = Gtk2::HBox->new;
+		$buttonbox->set_homogeneous(0);
+		$buttonbox->pack_end ($button_magnet, 0, 0, 5);
+		$buttonbox->pack_end ($button_torrent, 0, 0, 5);
+		$buttonbox->pack_end ($button_hash, 0, 0, 5);
+		
+	$hbox->add($buttonbox);
+	$vbox->add($hbox);
+
 	
-	my $hseparator = new Gtk2::HSeparator();
+	
+	
 	
 	# open manget_uri with xdg-open
-	$eventbox->signal_connect('button-press-event', sub { xdgopen($link) });
+	#$eventbox->signal_connect('button-press-event', sub { xdgopen($link) });
 	
 	# pack result
-	$vbox->add($hseparator);
-	$eventbox->add($label);
-	$vbox->add($eventbox);
+	
+	#$eventbox->add($label);
+	#$hbox->add($eventbox);
+	
+	
+	
 
 	$vbox->show_all;
 }
