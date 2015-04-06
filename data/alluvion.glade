@@ -11,7 +11,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="transient_for">window</property>
     <property name="program_name">Alluvion</property>
-    <property name="version">0.1</property>
+    <property name="version">0.1pre</property>
     <property name="copyright" translatable="yes">Copyright (C) Ricky K. Thomson 2015</property>
     <property name="website">http://github.com/jigoku/alluvion</property>
     <property name="license" translatable="yes">Copyright (C) 2015 Ricky K. Thomson
@@ -51,7 +51,46 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <widget class="GtkVBox" id="vbox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <widget class="GtkLabel" id="label_info">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Like this software? 
+Donate to the strike team
+for making this possible.</property>
+                <property name="justify">center</property>
+              </widget>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLinkButton" id="label_donate">
+                <property name="label" translatable="yes">Donate</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="relief">none</property>
+                <property name="uri">https://getstrike.net/torrents/donate/</property>
+              </widget>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
         </child>
       </widget>
     </child>
