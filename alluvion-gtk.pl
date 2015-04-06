@@ -138,7 +138,7 @@ sub on_button_hash_clicked {
 			spawn_error("Error", "Info hash not found\n(Error code 04)");
 		}
 	}
-	set_index_total();
+	
 }
 
 
@@ -146,13 +146,6 @@ sub on_button_hash_clicked {
 sub on_button_query_clicked {
 	my $query = $builder->get_object( 'entry_query' )->get_text;
 	
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 03)"); return; }
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query));
-	
-	my $json_text = $response->decoded_content;
-	my $json =  JSON->new;
-	my $data = $json->decode($json_text);
-		
 	# get top level container
 	my $vbox = $builder->get_object('vbox_query_results');
 	
@@ -161,6 +154,19 @@ sub on_button_query_clicked {
 	foreach my $child (@children) {
 		$child->destroy;
 	}
+	
+	# must be at least 4 characters for API
+	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n(Error code 05)"); return; }
+	
+	# check for connection
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 06)"); return; }
+	
+	# send request
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query));
+	
+	my $json_text = $response->decoded_content;
+	my $json =  JSON->new;
+	my $data = $json->decode($json_text);
 	
 	if ($response->is_success) {
 		for ($data) { 
@@ -191,7 +197,7 @@ sub on_button_query_clicked {
 		}
 	
 	}
-	set_index_total();
+	
 }
 
 sub bytes2mb($) {
