@@ -1,5 +1,42 @@
 <?xml version="1.0"?>
 <interface>
+  <object class="GtkListStore" id="model1">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">All</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Anime</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Applications</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Music</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">TV</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XXX</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkUIManager" id="uimanager1">
     <child>
       <object class="GtkActionGroup" id="actiongroup1">
@@ -96,7 +133,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="transient_for">window</property>
     <property name="program_name">Alluvion</property>
-    <property name="version">0.1</property>
+    <property name="version">0.1pre</property>
     <property name="copyright" translatable="yes">Copyright (C) Ricky K. Thomson 2015</property>
     <property name="website">http://github.com/jigoku/alluvion</property>
     <property name="license" translatable="yes">Copyright (C) 2015 Ricky K. Thomson
@@ -136,17 +173,17 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="vbox1">
+          <object class="GtkVBox" id="vbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkLabel" id="label1">
+              <object class="GtkLabel" id="label_info">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Like this software? 
 Donate to the strike team
-for making this possible</property>
+for making this possible.</property>
                 <property name="justify">center</property>
               </object>
               <packing>
@@ -156,7 +193,7 @@ for making this possible</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLinkButton" id="label_strike_info">
+              <object class="GtkLinkButton" id="label_donate">
                 <property name="label" translatable="yes">Donate</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -268,9 +305,11 @@ for making this possible</property>
           </packing>
         </child>
         <child>
-          <object class="GtkNotebook" id="notebook1">
+          <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="tab_hborder">10</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkVBox" id="vbox_hashlookup">
                 <property name="visible">True</property>
@@ -813,6 +852,52 @@ for making this possible</property>
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkHBox" id="hbox_category">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="label_category">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Filter category</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="combobox_category">
+                        <property name="width_request">130</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="active">0</property>
+                        <signal handler="on_combobox_category_changed" name="changed" swapped="no"/>
+                        <property name="model">model1</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="renderer1"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow_query">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -838,7 +923,7 @@ for making this possible</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>

@@ -50,6 +50,8 @@ my (
 	$filechooser_get,
 );
 
+my $category_filter = "";
+
 main();
 
 sub main {
@@ -163,8 +165,8 @@ sub on_button_query_clicked {
 	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 06)"); return; }
 	
 	# send request
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query));
-	
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter);
+
 	my $json_text = $response->decoded_content;
 	my $json =  JSON->new;
 	my $data = $json->decode($json_text);
@@ -332,6 +334,13 @@ sub on_button_file_cancel_clicked {
 	$filechooser->hide;
 }
 
+
+sub on_combobox_category_changed {
+	my $combobox = $builder->get_object( 'combobox_category' );
+	my $category = $combobox->get_active_text;
+	if ($category =~ m/All/) { $category_filter = ""; return; }
+	$category_filter = $category;
+}
 
 sub apply_filefilter($$$) {
 	#create a file filter

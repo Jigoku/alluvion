@@ -289,9 +289,11 @@ for making this possible.</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkNotebook" id="notebook1">
+          <widget class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="tab_hborder">10</property>
+            <property name="homogeneous">True</property>
             <child>
               <widget class="GtkVBox" id="vbox_hashlookup">
                 <property name="visible">True</property>
@@ -835,6 +837,55 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
+                  <widget class="GtkHBox" id="hbox_category">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <widget class="GtkLabel" id="label_category">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Filter category</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkComboBox" id="combobox_category">
+                        <property name="width_request">130</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="active">0</property>
+                        <property name="items" translatable="yes">All
+Anime
+Applications
+Books
+Games
+Movies
+Music
+Other
+TV
+XXX</property>
+                        <signal name="changed" handler="on_combobox_category_changed" swapped="no"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <widget class="GtkScrolledWindow" id="scrolledwindow_query">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -860,7 +911,7 @@ for making this possible.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </widget>
