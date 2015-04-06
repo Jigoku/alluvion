@@ -174,7 +174,10 @@ sub on_button_query_clicked {
 		
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "No torrents found\n(Error code 05)");
+			my $label = Gtk2::Label->new;
+			$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
+			$vbox->add($label);
+			$vbox->show_all;
 		}
 	
 	}
@@ -194,32 +197,32 @@ sub xdgopen($) {
 
 # adds a label with markup and separator to a vbox (For list of items)
 sub add_separated_item($$$$$) {
-	my ($vbox, $n, $markup, $link, $hash) = @_;
+	my ($vbox, $n, $torrent_info, $magnet_uri, $hash) = @_;
 
-	# make label clickable
-	#my $eventbox = Gtk2::EventBox->new;
-	
 	my $hseparator = new Gtk2::HSeparator();
 		$vbox->add($hseparator);
 	
 	my $hbox = Gtk2::HBox->new;
 		
-		
+	# item number of result
 	my $number = Gtk2::Label->new;
 	$number->set_markup("<span size='large'><b>".$n."</b></span>");
 	$number->set_alignment(0,.5);
 		$hbox->pack_start ($number, 0, 0, 5);
 		$hbox->set_homogeneous(0);
+		
 	# create new label for result
 	my $label = Gtk2::Label->new;
-	$label->set_markup($markup);
+	$label->set_markup($torrent_info);
 	$label->set_alignment(0,.5);	
 		$hbox->pack_start ($label, 0, 1, 5);
 
+	# magnet uri
 	my $button_magnet = Gtk2::Button->new;
 		$button_magnet->set_label("open magnet");
-		$button_magnet->signal_connect('clicked', sub { xdgopen($link); });
+		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
 		
+	# *.torrent
 	my $button_torrent = Gtk2::Button->new;
 		$button_torrent->set_label("save torrent");
 		$button_torrent->signal_connect('clicked', sub { print "DEBUG https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; });
@@ -227,6 +230,7 @@ sub add_separated_item($$$$$) {
 		# ....
 		#.... 
 		
+	# info hash
 	my $button_hash = Gtk2::Button->new;
 		$button_hash->set_label("copy hash");
 		$button_hash->signal_connect('clicked', sub { print "DEBUG " .$hash ."\n"; });
@@ -234,30 +238,19 @@ sub add_separated_item($$$$$) {
 		my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
 		$clipboard->set_text($hash);
 		
+	# container for buttons
 	my $buttonbox = Gtk2::HBox->new;
 		$buttonbox->set_homogeneous(0);
 		$buttonbox->pack_end ($button_magnet, 0, 0, 5);
 		$buttonbox->pack_end ($button_torrent, 0, 0, 5);
 		$buttonbox->pack_end ($button_hash, 0, 0, 5);
 		
+	# add everything
 	$hbox->add($buttonbox);
-	$vbox->add($hbox);
-
+	$vbox->pack_start ($hbox, 0, 0, 5);
+	$vbox->set_homogeneous(0);
 	
-	
-	
-	
-	# open manget_uri with xdg-open
-	#$eventbox->signal_connect('button-press-event', sub { xdgopen($link) });
-	
-	# pack result
-	
-	#$eventbox->add($label);
-	#$hbox->add($eventbox);
-	
-	
-	
-
+	#$vbox->add($hbox);
 	$vbox->show_all;
 }
 
