@@ -16,4 +16,10 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 This is alpha software, features are missing and/or may not exist in the intial release.
 
 ## Modules required
-FindBin, Gtk2, JSON, LWP::UserAgent, URI::Escape
+* FindBin
+* Gtk2
+* JSON
+* LWP::UserAgent
+* LWP::Simple
+* URI::Escape
+(these should be available on most linux distributions, it's likely they are already installed) 
