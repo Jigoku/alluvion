@@ -5,7 +5,8 @@ Unofficial Perl/Gtk2 frontend for [strike API](https://getstrike.net/api/)
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
 * lookup an info hash
 * search for torrents
-* download torrent file
+* filter search queries by category
+* download *.torrent file
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
 
