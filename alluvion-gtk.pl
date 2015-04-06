@@ -83,7 +83,7 @@ sub set_index_total {
 	
 	if ($response->is_success) {
 		for ($data) {
-			$label->set_markup("".$_->{message} . " indexed torrents");
+			$label->set_markup("".commify($_->{message}) . " indexed torrents");
 		}
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
@@ -121,7 +121,7 @@ sub on_button_hash_clicked {
 			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
 			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-			$builder->get_object( 'label_size' )->set_text(bytes2mb(($_->{size}))."MB");
+			$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
 			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
@@ -170,7 +170,7 @@ sub on_button_query_clicked {
 				$vbox, #container to append
 				$n,	# number of item
 				$_->{torrent_title},
-				"Seeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . bytes2mb($_->{size}) ."MB | Uploaded: " . $_->{upload_date},
+				"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri},
 				$_->{torrent_hash}
 			);
@@ -343,6 +343,13 @@ sub spawn_error {
 	
 	my $response = $dialog->run;
 	$dialog->destroy;
+}
+
+# add commas to an integer
+sub commify {
+	local $_ = shift;
+	1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
+	return $_;
 }
 
 sub gtk_main_quit {
