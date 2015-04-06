@@ -164,8 +164,8 @@ sub on_button_query_clicked {
 		for (@{$data->{torrents}}) {
 			$n++;
 			add_separated_item(
-				$vbox, 
-				$n,
+				$vbox, #container to append
+				$n,	# number of item
 				"<b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri},
 				$_->{torrent_hash}
@@ -188,7 +188,7 @@ sub convert_special_char {
 	return $str
 }
 
-sub xdgopen {
+sub xdgopen($) {
 	system("xdg-open '". shift ."'");
 }
 
@@ -223,10 +223,16 @@ sub add_separated_item($$$$$) {
 	my $button_torrent = Gtk2::Button->new;
 		$button_torrent->set_label("save torrent");
 		$button_torrent->signal_connect('clicked', sub { print "DEBUG https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; });
+		# implement filechooser, save as, set folder location and store torrent there
+		# ....
+		#.... 
 		
 	my $button_hash = Gtk2::Button->new;
 		$button_hash->set_label("copy hash");
 		$button_hash->signal_connect('clicked', sub { print "DEBUG " .$hash ."\n"; });
+		# copy to clipboard
+		my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
+		$clipboard->set_text($hash);
 		
 	my $buttonbox = Gtk2::HBox->new;
 		$buttonbox->set_homogeneous(0);
