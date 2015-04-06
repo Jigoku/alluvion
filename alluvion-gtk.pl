@@ -31,20 +31,16 @@ use LWP::Simple;
 use LWP::UserAgent;
 use URI::Escape;
 
-
 my $ua = LWP::UserAgent->new;
-
-# provide user agent (cloudflare blocks otherwise)
-print $ua->agent . "\n";
-$ua->agent("Alluvion/0.1pre https://github.com/Jigoku/alluvion");
-
-$ua->timeout(4);
+	# provide user agent 
+	# (cloudflare blocks libwww-perl/*.*)
+	$ua->agent("Alluvion/0.1pre https://github.com/Jigoku/alluvion");
+	$ua->timeout(4);
 
 my $VERSION = "0.1";
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion-gtk.xml";
-
 
 my (
 	$builder, 
