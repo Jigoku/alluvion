@@ -27,13 +27,15 @@ use warnings;
 use FindBin qw($Bin);
 use Gtk2 qw(-init);
 use JSON;
+use LWP::Simple;
 use LWP::UserAgent;
 use URI::Escape;
+
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(4);
 
-my $VERSION = "0.0.9000";
+my $VERSION = "0.1";
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion-gtk.xml";
@@ -43,6 +45,7 @@ my (
 	$builder, 
 	$window,
 	$filechooser,
+	$filechooser_get,
 );
 
 main();
@@ -261,11 +264,13 @@ sub add_separated_item($$$$$) {
 			sub { 
 				apply_filefilter("*.torrent", "torrent files", $filechooser);
 				apply_filefilter("*", "all files", $filechooser);
+				$filechooser->set_current_name($torrent_title.".torrent");
+				$filechooser_get = "https://getstrike.net/torrents/api/download/".$hash .".torrent";
 				$filechooser->run; 
 				$filechooser->hide; 
-				print "DEBUG (torrent to fetch) = https://getstrike.net/torrents/api/download/".$hash .".torrent\n"; 
 			}
 		);
+		
 	my $tooltip_torrent = Gtk2::Tooltips->new;
 		$tooltip_torrent->set_tip( $button_torrent, "Save *.torrent file as..." );
 		
@@ -310,7 +315,7 @@ sub on_about_clicked {
 
 sub on_button_file_save_clicked {
 	$filechooser->hide;
-	print "DEBUG (selected filename to save as) = ". $filechooser->get_filename . "\n";
+	getstore($filechooser_get, $filechooser->get_filename);
 }
 
 sub on_button_file_cancel_clicked {
@@ -346,7 +351,7 @@ sub spawn_error {
 }
 
 # add commas to an integer
-sub commify {
+sub commify($) {
 	local $_ = shift;
 	1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
 	return $_;
