@@ -166,7 +166,7 @@ sub on_button_query_clicked {
 			add_separated_item(
 				$vbox, #container to append
 				$n,	# number of item
-				"<b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . $_->{size} ." | Uploaded: " . $_->{upload_date},
+				"<b>".convert_special_char($_->{torrent_title})."</b>\nSeeders: <span color='green'>". $_->{seeds} ."</span> | Leechers: <span color='red'>". $_->{leeches} ."</span> | Size: " . bytes2mb($_->{size}) ."MB | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri},
 				$_->{torrent_hash}
 			);
@@ -181,6 +181,11 @@ sub on_button_query_clicked {
 		}
 	
 	}
+}
+
+sub bytes2mb($) {
+	my $bytes = shift;
+	return sprintf "%.0f",($bytes / (1024 * 1024));
 }
 
 sub convert_special_char {
