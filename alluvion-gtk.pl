@@ -33,6 +33,11 @@ use URI::Escape;
 
 
 my $ua = LWP::UserAgent->new;
+
+# provide user agent (cloudflare blocks otherwise)
+print $ua->agent . "\n";
+$ua->agent("Alluvion/0.1pre https://github.com/Jigoku/alluvion");
+
 $ua->timeout(4);
 
 my $VERSION = "0.1";
@@ -54,7 +59,7 @@ sub main {
 	# check libglade xml exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
-        $builder = Gtk2::Builder->new();
+     $builder = Gtk2::Builder->new();
 
  	# load glade XML
 	$builder->add_from_file( $xml );
@@ -74,6 +79,7 @@ sub main {
 }
 
 sub set_index_total {
+
 	my $label = $builder->get_object( 'label_indexed_total' );
 	
 	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
@@ -81,6 +87,7 @@ sub set_index_total {
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
 	
 	my $json_text = $response->decoded_content;
+	
 	my $json =  JSON->new;
 	my $data = $json->decode($json_text);
 	
