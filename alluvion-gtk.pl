@@ -233,10 +233,12 @@ sub add_separated_item($$$$$) {
 	# info hash
 	my $button_hash = Gtk2::Button->new;
 		$button_hash->set_label("copy hash");
-		$button_hash->signal_connect('clicked', sub { print "DEBUG " .$hash ."\n"; });
-		# copy to clipboard
-		my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
-		$clipboard->set_text($hash);
+		$button_hash->signal_connect('clicked', 
+			sub { 
+				my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
+				$clipboard->set_text($hash);
+			}
+		);
 		
 	# container for buttons
 	my $buttonbox = Gtk2::HBox->new;
