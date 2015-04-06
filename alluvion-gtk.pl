@@ -192,7 +192,10 @@ sub convert_special_char {
 	# replaces any characters that complain
 	# about being set with set_markup
 	my $str = shift;
+	# use markup safe ampersands
 	$str =~ s/&/&amp;/g;
+	# some titles have html tags? remove them...
+	$str =~ s/<(\/|!)?[-.a-zA-Z0-9]*.*?>//g;
 	return $str
 }
 
