@@ -119,7 +119,7 @@ sub on_button_hash_clicked {
 			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
 			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-			$builder->get_object( 'label_size' )->set_text(($_->{size})." bytes");
+			$builder->get_object( 'label_size' )->set_text(bytes2mb(($_->{size}))."MB");
 			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
@@ -130,6 +130,7 @@ sub on_button_hash_clicked {
 			spawn_error("Error", "Info hash not found\n(Error code 04)");
 		}
 	}
+	set_index_total();
 }
 
 
@@ -181,6 +182,7 @@ sub on_button_query_clicked {
 		}
 	
 	}
+	set_index_total();
 }
 
 sub bytes2mb($) {
