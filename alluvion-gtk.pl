@@ -208,7 +208,7 @@ sub add_separated_item($$$$$) {
 	my ($vbox, $n, $torrent_info, $magnet_uri, $hash) = @_;
 
 	my $hseparator = new Gtk2::HSeparator();
-		$vbox->pack_start($hseparator, 0,0, 5);
+		$vbox->pack_start($hseparator, 0, 0, 5);
 	
 	my $hbox = Gtk2::HBox->new;
 		
