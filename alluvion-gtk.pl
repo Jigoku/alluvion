@@ -157,7 +157,7 @@ sub on_button_query_clicked {
 		for ($data) { 
 			my $label = Gtk2::Label->new;
 			$label->set_markup("<span size='large'><b>".$_->{results}." torrents found</b></span>");
-			$vbox->add($label);
+			$vbox->pack_start($label, 0, 0, 5);
 		}
 		
 		my $n = 0;
@@ -176,7 +176,7 @@ sub on_button_query_clicked {
 		if ($response->status_line =~ m/404 Not Found/) {
 			my $label = Gtk2::Label->new;
 			$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
-			$vbox->add($label);
+			$vbox->pack_start($label, 0, 0, 5);
 			$vbox->show_all;
 		}
 	
@@ -208,7 +208,7 @@ sub add_separated_item($$$$$) {
 	my ($vbox, $n, $torrent_info, $magnet_uri, $hash) = @_;
 
 	my $hseparator = new Gtk2::HSeparator();
-		$vbox->add($hseparator);
+		$vbox->pack_start($hseparator, 0,0, 5);
 	
 	my $hbox = Gtk2::HBox->new;
 		
@@ -256,7 +256,7 @@ sub add_separated_item($$$$$) {
 		$buttonbox->pack_end ($button_hash, 0, 0, 5);
 		
 	# add everything
-	$hbox->add($buttonbox);
+	$hbox->pack_end ($buttonbox, 0, 0, 5);
 	$vbox->pack_start ($hbox, 0, 0, 5);
 	$vbox->set_homogeneous(0);
 	
