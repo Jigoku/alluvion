@@ -21,7 +21,6 @@ This is alpha software, features are missing and/or may not exist in the intial 
 * Gtk2
 * JSON
 * LWP::UserAgent
-* LWP::Simple
 * URI::Escape
 
 (these should be available on most linux distributions, it's likely they are already installed) 
