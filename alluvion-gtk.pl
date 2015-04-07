@@ -24,18 +24,12 @@
 
 use strict;
 use warnings;
-use threads;
 use FindBin qw($Bin);
-use Gtk2;
+use Gtk2 qw(-init);
 use JSON;
 use LWP::UserAgent;
 use URI::Escape;
-use Glib qw(TRUE FALSE);
 
-Gtk2::Gdk::Threads->init();
-Gtk2->init();
-$|++;
-my $t;
 my $VERSION = "0.1pre";
 
 my $ua = LWP::UserAgent->new;
@@ -83,38 +77,31 @@ sub main {
 	set_index_total();
 
 	# main loop
-	Gtk2::Gdk::Threads->enter();
-	Gtk2->main();
-	Gtk2::Gdk::Threads->leave(); 
-	gtk_main_quit();
+	Gtk2->main(); gtk_main_quit();
 }
 
 sub set_index_total {
-	$t = threads->create(
-		sub {
-			my $label = $builder->get_object( 'label_indexed_total' );
-			if (!($ua->is_online)) { $label->set_markup("No Connection."); return }
-			my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
+
+	my $label = $builder->get_object( 'label_indexed_total' );
 	
-			if ($response->is_success) {
-				my $json =  JSON->new;
-				my $data = $json->decode($response->decoded_content);
-			
-				for ($data) {
-					$label->set_markup("".commify($_->{message}) . " indexed torrents");
-				}
-			} else {
-				if ($response->status_line =~ m/404 Not Found/) {
-					spawn_error("Error", "Could not set index total");
-				}
-			}
+	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
+	
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
+	
+	if ($response->is_success) {
+		my $json =  JSON->new;
+		my $data = $json->decode($response->decoded_content);
+		
+		for ($data) {
+			$label->set_markup("".commify($_->{message}) . " indexed torrents");
 		}
-	);
-	
-	$t->detach();
+	} else {
+		if ($response->status_line =~ m/404 Not Found/) {
+			spawn_error("Error", "Could not set index total");
+		}
+	}
 	
 }
-
 
 sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
