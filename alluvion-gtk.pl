@@ -226,6 +226,8 @@ sub xdgopen($) {
 sub add_separated_item($$$$$) {
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 
+	my $eventbox = Gtk2::EventBox->new;
+
 	my $hseparator = new Gtk2::HSeparator();
 		$vbox->pack_start($hseparator, 0, 0, 5);
 	
@@ -307,7 +309,8 @@ sub add_separated_item($$$$$) {
 	# add everything
 	$hbox->pack_start ($vboxinfo, 0, 0, 5);
 	$hbox->pack_end ($buttonbox, 0, 0, 5);
-	$vbox->pack_start ($hbox, 0, 0, 5);
+	$eventbox->add ($hbox);
+	$vbox->pack_start ($eventbox, 0, 0, 5);
 	$vbox->set_homogeneous(0);
 	
 	#$vbox->add($hbox);
