@@ -40,6 +40,12 @@ my $ua = LWP::UserAgent->new;
 	$ua->timeout(4);
 	print $ua->agent ."\n";
 
+# NOTE 
+## Untested, but LWP::Useragent allegedly has built in
+## proxy support via
+##     $ua->proxy('https', 'connect://proxyhost.domain:3128/');
+
+
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion-gtk.xml";
 
@@ -174,7 +180,7 @@ sub on_button_query_clicked {
 	if ($response->is_success) {
 		for ($data) { 
 			my $label = Gtk2::Label->new;
-			$label->set_markup("<span size='large'><b>".$_->{results}." torrents found</b></span>");
+			$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
 			$vbox->pack_start($label, 0, 0, 5);
 		}
 		
