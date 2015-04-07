@@ -60,27 +60,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkAction" id="menu_edit_cut">
-            <property name="stock_id">gtk-cut</property>
-            <property name="name">menu_edit_cut</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_edit_copy">
-            <property name="stock_id">gtk-copy</property>
-            <property name="name">menu_edit_copy</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_edit_paste">
-            <property name="stock_id">gtk-paste</property>
-            <property name="name">menu_edit_paste</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_edit_delete">
-            <property name="stock_id">gtk-delete</property>
-            <property name="name">menu_edit_delete</property>
+          <object class="GtkAction" id="menu_edit_preferences">
+            <property name="stock_id">gtk-properties</property>
+            <property name="name">menu_edit_preferences</property>
+            <property name="label">_Preferences</property>
+            <signal handler="on_menu_edit_preferences_activate" name="activate" swapped="no"/>
           </object>
         </child>
         <child>
@@ -110,10 +94,7 @@
           <menuitem action="menu_file_quit"/>
         </menu>
         <menu action="menuitem_edit">
-          <menuitem action="menu_edit_cut"/>
-          <menuitem action="menu_edit_copy"/>
-          <menuitem action="menu_edit_paste"/>
-          <menuitem action="menu_edit_delete"/>
+          <menuitem action="menu_edit_preferences"/>
         </menu>
         <menuitem action="menuitem_view"/>
         <menu action="menuitem_help">
@@ -127,6 +108,7 @@
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
+    <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
