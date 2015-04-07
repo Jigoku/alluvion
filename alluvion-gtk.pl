@@ -27,7 +27,6 @@ use warnings;
 use FindBin qw($Bin);
 use Gtk2 qw(-init);
 use JSON;
-use LWP::Simple;
 use LWP::UserAgent;
 use URI::Escape;
 
@@ -37,14 +36,9 @@ my $ua = LWP::UserAgent->new;
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://github.com/Jigoku/alluvion");
+	$ua->env_proxy;
 	$ua->timeout(4);
 	print $ua->agent ."\n";
-
-# NOTE 
-## Untested, but LWP::Useragent allegedly has built in
-## proxy support via
-##     $ua->proxy('https', 'connect://proxyhost.domain:3128/');
-
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion-gtk.xml";
@@ -91,18 +85,16 @@ sub set_index_total {
 	
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
 	
-	my $json_text = $response->decoded_content;
-	
-	my $json =  JSON->new;
-	my $data = $json->decode($json_text);
-	
 	if ($response->is_success) {
+		my $json =  JSON->new;
+		my $data = $json->decode($response->decoded_content);
+		
 		for ($data) {
 			$label->set_markup("".commify($_->{message}) . " indexed torrents");
 		}
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Could not set index total\n(Error code 01)");
+			spawn_error("Error", "Could not set index total");
 		}
 	}
 	
@@ -113,19 +105,18 @@ sub on_button_hash_clicked {
 
 	# check for valid info hash before doing anything
 	if ((length($hash) != 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
-		spawn_error("Error", "Invalid info hash\n(Error code 02)");
+		spawn_error("Error", "Invalid info hash");
 		return;
 	}
 	
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 03)"); return; }
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n $!"); return; }
 	
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 		
 	if ($response->is_success) {
 		#parse json api result
-		my $json_text = $response->decoded_content;
 		my $json =  JSON->new;
-		my $data = $json->decode($json_text);
+		my $data = $json->decode($response->decoded_content);
 
 		# apply data to labels
 		for (@{$data->{torrents}}) {
@@ -144,7 +135,7 @@ sub on_button_hash_clicked {
 	
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Info hash not found\n(Error code 04)");
+			spawn_error("Error", "Info hash not found\n". $!);
 		}
 	}
 	
@@ -165,19 +156,18 @@ sub on_button_query_clicked {
 	}
 	
 	# must be at least 4 characters for API
-	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n(Error code 05)"); return; }
+	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n".$!); return; }
 	
 	# check for connection
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n(Error code 06)"); return; }
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
 	
 	# send request
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter);
 
-	my $json_text = $response->decoded_content;
-	my $json =  JSON->new;
-	my $data = $json->decode($json_text);
-	
 	if ($response->is_success) {
+		my $json =  JSON->new;
+		my $data = $json->decode($response->decoded_content);
+	
 		for ($data) { 
 			my $label = Gtk2::Label->new;
 			$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
@@ -333,7 +323,24 @@ sub on_about_clicked {
 
 sub on_button_file_save_clicked {
 	$filechooser->hide;
-	getstore($filechooser_get, $filechooser->get_filename);
+	
+	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
+	
+	my $request = HTTP::Request->new( GET => $filechooser_get );
+	my $response = $ua->request($request);
+
+	if ($response->is_success) {
+
+		open FILE, ">", $filechooser->get_filename or die $!;
+		binmode FILE;
+		print FILE $response->content;
+		close FILE;
+		
+	} else {
+		if ($response->status_line =~ m/404 Not Found/) {
+			spawn_error("Error", "Torrent not found\n".$!);
+		}
+	}
 }
 
 sub on_button_file_cancel_clicked {
