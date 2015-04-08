@@ -186,7 +186,7 @@ sub on_button_query_clicked {
 				$_->{torrent_title},
 				"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 				$_->{magnet_uri},
-				$_->{torrent_hash}
+				uc $_->{torrent_hash}
 			);
 		}
 		
@@ -225,8 +225,19 @@ sub xdgopen($) {
 # adds a label with markup and separator to a vbox (For list of items)
 sub add_separated_item($$$$$) {
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
-
+	
 	my $eventbox = Gtk2::EventBox->new;
+	
+	## iterate between shaded/non shaded
+	#if ($n % 2) { 
+	#	$eventbox->modify_bg(
+	#		"normal",
+	#		Gtk2::Gdk::Color->parse( ...... ) ## get gtk2 style colours, make shaded
+	#	);
+	#}
+	
+	my $tooltip_title = Gtk2::Tooltips->new;
+		$tooltip_title->set_tip( $eventbox, $torrent_title );
 
 	my $hseparator = new Gtk2::HSeparator();
 		$vbox->pack_start($hseparator, 0, 0, 5);
@@ -236,9 +247,10 @@ sub add_separated_item($$$$$) {
 		
 	# item number of result
 	my $number = Gtk2::Label->new;
-	$number->set_markup("<span size='large'><b>".$n."</b></span>");
+	$number->set_markup("<span size='large'><b>".$n.".</b></span>");
 	$number->set_alignment(0,.5);
-		$hbox->pack_start ($number, 0, 0, 5);
+	$number->set_width_chars(3);
+		$hbox->pack_start ($number, 0, 0, 10);
 		
 		
 	my $vboxinfo = Gtk2::VBox->new;
@@ -252,8 +264,6 @@ sub add_separated_item($$$$$) {
 	$label_title->set_alignment(0,.5);	
 		$vboxinfo->pack_start ($label_title, 0, 0, 0);
 		
-	my $tooltip_title = Gtk2::Tooltips->new;
-		$tooltip_title->set_tip( $label_title, $torrent_title );
 	
 	# create new label for aditional info
 	my $label = Gtk2::Label->new;
@@ -307,10 +317,10 @@ sub add_separated_item($$$$$) {
 		$buttonbox->pack_end ($button_hash, 0, 0, 5);
 		
 	# add everything
-	$hbox->pack_start ($vboxinfo, 0, 0, 5);
-	$hbox->pack_end ($buttonbox, 0, 0, 5);
+	$hbox->pack_start ($vboxinfo, 0, 0, 0);
+	$hbox->pack_end ($buttonbox, 0, 0, 0);
 	$eventbox->add ($hbox);
-	$vbox->pack_start ($eventbox, 0, 0, 5);
+	$vbox->pack_start ($eventbox, 0, 0, 0);
 	$vbox->set_homogeneous(0);
 	
 	#$vbox->add($hbox);
