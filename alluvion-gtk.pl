@@ -166,8 +166,7 @@ sub on_button_query_clicked {
 	
 	# send request
 	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
-#DEBUG
-print "https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter . "\n";
+
 	if ($response->is_success) {
 		my $json =  JSON->new;
 		my $data = $json->decode($response->decoded_content);
@@ -371,7 +370,7 @@ sub on_button_file_cancel_clicked {
 sub on_combobox_category_changed {
 	my $combobox = $builder->get_object( 'combobox_category' );
 	my $category = $combobox->get_active_text;
-	if ($category =~ m/N\/A/) { $category_filter = ""; return; } e
+	if ($category =~ m/N\/A/) { $category_filter = ""; return; }
 	$category_filter = $category;
 }
 
