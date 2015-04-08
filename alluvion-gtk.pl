@@ -51,7 +51,7 @@ my (
 	$filechooser_get,
 );
 
-my $category_filter = "";
+my ($category_filter, $subcategory_filter) = ("","");
 
 main();
 
@@ -59,7 +59,7 @@ sub main {
 	# check libglade xml exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
-     $builder = Gtk2::Builder->new();
+    $builder = Gtk2::Builder->new();
 
  	# load glade XML
 	$builder->add_from_file( $xml );
@@ -165,8 +165,9 @@ sub on_button_query_clicked {
 	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
 	
 	# send request
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter);
-
+	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
+#DEBUG
+print "https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter . "\n";
 	if ($response->is_success) {
 		my $json =  JSON->new;
 		my $data = $json->decode($response->decoded_content);
@@ -370,9 +371,17 @@ sub on_button_file_cancel_clicked {
 sub on_combobox_category_changed {
 	my $combobox = $builder->get_object( 'combobox_category' );
 	my $category = $combobox->get_active_text;
-	if ($category =~ m/All/) { $category_filter = ""; return; }
+	if ($category =~ m/N\/A/) { $category_filter = ""; return; } e
 	$category_filter = $category;
 }
+
+sub on_combobox_subcategory_changed {
+	my $combobox = $builder->get_object( 'combobox_subcategory' );
+	my $subcategory = $combobox->get_active_text;
+	if ($subcategory =~ m/N\/A/) { $subcategory_filter = ""; return; }
+	$subcategory_filter = $subcategory;
+}
+
 
 sub apply_filefilter($$$) {
 	#create a file filter

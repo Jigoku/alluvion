@@ -6,7 +6,7 @@
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">All</col>
+        <col id="0" translatable="yes">N/A</col>
       </row>
       <row>
         <col id="0" translatable="yes">Anime</col>
@@ -34,6 +34,205 @@
       </row>
       <row>
         <col id="0" translatable="yes">XXX</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="model2">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">N/A</col>
+      </row>
+      <row>
+        <col id="0">3D Movies</col>
+      </row>
+      <row>
+        <col id="0">AAC</col>
+      </row>
+      <row>
+        <col id="0">Academic</col>
+      </row>
+      <row>
+        <col id="0">Android</col>
+      </row>
+      <row>
+        <col id="0">Animation</col>
+      </row>
+      <row>
+        <col id="0">Anime Music Video</col>
+      </row>
+      <row>
+        <col id="0">Asian</col>
+      </row>
+      <row>
+        <col id="0">Audio books</col>
+      </row>
+      <row>
+        <col id="0">Bollywood</col>
+      </row>
+      <row>
+        <col id="0">Books</col>
+      </row>
+      <row>
+        <col id="0">Comics</col>
+      </row>
+      <row>
+        <col id="0">Concerts</col>
+      </row>
+      <row>
+        <col id="0">Documentary</col>
+      </row>
+      <row>
+        <col id="0">Dubbed Movies</col>
+      </row>
+      <row>
+        <col id="0">Ebooks</col>
+      </row>
+      <row>
+        <col id="0">English-translated</col>
+      </row>
+      <row>
+        <col id="0">Fiction</col>
+      </row>
+      <row>
+        <col id="0">Games</col>
+      </row>
+      <row>
+        <col id="0">HD Video</col>
+      </row>
+      <row>
+        <col id="0">Handheld</col>
+      </row>
+      <row>
+        <col id="0">Hentai</col>
+      </row>
+      <row>
+        <col id="0">Highres Movies</col>
+      </row>
+      <row>
+        <col id="0">iOS</col>
+      </row>
+      <row>
+        <col id="0">Karaoke</col>
+      </row>
+      <row>
+        <col id="0">Linux</col>
+      </row>
+      <row>
+        <col id="0">Lossless</col>
+      </row>
+      <row>
+        <col id="0">Mac</col>
+      </row>
+      <row>
+        <col id="0">Magazines</col>
+      </row>
+      <row>
+        <col id="0">Movie clips</col>
+      </row>
+      <row>
+        <col id="0">Mp3</col>
+      </row>
+      <row>
+        <col id="0">Music videos</col>
+      </row>
+      <row>
+        <col id="0">Newspapers</col>
+      </row>
+      <row>
+        <col id="0">Non-fiction</col>
+      </row>
+      <row>
+        <col id="0">Other Anime</col>
+      </row>
+      <row>
+        <col id="0">Other Applications</col>
+      </row>
+      <row>
+        <col id="0">Other Books</col>
+      </row>
+      <row>
+        <col id="0">Other Games</col>
+      </row>
+      <row>
+        <col id="0">Other Movies</col>
+      </row>
+      <row>
+        <col id="0">Other Music</col>
+      </row>
+      <row>
+        <col id="0">Other TV</col>
+      </row>
+      <row>
+        <col id="0">Other XXX</col>
+      </row>
+      <row>
+        <col id="0">PC</col>
+      </row>
+      <row>
+        <col id="0">PS2</col>
+      </row>
+      <row>
+        <col id="0">PS3</col>
+      </row>
+      <row>
+        <col id="0">PSP</col>
+      </row>
+      <row>
+        <col id="0">Pictures</col>
+      </row>
+      <row>
+        <col id="0">Poetry</col>
+      </row>
+      <row>
+        <col id="0">Radio Shows</col>
+      </row>
+      <row>
+        <col id="0">Sound clips</col>
+      </row>
+      <row>
+        <col id="0">Soundtrack</col>
+      </row>
+      <row>
+        <col id="0">Subtitles</col>
+      </row>
+      <row>
+        <col id="0">Textbooks</col>
+      </row>
+      <row>
+        <col id="0">Trailer</col>
+      </row>
+      <row>
+        <col id="0">Transcode</col>
+      </row>
+      <row>
+        <col id="0">Tutorials</col>
+      </row>
+      <row>
+        <col id="0">UNIX</col>
+      </row>
+      <row>
+        <col id="0">UltraHD</col>
+      </row>
+      <row>
+        <col id="0">Unsorted</col>
+      </row>
+      <row>
+        <col id="0">Video</col>
+      </row>
+      <row>
+        <col id="0">Wallpapers</col>
+      </row>
+      <row>
+        <col id="0">Wii</col>
+      </row>
+      <row>
+        <col id="0">Windows</col>
+      </row>
+      <row>
+        <col id="0">XBOX360</col>
       </row>
     </data>
   </object>
@@ -783,6 +982,7 @@ for making this possible.</property>
                 <property name="label" translatable="yes">Hash Lookup</property>
               </object>
               <packing>
+                <property name="position">1</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -834,6 +1034,17 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkHSeparator" id="hseparator_query">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkHBox" id="hbox_category">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -842,7 +1053,7 @@ for making this possible.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Filter category</property>
+                        <property name="label" translatable="yes">Category</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -872,11 +1083,46 @@ for making this possible.</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkLabel" id="label_subcategory">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Subcategory</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="combobox_subcategory">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="active">0</property>
+                        <signal handler="on_combobox_subcategory_changed" name="changed" swapped="no"/>
+                        <property name="model">model2</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="renderer2"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -905,7 +1151,7 @@ for making this possible.</property>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>
@@ -964,17 +1210,6 @@ for making this possible.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkHSeparator" id="hseparator">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkSpinner" id="spinner_loading">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -985,6 +1220,9 @@ for making this possible.</property>
                 <property name="pack_type">end</property>
                 <property name="position">2</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>
