@@ -11,7 +11,7 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 * launch magnet with torrent client (via `xdg-open')
 
 ## Alpha preview
-![screenshot1](https://cloud.githubusercontent.com/assets/1535179/7045128/e34d9942-ddf2-11e4-87ff-20daf1185a39.png)
+![screenshot1](https://cloud.githubusercontent.com/assets/1535179/7045148/1ab283ca-ddf3-11e4-84dc-4f8cacace698.png)
 
 ## NOTE
 This is alpha software, features are missing and/or may not exist in the intial release.
