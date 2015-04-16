@@ -19,9 +19,6 @@
 # API information url:
 #    https://getstrike.net/api/
 
-# Maybe consider using this wrapper? 
-#    https://metacpan.org/pod/WebService::Strike
-
 use strict;
 use warnings;
 use FindBin qw($Bin);
@@ -34,6 +31,7 @@ use Glib qw(TRUE FALSE);
 
 die "Glib::Object thread safety failed"
         unless Glib::Object->set_threadsafe (TRUE);
+        
 $|++;
 
 my $VERSION = "0.1pre";
