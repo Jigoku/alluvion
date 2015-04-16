@@ -533,6 +533,17 @@ sub on_combobox_subcategory_changed {
 	$subcategory_filter = $subcategory;
 }
 
+sub on_view_statusbar_toggled {
+	my $check 	  = $builder->get_object( 'view_statusbar' );
+	my $statusbar = $builder->get_object( 'statusbar' );
+	
+	if ($check->get_active == 1) {
+		$statusbar->set_visible(1);
+	} else {
+		$statusbar->set_visible(0);
+	}
+}
+
 
 sub apply_filefilter($$$) {
 	#create a file filter
