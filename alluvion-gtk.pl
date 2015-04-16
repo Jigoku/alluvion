@@ -109,7 +109,9 @@ sub set_index_total {
 				}
 			} else {
 				#if ($response->status_line =~ m/404 Not Found/) {
+				Gtk2::Gdk::Threads->enter();
 					spawn_error("Error", "Could not set index total");
+				Gtk2::Gdk::Threads->leave();
 				#}
 			}
 		}
@@ -233,9 +235,16 @@ sub on_button_query_clicked {
 	
 
 	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
+
+	$button->set_sensitive(1);
+	$spinner->set_visible(0);
+	$spinner->stop;
 	
 	my $json =  JSON->new;
+	# should check if it is json data before trying to parse...
 	my $data = $json->decode($thread->join);
+	
+	
 	for ($data) { 
 		my $label = Gtk2::Label->new;
 		$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
@@ -257,9 +266,7 @@ sub on_button_query_clicked {
 		);	
 	}
 	
-	$button->set_sensitive(1);
-	$spinner->set_visible(0);
-	$spinner->stop;
+
 }
 
 sub bytes2mb($) {
@@ -438,8 +445,17 @@ sub on_button_file_cancel_clicked {
 
 sub on_combobox_category_changed {
 	my $combobox = $builder->get_object( 'combobox_category' );
+	my $combobox2 = $builder->get_object( 'combobox_subcategory' );
 	my $category = $combobox->get_active_text;
-	if ($category =~ m/N\/A/) { $category_filter = ""; return; }
+	if ($category =~ m/N\/A/) { 
+		$category_filter = ""; 
+		$combobox2->set_visible(0);
+		$subcategory_filter = "";
+		return; 
+		
+	} else {
+		$combobox2->set_visible(1);
+	}
 	$category_filter = $category;
 }
 
@@ -464,7 +480,7 @@ sub apply_filefilter($$$) {
 # create an error dialog
 sub spawn_error {
 	my ($title, $message) = @_;
-	Gtk2::Gdk::Threads->enter;
+
 	 my $dialog = Gtk2::MessageDialog->new (
 		$window,
 		'destroy-with-parent',
@@ -476,11 +492,7 @@ sub spawn_error {
 	$dialog->format_secondary_text($message);
 	
 	my $response = $dialog->run;
-	Gtk2::Gdk::Threads->leave;
-	
-	Gtk2::Gdk::Threads->enter;
 	$dialog->destroy;
-	Gtk2::Gdk::Threads->leave;
 }
 
 # add commas to an integer

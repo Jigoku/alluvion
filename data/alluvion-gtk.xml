@@ -1084,23 +1084,11 @@ for making this possible.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label_subcategory">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Subcategory</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">5</property>
-                        <property name="position">2</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combobox_subcategory">
                         <property name="width_request">150</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="active">0</property>
                         <signal handler="on_combobox_subcategory_changed" name="changed" swapped="no"/>
