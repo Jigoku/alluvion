@@ -302,7 +302,10 @@ sub on_button_query_clicked {
 
 	for ($data) { 
 		my $label = Gtk2::Label->new;
-		my $results = 0 if not defined $_->{results};
+		my $results = $_->{results};
+		if (not defined $results) { $results = 0; }
+		
+		
 		$label->set_markup("<span size='large'><b>".($results == 1 ? "1 torrent" : $results . " torrents")." found</b></span>");
 		$vbox->pack_start($label, 0, 0, 5);
 	}
@@ -345,7 +348,8 @@ sub splice_thread {
 
 
 
-# adds a label with markup and separator to a vbox (For list of items)
+# adds a label with markup and separator to a vbox 
+# (For list of search results)
 sub add_separated_item($$$$$$) {
 
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
@@ -394,7 +398,6 @@ sub add_separated_item($$$$$$) {
 	$label_title->set_width_chars(65); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
-		
 		
 	
 	# create new label for aditional info
@@ -468,8 +471,7 @@ sub add_separated_item($$$$$$) {
 }
 
 sub on_menu_edit_preferences_activate {
-	$preferences->show;
-	
+	$preferences->show; # not implemented
 }
 
 sub on_about_clicked {
@@ -563,9 +565,6 @@ sub spawn_error {
 sub debug($) {
 		if ($debug == 1) { print shift };
 }
-
-
-
 
 
 sub gtk_main_quit {

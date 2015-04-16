@@ -170,7 +170,7 @@ for making this possible.</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-properties</property>
   </object>
-  <object class="GtkListStore" id="liststore1">
+  <object class="GtkListStore" id="liststore_category">
     <columns>
       <!-- column-name item -->
       <column type="gchararray"/>
@@ -208,7 +208,7 @@ for making this possible.</property>
       </row>
     </data>
   </object>
-  <object class="GtkListStore" id="liststore2">
+  <object class="GtkListStore" id="liststore_subcategory">
     <columns>
       <!-- column-name item -->
       <column type="gchararray"/>
@@ -523,6 +523,191 @@ for making this possible.</property>
             <property name="can_focus">True</property>
             <property name="tab_hborder">10</property>
             <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkVBox" id="vbox_query">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkHBox" id="hbox_query">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkEntry" id="entry_query">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="text" translatable="yes">Slackware Linux</property>
+                        <property name="invisible_char_set">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button_query">
+                        <property name="label" translatable="yes">Search</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="border_width">3</property>
+                        <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button_query_clear">
+                        <property name="label">gtk-clear</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="border_width">3</property>
+                        <property name="use_stock">True</property>
+                        <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHSeparator" id="hseparator_query">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox_category">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="label_category">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Category</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="combobox_category">
+                        <property name="width_request">130</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="model">liststore_category</property>
+                        <property name="active">0</property>
+                        <signal name="changed" handler="on_combobox_category_changed" swapped="no"/>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="combobox_subcategory">
+                        <property name="width_request">150</property>
+                        <property name="can_focus">False</property>
+                        <property name="model">liststore_subcategory</property>
+                        <property name="active">0</property>
+                        <signal name="changed" handler="on_combobox_subcategory_changed" swapped="no"/>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="scrolledwindow_query">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <child>
+                      <object class="GtkViewport" id="viewport_query">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox_query_results">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="border_width">5</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="label_search_query">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Search Query</property>
+              </object>
+              <packing>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkVBox" id="vbox_hashlookup">
                 <property name="visible">True</property>
@@ -1008,201 +1193,15 @@ for making this possible.</property>
                   </packing>
                 </child>
               </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="label_hash_lookup">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Hash Lookup</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVBox" id="vbox_query">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkHBox" id="hbox_query">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkEntry" id="entry_query">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">Slackware Linux</property>
-                        <property name="invisible_char_set">True</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_query">
-                        <property name="label" translatable="yes">Search</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="border_width">3</property>
-                        <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button_query_clear">
-                        <property name="label">gtk-clear</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="border_width">3</property>
-                        <property name="use_stock">True</property>
-                        <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkHSeparator" id="hseparator_query">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkHBox" id="hbox_category">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkLabel" id="label_category">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Category</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">5</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBox" id="combobox_category">
-                        <property name="width_request">130</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="model">liststore1</property>
-                        <property name="active">0</property>
-                        <signal name="changed" handler="on_combobox_category_changed" swapped="no"/>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext1"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkComboBox" id="combobox_subcategory">
-                        <property name="width_request">150</property>
-                        <property name="can_focus">False</property>
-                        <property name="model">liststore2</property>
-                        <property name="active">0</property>
-                        <signal name="changed" handler="on_combobox_subcategory_changed" swapped="no"/>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
-                          <attributes>
-                            <attribute name="text">0</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow_query">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">automatic</property>
-                    <child>
-                      <object class="GtkViewport" id="viewport_query">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkVBox" id="vbox_query_results">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="border_width">5</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel" id="label_search_query">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Search Query</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -1286,6 +1285,9 @@ for making this possible.</property>
             <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
