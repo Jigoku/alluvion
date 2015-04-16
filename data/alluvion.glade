@@ -484,6 +484,7 @@ for making this possible.</property>
             </child>
             <child>
               <object class="GtkMenuItem" id="menuitem_view">
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
@@ -541,7 +542,6 @@ for making this possible.</property>
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="show_tabs">False</property>
             <property name="tab_hborder">10</property>
             <property name="homogeneous">True</property>
             <child>
