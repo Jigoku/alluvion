@@ -29,7 +29,7 @@ use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
 
-die "Glib::Object thread safety failed"
+die "[ -] Glib::Object thread safety failed"
         unless Glib::Object->set_threadsafe (TRUE);
         
 $|++;
@@ -180,8 +180,6 @@ sub destroy_children($) {
 
 sub on_button_query_clicked {
 	
-	debug("[ !] on_button_query_clicked() thread #". (scalar(@threads)+1) ." started\n");
-	
 	my $query = $builder->get_object( 'entry_query' )->get_text;
 	my $button = $builder->get_object( 'button_query' );
 	my $spinner = $builder->get_object( 'spinner' );
@@ -195,10 +193,12 @@ sub on_button_query_clicked {
 	# must be at least 4 characters for API
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
 	
+	debug("[ !] on_button_query_clicked() thread #". (scalar(@threads)+1) ." started\n");
+	
 	$button->set_sensitive(0);
 	$spinner->start;
 	$spinner->set_visible(1);
-	
+		
 	my $thread = threads->create(
 		sub {
 
@@ -429,6 +429,7 @@ sub on_button_file_save_clicked {
 	
 	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
 	
+	# could add threading here 
 	my $request = HTTP::Request->new( GET => $filechooser_get );
 	my $response = $ua->request($request);
 
