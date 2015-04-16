@@ -227,6 +227,7 @@ sub on_button_query_clicked {
 	my $query = $builder->get_object( 'entry_query' )->get_text;
 	my $button = $builder->get_object( 'button_query' );
 	my $spinner = $builder->get_object( 'spinner' );
+	my $vbox_spinner = Gtk2::Spinner->new;
 	my $pending = $builder->get_object( 'label_pending' );
 	
 	# get top level container ready for packing results
@@ -234,6 +235,12 @@ sub on_button_query_clicked {
 	
 	# remove previous results
 	destroy_children($vbox);
+	
+	# setup progress spinner for vbox
+	$vbox->pack_start($vbox_spinner, 1, 1, 175);
+	$vbox_spinner->start;
+	$vbox_spinner->set_visible(1);
+	$vbox->show_all;
 	
 	# must be at least 4 characters for API
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
@@ -260,6 +267,7 @@ sub on_button_query_clicked {
 				
 			} else {
 				Gtk2::Gdk::Threads->enter();
+				$vbox_spinner->destroy;
 				my $label = Gtk2::Label->new;
 				$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
 				$vbox->pack_start($label, 0, 0, 5);
@@ -283,6 +291,7 @@ sub on_button_query_clicked {
 	$button->set_sensitive(1);
 	$spinner->set_visible(0);
 	$spinner->stop;
+	$vbox_spinner->destroy;
 	
 	my $json =  JSON->new;
 	# should check if it is json data before trying to parse...
