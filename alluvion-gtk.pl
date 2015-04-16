@@ -4,8 +4,11 @@
 # Perl/Gtk2 torrent search utility (strike API)
 #
 # Usage:
-#    ./$0 
-#    @TODO@ add --debug/-d flag for toggling $debug
+#    ./$0 <option>
+#
+# Options:
+#	-d  | --debug           enable debug output
+#	-v  | --version 		print version
 #
 # --------------------------------------------------------------------
 # Strike API information   : https://getstrike.net/api/
@@ -71,6 +74,7 @@ my (
 # command line arguments
 foreach my $arg (@ARGV) {
 		if ($arg =~ m/^(--debug|-d)$/) { $debug = 1; }
+		if ($arg =~ m/^(--version|-v)$/) { print $ua->agent ."\n"; exit(0); }
 }
 
 
