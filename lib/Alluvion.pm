@@ -1,4 +1,4 @@
-package Alluvion::Misc;
+package Alluvion;
 
 use strict;
 use warnings;

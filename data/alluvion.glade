@@ -535,6 +535,7 @@ for making this possible.</property>
                       <object class="GtkEntry" id="entry_hash">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="max_length">40</property>
                         <property name="invisible_char">●</property>
                         <property name="text" translatable="yes">156B69B8643BD11849A5D8F2122E13FBB61BD041</property>
                         <property name="invisible_char_set">True</property>
@@ -551,10 +552,11 @@ for making this possible.</property>
                     </child>
                     <child>
                       <object class="GtkButton" id="button_hash">
-                        <property name="label" translatable="yes">Search hash</property>
+                        <property name="label" translatable="yes">Search</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="border_width">3</property>
                         <signal name="clicked" handler="on_button_hash_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -1050,6 +1052,7 @@ for making this possible.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="border_width">3</property>
                         <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -1064,6 +1067,7 @@ for making this possible.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="border_width">3</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
                       </object>

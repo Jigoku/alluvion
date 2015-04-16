@@ -37,7 +37,7 @@ use Glib qw(TRUE FALSE);
 
 
 use lib $Bin.'/lib/';
-use Alluvion::Misc;
+use Alluvion;
 
 
 die "[ -] Glib::Object thread safety failed"
@@ -144,7 +144,7 @@ sub set_index_total {
 		
 				for ($data) {
 					Gtk2::Gdk::Threads->enter();
-					$index_total->set_markup("".Alluvion::Misc::commify($_->{message}) . " indexed torrents");
+					$index_total->set_markup("".Alluvion::commify($_->{message}) . " indexed torrents");
 					Gtk2::Gdk::Threads->leave();	
 				}
 			} else {
@@ -200,7 +200,7 @@ sub on_button_hash_clicked {
 			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
 			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-			$builder->get_object( 'label_size' )->set_text(Alluvion::Misc::commify(Alluvion::Misc::bytes2mb(($_->{size})))."MB");
+			$builder->get_object( 'label_size' )->set_text(Alluvion::commify(Alluvion::bytes2mb(($_->{size})))."MB");
 			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
@@ -306,7 +306,7 @@ sub on_button_query_clicked {
 			$vbox, #container to append
 			$n,	# number of item
 			$_->{torrent_title},
-			"Seeders: <span color='green'><b>". Alluvion::Misc::commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". Alluvion::Misc::commify($_->{leeches}) ."</b></span> | Size: <b>" . Alluvion::Misc::commify(Alluvion::Misc::bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
+			"Seeders: <span color='green'><b>". Alluvion::commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". Alluvion::commify($_->{leeches}) ."</b></span> | Size: <b>" . Alluvion::commify(Alluvion::bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 			$_->{magnet_uri},
 			uc $_->{torrent_hash}
 		);	
@@ -341,17 +341,24 @@ sub add_separated_item($$$$$$) {
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 				
 	my $eventbox = Gtk2::EventBox->new;
-	
-	
-	## TODO
-	## iterate between shaded/non shaded if possible
-	#if ($n % 2) { 
-	#	$eventbox->modify_bg(
-	#		"normal",
-	#		Gtk2::Gdk::Color->parse( ...... ) ## get gtk2 style colours, make shaded
-	#	);
-	#}
-	
+	#	$eventbox->signal_connect('enter-notify-event', 
+	#		sub { 
+	#			$eventbox->modify_bg(
+	#				"normal",
+	#				Gtk2::Gdk::Color->parse( "#662222" ) 
+	#			);
+	#		}
+	#	 );
+	#
+	#	$eventbox->signal_connect('leave-notify-event', 
+	#		sub { 
+	#			$eventbox->modify_bg(
+	#				"normal",
+	#				Gtk2::Gdk::Color->parse( "#000000" ) 
+	#			);
+	#		}
+	#	 );
+
 	my $tooltip_title = Gtk2::Tooltips->new;
 		$tooltip_title->set_tip( $eventbox, $torrent_title );
 
@@ -366,13 +373,14 @@ sub add_separated_item($$$$$$) {
 	$number->set_markup("<span size='large'><b>".$n.".</b></span>");
 	$number->set_alignment(0,.5);
 	$number->set_width_chars(3);
+
 		
 	my $vboxinfo = Gtk2::VBox->new;
 		$hbox->set_homogeneous(0);
 		
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
-	$label_title->set_markup("<b>".Alluvion::Misc::convert_special_char($torrent_title) ."</b>");
+	$label_title->set_markup("<b><u>".Alluvion::convert_special_char($torrent_title) ."</u></b>");
 	$label_title->set_width_chars(65); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
@@ -388,7 +396,7 @@ sub add_separated_item($$$$$$) {
 	# magnet uri
 	my $button_magnet = Gtk2::Button->new_from_stock("gtk-execute");
 		#$button_magnet->set_label("open magnet");
-		$button_magnet->signal_connect('clicked', sub { Alluvion::Misc::xdgopen($magnet_uri); });
+		$button_magnet->signal_connect('clicked', sub { Alluvion::xdgopen($magnet_uri); });
 		
 	my $tooltip_magnet = Gtk2::Tooltips->new;
 		$tooltip_magnet->set_tip( $button_magnet, "Open magnet with xdg-open\n(your preffered torrent client)" );
@@ -429,14 +437,14 @@ sub add_separated_item($$$$$$) {
 		
 	# add everything
 
-	$vbox->pack_start($hseparator, 0, 0, 5);
-	$hbox->pack_start($number, 0, 0, 10);
+	$vbox->pack_start($hseparator, 0, 0, 0);
+	$hbox->pack_start($number, 0, 0, 5);
 	$vboxinfo->pack_start($label_title, 0, 0, 0);
 	$vboxinfo->pack_start ($label, 0, 0, 0);
 		
-	$buttonbox->pack_end ($button_magnet, 0, 0, 5);
-	$buttonbox->pack_end ($button_torrent, 0, 0, 5);
-	$buttonbox->pack_end ($button_hash, 0, 0, 5);
+	$buttonbox->pack_end ($button_magnet, 0, 0, 0);
+	$buttonbox->pack_end ($button_torrent, 0, 0, 0);
+	$buttonbox->pack_end ($button_hash, 0, 0, 0);
 		
 	$hbox->pack_start ($vboxinfo, 0, 0, 0);
 	$hbox->pack_end ($buttonbox, 0, 0, 0);
