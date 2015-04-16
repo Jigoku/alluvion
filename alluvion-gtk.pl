@@ -46,7 +46,6 @@ die "[ -] Glib::Object thread safety failed"
 $|++;
 
 my $VERSION = "0.1pre";
-my $debug = 1;
 
 my $ua = LWP::UserAgent->new;
 	# provide user agent 
@@ -57,8 +56,10 @@ my $ua = LWP::UserAgent->new;
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
+my $debug = 0;
 
 my (
+
 	$builder, 
 	$window,
 	$preferences,
@@ -66,6 +67,12 @@ my (
 	$filechooser_get,
 	@threads,
 );
+
+# command line arguments
+foreach my $arg (@ARGV) {
+		if ($arg =~ m/^(--debug|-d)$/) { $debug = 1; }
+}
+
 
 
 # print mem usage
@@ -84,8 +91,16 @@ if ($debug == 1) {
 	)->detach;
 }
 
-
-
+# sleeping thread, for some reason this stops segfaults at exit
+# and several random GLib-GObject-CRITICAL errors
+my $sleeper = threads->create({'void' => 1},
+		sub {
+			while (1) {
+				sleep 1;
+			}
+			
+		}
+)->detach;
 
 my ($category_filter, $subcategory_filter) = ("","");
 
@@ -579,7 +594,7 @@ sub debug($) {
 
 
 sub gtk_main_quit {
-	
+
 	for (@threads) {
 		#show any threads that are still alive
 		debug( $_."\n");
@@ -587,6 +602,7 @@ sub gtk_main_quit {
 	
 	$_->detach for threads->list;
 
+	
 	Gtk2->main_quit();
 	exit(0);
 }
