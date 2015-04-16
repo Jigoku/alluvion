@@ -73,7 +73,10 @@ if ($debug == 1) {
 	my $thread = threads->create({'void' => 1},
 		sub {
 			while (1) {
-				print qx{ grep VmSize /proc/$$/status };
+				chomp( my $size = `grep VmSize /proc/$$/status`);
+				chomp( my $peak = `grep VmPeak /proc/$$/status`);
+				chomp( my $threads = `grep Threads /proc/$$/status`);
+				print "PID:\t".$$." | ".$size." | ".$peak." | ".$threads ."\n";
 				sleep 1;
 			}
 			
