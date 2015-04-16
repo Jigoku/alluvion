@@ -306,7 +306,7 @@ sub xdgopen($) {
 }
 
 # adds a label with markup and separator to a vbox (For list of items)
-sub add_separated_item {
+sub add_separated_item($$$$$$) {
 
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 				
@@ -522,10 +522,12 @@ sub commify($) {
 sub debug($) {
 		if ($debug == 1) { print shift };
 }
+
 sub gtk_main_quit {
 	
 	for (@threads) {
-			print $_ . "\n";
+		#show any threads that are still alive
+		debug( $_."\n");
 	}
 	
 	$_->detach for threads->list;

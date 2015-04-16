@@ -1021,7 +1021,7 @@ XBOX360</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="PLACEHOLDER2">
+              <widget class="GtkLabel" id="PLACEHOLDER">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">&lt;placeholder&gt;</property>
@@ -1031,10 +1031,10 @@ XBOX360</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label_placeholder">
+              <widget class="GtkLabel" id="label_favourites">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">&lt;placeholder&gt;</property>
+                <property name="label" translatable="yes">Favourites</property>
               </widget>
               <packing>
                 <property name="position">2</property>
