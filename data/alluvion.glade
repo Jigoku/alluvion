@@ -1066,6 +1066,7 @@ XBOX360</property>
             <child>
               <widget class="GtkSpinner" id="spinner">
                 <property name="can_focus">False</property>
+                <property name="active">True</property>
               </widget>
               <packing>
                 <property name="expand">False</property>

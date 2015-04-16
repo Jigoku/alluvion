@@ -27,12 +27,14 @@ use warnings;
 use FindBin qw($Bin);
 use JSON;
 use threads;
+use threads::shared;
 use LWP::UserAgent;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
-Glib::Object->set_threadsafe (TRUE);
 
+die "Glib::Object thread safety failed"
+        unless Glib::Object->set_threadsafe (TRUE);
 $|++;
 
 my $VERSION = "0.1pre";
@@ -78,22 +80,22 @@ sub main {
 	
 	$builder->connect_signals( undef );
 
+	set_index_total();
+
 	# draw the window
 	$window->show();
 
-	set_index_total();
-
 	# main loop
+	Gtk2->main_iteration while Gtk2->events_pending;
 	Gtk2->main(); gtk_main_quit();
 }
 
 sub set_index_total {
 	
-	debug("[ !] thread #". (scalar(@threads)+1) ." started\n");
+	debug("[ !] set_index_total() thread #". (scalar(@threads)+1) ." started\n");
 	
 	my $label = $builder->get_object( 'label_indexed_total' );
-	my $spinner = $builder->get_object( 'spinner' );
-	
+
 	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
 	
 	my $thread = threads->create(
@@ -108,12 +110,11 @@ sub set_index_total {
 					Gtk2::Gdk::Threads->enter();
 					$label->set_markup("".commify($_->{message}) . " indexed torrents");
 					Gtk2::Gdk::Threads->leave();	
+					spawn_error("Error", "Could not set index total");
 				}
 			} else {
 				if ($response->status_line =~ m/404 Not Found/) {
-					Gtk2::Gdk::Threads->enter();
 					spawn_error("Error", "Could not set index total");
-					Gtk2::Gdk::Threads->leave();
 				}
 			}
 		}
@@ -126,7 +127,7 @@ sub set_index_total {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
 	
-	debug( "[ !] thread #" .$tid ." finished\n");
+	debug( "[ !] set_index_total() thread #" .$tid ." finished\n");
 }
 
 sub on_button_hash_clicked {
@@ -170,62 +171,100 @@ sub on_button_hash_clicked {
 	
 }
 
-
-
-sub on_button_query_clicked {
-	my $query = $builder->get_object( 'entry_query' )->get_text;
-	
-	# get top level container
-	my $vbox = $builder->get_object('vbox_query_results');
-	
-	# remove previous results
-	my @children = $vbox->get_children();
+sub destroy_children($) {
+	# remove children from object
+	my @children = shift->get_children();
 	foreach my $child (@children) {
 		$child->destroy;
 	}
+}
+
+sub on_button_query_clicked {
 	
+	debug("[ !] on_button_query_clicked() thread #". (scalar(@threads)+1) ." started\n");
+	
+	my $query = $builder->get_object( 'entry_query' )->get_text;
+	my $button = $builder->get_object( 'button_query' );
+	my $spinner = $builder->get_object( 'spinner' );
+
+	# get top level container ready for packing results
+	my $vbox = $builder->get_object('vbox_query_results');
+	
+	destroy_children($vbox);
+
 	# must be at least 4 characters for API
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n".$!); return; }
 	
-	# check for connection
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
-	
-	# send request
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
+	my $thread = threads->create(
+		sub {
+			
+			Gtk2::Gdk::Threads->enter();
+			$button->set_sensitive(0);
+			$spinner->visible(1);
+			Gtk2::Gdk::Threads->leave();
 
-	if ($response->is_success) {
-		my $json =  JSON->new;
-		my $data = $json->decode($response->decoded_content);
+			# check for connection
+			if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
 	
-		for ($data) { 
-			my $label = Gtk2::Label->new;
-			$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
-			$vbox->pack_start($label, 0, 0, 5);
-		}
-		
-		my $n = 0;
-		for (@{$data->{torrents}}) {
-			$n++;
-			add_separated_item(
-				$vbox, #container to append
-				$n,	# number of item
-				$_->{torrent_title},
-				"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
-				$_->{magnet_uri},
-				uc $_->{torrent_hash}
+			# send request
+			my $response = $ua->get(
+				"https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter
 			);
-		}
-		
-	} else {
-		if ($response->status_line =~ m/404 Not Found/) {
-			my $label = Gtk2::Label->new;
-			$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
-			$vbox->pack_start($label, 0, 0, 5);
-			$vbox->show_all;
-		}
+
+			if ($response->is_success) {
+				my $json =  JSON->new;
+				my $data = $json->decode($response->decoded_content);
+				
+				
+				for ($data) { 
+					Gtk2::Gdk::Threads->enter();
+					my $label = Gtk2::Label->new;
+					$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
+					$vbox->pack_start($label, 0, 0, 5);
+					Gtk2::Gdk::Threads->leave();
+				}
+
+				my $n = 0;
+				
+				for (@{$data->{torrents}}) {
+					$n++;
+					
+					add_separated_item(
+						$vbox, #container to append
+						$n,	# number of item
+						$_->{torrent_title},
+						"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
+						$_->{magnet_uri},
+						uc $_->{torrent_hash}
+					);
+				}
+				
+				
+			} else {
+				Gtk2::Gdk::Threads->enter();
+				my $label = Gtk2::Label->new;
+				$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
+				$vbox->pack_start($label, 0, 0, 5);
+				$vbox->show_all;
+				Gtk2::Gdk::Threads->leave();
+			}
 	
+			Gtk2::Gdk::Threads->enter();
+			$button->set_sensitive(1);
+			$spinner->visible(0);
+			Gtk2::Gdk::Threads->leave();
+	
+		}
+	);
+	
+	push (@threads, $thread);
+	my $tid = $thread->tid;
+	
+	while ($thread->is_running) {
+		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
-	
+
+	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
 }
 
 sub bytes2mb($) {
@@ -249,7 +288,8 @@ sub xdgopen($) {
 }
 
 # adds a label with markup and separator to a vbox (For list of items)
-sub add_separated_item($$$$$) {
+sub add_separated_item {
+	Gtk2::Gdk::Threads->enter();
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 	
 	my $eventbox = Gtk2::EventBox->new;
@@ -350,7 +390,11 @@ sub add_separated_item($$$$$) {
 	$vbox->set_homogeneous(0);
 	
 	#$vbox->add($hbox);
+	
 	$vbox->show_all;
+	
+	Gtk2->main_iteration while Gtk2->events_pending;
+	Gtk2::Gdk::Threads->leave;
 }
 
 sub on_menu_edit_preferences_activate {
@@ -421,6 +465,7 @@ sub apply_filefilter($$$) {
 # create an error dialog
 sub spawn_error {
 	my ($title, $message) = @_;
+	Gtk2::Gdk::Threads->enter;
 	 my $dialog = Gtk2::MessageDialog->new (
 		$window,
 		'destroy-with-parent',
@@ -432,7 +477,11 @@ sub spawn_error {
 	$dialog->format_secondary_text($message);
 	
 	my $response = $dialog->run;
+	Gtk2::Gdk::Threads->leave;
+	
+	Gtk2::Gdk::Threads->enter;
 	$dialog->destroy;
+	Gtk2::Gdk::Threads->leave;
 }
 
 # add commas to an integer
