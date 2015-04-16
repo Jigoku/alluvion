@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.1pre
+# Alluvion 0.1
 # Perl/Gtk2 torrent search utility (strike API)
 #
 # Usage:
@@ -48,14 +48,13 @@ die "[ -] Glib::Object thread safety failed"
         
 $|++;
 
-my $VERSION = "0.1pre";
+my $VERSION = "0.1";
 
 my $ua = LWP::UserAgent->new;
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://github.com/Jigoku/alluvion");
 	$ua->timeout(3);
-	print $ua->agent ."\n";
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
@@ -73,11 +72,9 @@ my (
 
 # command line arguments
 foreach my $arg (@ARGV) {
-		if ($arg =~ m/^(--debug|-d)$/) { $debug = 1; }
+		if ($arg =~ m/^(--debug|-d)$/) { print $ua->agent ."\n"; $debug = 1; }
 		if ($arg =~ m/^(--version|-v)$/) { print $ua->agent ."\n"; exit(0); }
 }
-
-
 
 
 # sleeping thread, for some reason this stops segfaults at exit
