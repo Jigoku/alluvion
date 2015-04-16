@@ -193,7 +193,7 @@ sub on_button_query_clicked {
 	destroy_children($vbox);
 	
 	# must be at least 4 characters for API
-	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n".$!); return; }
+	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
 	
 	$button->set_sensitive(0);
 	$spinner->start;
@@ -220,6 +220,7 @@ sub on_button_query_clicked {
 				$vbox->pack_start($label, 0, 0, 5);
 				$vbox->show_all;
 				Gtk2::Gdk::Threads->leave();
+				return $response->decoded_content;
 			}
 	
 		}
@@ -243,8 +244,7 @@ sub on_button_query_clicked {
 	my $json =  JSON->new;
 	# should check if it is json data before trying to parse...
 	my $data = $json->decode($thread->join);
-	
-	
+
 	for ($data) { 
 		my $label = Gtk2::Label->new;
 		$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
@@ -265,9 +265,17 @@ sub on_button_query_clicked {
 			uc $_->{torrent_hash}
 		);	
 	}
-	
-
 }
+
+
+sub on_button_query_clear_clicked {
+	my $query = $builder->get_object( 'entry_query' );
+	$query->set_text("");
+	
+	my $vbox = $builder->get_object('vbox_query_results');
+	destroy_children($vbox);
+}
+
 
 sub bytes2mb($) {
 	my $bytes = shift;
