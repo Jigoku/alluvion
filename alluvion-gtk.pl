@@ -302,7 +302,8 @@ sub on_button_query_clicked {
 
 	for ($data) { 
 		my $label = Gtk2::Label->new;
-		$label->set_markup("<span size='large'><b>".($_->{results} == 1 ? "1 torrent" : $_->{results} . " torrents")." found</b></span>");
+		my $results = 0 if not defined $_->{results};
+		$label->set_markup("<span size='large'><b>".($results == 1 ? "1 torrent" : $results . " torrents")." found</b></span>");
 		$vbox->pack_start($label, 0, 0, 5);
 	}
 
