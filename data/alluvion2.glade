@@ -1,308 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkListStore" id="model1">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">N/A</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Anime</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Applications</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Books</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Games</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Movies</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Music</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Other</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">TV</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">XXX</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="model2">
-    <columns>
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">N/A</col>
-      </row>
-      <row>
-        <col id="0">3D Movies</col>
-      </row>
-      <row>
-        <col id="0">AAC</col>
-      </row>
-      <row>
-        <col id="0">Academic</col>
-      </row>
-      <row>
-        <col id="0">Android</col>
-      </row>
-      <row>
-        <col id="0">Animation</col>
-      </row>
-      <row>
-        <col id="0">Anime Music Video</col>
-      </row>
-      <row>
-        <col id="0">Asian</col>
-      </row>
-      <row>
-        <col id="0">Audio books</col>
-      </row>
-      <row>
-        <col id="0">Bollywood</col>
-      </row>
-      <row>
-        <col id="0">Books</col>
-      </row>
-      <row>
-        <col id="0">Comics</col>
-      </row>
-      <row>
-        <col id="0">Concerts</col>
-      </row>
-      <row>
-        <col id="0">Documentary</col>
-      </row>
-      <row>
-        <col id="0">Dubbed Movies</col>
-      </row>
-      <row>
-        <col id="0">Ebooks</col>
-      </row>
-      <row>
-        <col id="0">English-translated</col>
-      </row>
-      <row>
-        <col id="0">Fiction</col>
-      </row>
-      <row>
-        <col id="0">Games</col>
-      </row>
-      <row>
-        <col id="0">HD Video</col>
-      </row>
-      <row>
-        <col id="0">Handheld</col>
-      </row>
-      <row>
-        <col id="0">Hentai</col>
-      </row>
-      <row>
-        <col id="0">Highres Movies</col>
-      </row>
-      <row>
-        <col id="0">iOS</col>
-      </row>
-      <row>
-        <col id="0">Karaoke</col>
-      </row>
-      <row>
-        <col id="0">Linux</col>
-      </row>
-      <row>
-        <col id="0">Lossless</col>
-      </row>
-      <row>
-        <col id="0">Mac</col>
-      </row>
-      <row>
-        <col id="0">Magazines</col>
-      </row>
-      <row>
-        <col id="0">Movie clips</col>
-      </row>
-      <row>
-        <col id="0">Mp3</col>
-      </row>
-      <row>
-        <col id="0">Music videos</col>
-      </row>
-      <row>
-        <col id="0">Newspapers</col>
-      </row>
-      <row>
-        <col id="0">Non-fiction</col>
-      </row>
-      <row>
-        <col id="0">Other Anime</col>
-      </row>
-      <row>
-        <col id="0">Other Applications</col>
-      </row>
-      <row>
-        <col id="0">Other Books</col>
-      </row>
-      <row>
-        <col id="0">Other Games</col>
-      </row>
-      <row>
-        <col id="0">Other Movies</col>
-      </row>
-      <row>
-        <col id="0">Other Music</col>
-      </row>
-      <row>
-        <col id="0">Other TV</col>
-      </row>
-      <row>
-        <col id="0">Other XXX</col>
-      </row>
-      <row>
-        <col id="0">PC</col>
-      </row>
-      <row>
-        <col id="0">PS2</col>
-      </row>
-      <row>
-        <col id="0">PS3</col>
-      </row>
-      <row>
-        <col id="0">PSP</col>
-      </row>
-      <row>
-        <col id="0">Pictures</col>
-      </row>
-      <row>
-        <col id="0">Poetry</col>
-      </row>
-      <row>
-        <col id="0">Radio Shows</col>
-      </row>
-      <row>
-        <col id="0">Sound clips</col>
-      </row>
-      <row>
-        <col id="0">Soundtrack</col>
-      </row>
-      <row>
-        <col id="0">Subtitles</col>
-      </row>
-      <row>
-        <col id="0">Textbooks</col>
-      </row>
-      <row>
-        <col id="0">Trailer</col>
-      </row>
-      <row>
-        <col id="0">Transcode</col>
-      </row>
-      <row>
-        <col id="0">Tutorials</col>
-      </row>
-      <row>
-        <col id="0">UNIX</col>
-      </row>
-      <row>
-        <col id="0">UltraHD</col>
-      </row>
-      <row>
-        <col id="0">Unsorted</col>
-      </row>
-      <row>
-        <col id="0">Video</col>
-      </row>
-      <row>
-        <col id="0">Wallpapers</col>
-      </row>
-      <row>
-        <col id="0">Wii</col>
-      </row>
-      <row>
-        <col id="0">Windows</col>
-      </row>
-      <row>
-        <col id="0">XBOX360</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkUIManager" id="uimanager1">
-    <child>
-      <object class="GtkActionGroup" id="actiongroup1">
-        <child>
-          <object class="GtkAction" id="menuitem_file">
-            <property name="name">menuitem_file</property>
-            <property name="label" translatable="yes">_File</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_file_quit">
-            <property name="stock_id">gtk-quit</property>
-            <property name="name">menu_file_quit</property>
-            <signal handler="gtk_main_quit" name="activate" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menuitem_edit">
-            <property name="name">menuitem_edit</property>
-            <property name="label" translatable="yes">_Edit</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_edit_preferences">
-            <property name="stock_id">gtk-properties</property>
-            <property name="name">menu_edit_preferences</property>
-            <property name="label">_Preferences</property>
-            <signal handler="on_menu_edit_preferences_activate" name="activate" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menuitem_view">
-            <property name="name">menuitem_view</property>
-            <property name="label" translatable="yes">_View</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menuitem_help">
-            <property name="name">menuitem_help</property>
-            <property name="label" translatable="yes">_Help</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkAction" id="menu_help_about">
-            <property name="stock_id">gtk-about</property>
-            <property name="name">menu_help_about</property>
-            <signal handler="on_about_clicked" name="activate" swapped="no"/>
-          </object>
-        </child>
-      </object>
-    </child>
-    <ui>
-      <menubar name="menubar">
-        <menu action="menuitem_file">
-          <menuitem action="menu_file_quit"/>
-        </menu>
-        <menu action="menuitem_edit">
-          <menuitem action="menu_edit_preferences"/>
-        </menu>
-        <menuitem action="menuitem_view"/>
-        <menu action="menuitem_help">
-          <menuitem action="menu_help_about"/>
-        </menu>
-      </menubar>
-    </ui>
-  </object>
-  <!-- interface-requires gtk+ 2.24 -->
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
@@ -398,69 +96,249 @@ for making this possible.</property>
       </object>
     </child>
   </object>
-  <object class="GtkFileChooserDialog" id="filechooserdialog">
+  <object class="GtkAccelGroup" id="accelgroup1"/>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">Alluvion - Select location to save torrent</property>
-    <property name="role">GtkFileChooserDialog</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="type_hint">dialog</property>
-    <property name="transient_for">window</property>
-    <property name="action">save</property>
-    <property name="do_overwrite_confirmation">True</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="filechooserdialog-vbox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="filechooserdialog-action_area">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="button_file_save">
-                <property name="label">gtk-save</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal handler="on_button_file_save_clicked" name="clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button_file_cancel">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal handler="on_button_file_cancel_clicked" name="clicked" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-    </child>
+    <property name="stock">gtk-properties</property>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name item text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">N/A</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Anime</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Applications</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Music</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">TV</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XXX</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="liststore2">
+    <columns>
+      <!-- column-name item text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">N/A</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">3D Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">AAC</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Academic</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Android</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Animation</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Anime Music Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Asian</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Audio books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Bollywood</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Comics</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Concerts</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Documentary</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Dubbed Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Ebooks</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">English-translated</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Fiction</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">HD Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Handheld</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Hentai</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Highres Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">iOS</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Karaoke</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Linux</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Lossless</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Mac</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Magazines</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Movie clips</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Mp3</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Music videos</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Newspapers</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Non-fiction</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Anime</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Applications</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Music</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other TV</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other XXX</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PC</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PS2</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PS3</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PSP</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Pictures</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Poetry</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Radio Shows</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Sound clips</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Soundtrack</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Subtitles</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Textbooks</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Trailer</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Transcode</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Tutorials</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">UNIX</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">UltraHD</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Unsorted</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Wallpapers</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Wii</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Windows</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XBOX360</col>
+      </row>
+    </data>
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
@@ -469,15 +347,101 @@ for making this possible.</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="icon">alluvion_48.png</property>
-    <signal handler="gtk_main_quit" name="destroy" swapped="no"/>
+    <accel-groups>
+      <group name="accelgroup1"/>
+    </accel-groups>
+    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox_main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkMenuBar" constructor="uimanager1" id="menubar">
+          <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <child>
+              <object class="GtkMenuItem" id="menuitem_file">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_File</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_file">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_file_quit">
+                        <property name="label">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
+                        <signal name="activate" handler="gtk_main_quit" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem_edit">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_Edit</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_edit">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_edit_preferences">
+                        <property name="label">_Preferences</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_menu_edit_preferences_activate" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem_view">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem_help">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_help">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_help_about">
+                        <property name="label">gtk-about</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
+                        <signal name="activate" handler="on_about_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -503,7 +467,7 @@ for making this possible.</property>
                       <object class="GtkEntry" id="entry_hash">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char">●</property>
                         <property name="text" translatable="yes">156B69B8643BD11849A5D8F2122E13FBB61BD041</property>
                         <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">False</property>
@@ -523,7 +487,7 @@ for making this possible.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal handler="on_button_hash_clicked" name="clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_button_hash_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -998,7 +962,7 @@ for making this possible.</property>
                       <object class="GtkEntry" id="entry_query">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char">●</property>
                         <property name="text" translatable="yes">Slackware Linux</property>
                         <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">False</property>
@@ -1018,7 +982,7 @@ for making this possible.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <signal handler="on_button_query_clicked" name="clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1033,7 +997,7 @@ for making this possible.</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
-                        <signal handler="on_button_query_clear_clicked" name="clicked" swapped="no"/>
+                        <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1082,11 +1046,11 @@ for making this possible.</property>
                         <property name="width_request">130</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="model">liststore1</property>
                         <property name="active">0</property>
-                        <signal handler="on_combobox_category_changed" name="changed" swapped="no"/>
-                        <property name="model">model1</property>
+                        <signal name="changed" handler="on_combobox_category_changed" swapped="no"/>
                         <child>
-                          <object class="GtkCellRendererText" id="renderer1"/>
+                          <object class="GtkCellRendererText" id="cellrenderertext1"/>
                           <attributes>
                             <attribute name="text">0</attribute>
                           </attributes>
@@ -1105,11 +1069,11 @@ for making this possible.</property>
                       <object class="GtkComboBox" id="combobox_subcategory">
                         <property name="width_request">150</property>
                         <property name="can_focus">False</property>
+                        <property name="model">liststore2</property>
                         <property name="active">0</property>
-                        <signal handler="on_combobox_subcategory_changed" name="changed" swapped="no"/>
-                        <property name="model">model2</property>
+                        <signal name="changed" handler="on_combobox_subcategory_changed" swapped="no"/>
                         <child>
-                          <object class="GtkCellRendererText" id="renderer2"/>
+                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
                           <attributes>
                             <attribute name="text">0</attribute>
                           </attributes>
@@ -1158,6 +1122,9 @@ for making this possible.</property>
                   </packing>
                 </child>
               </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="label_search_query">
@@ -1176,6 +1143,9 @@ for making this possible.</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">&lt;placeholder&gt;</property>
               </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="label_favourites">
@@ -1235,5 +1205,73 @@ for making this possible.</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkFileChooserDialog" id="filechooserdialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Alluvion - Select location to save torrent</property>
+    <property name="role">GtkFileChooserDialog</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="type_hint">dialog</property>
+    <property name="transient_for">window</property>
+    <property name="action">save</property>
+    <property name="do_overwrite_confirmation">True</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="filechooserdialog-vbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="filechooserdialog-action_area">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="button_file_save">
+                <property name="label">gtk-save</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button_file_save_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button_file_cancel">
+                <property name="label">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button_file_cancel_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">button_file_save</action-widget>
+      <action-widget response="0">button_file_cancel</action-widget>
+    </action-widgets>
   </object>
 </interface>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.24 -->
+<interface>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkAboutDialog" id="aboutdialog">
+  <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="resizable">False</property>
@@ -34,16 +34,16 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
 </property>
     <property name="logo">alluvion_128.png</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="aboutdialog-vbox">
+      <object class="GtkVBox" id="aboutdialog-vbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="aboutdialog-action_area">
+          <object class="GtkHButtonBox" id="aboutdialog-action_area">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
@@ -52,19 +52,19 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
           </packing>
         </child>
         <child>
-          <widget class="GtkVBox" id="vbox">
+          <object class="GtkVBox" id="vbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <widget class="GtkLabel" id="label_info">
+              <object class="GtkLabel" id="label_info">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Like this software? 
 Donate to the strike team
 for making this possible.</property>
                 <property name="justify">center</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
@@ -72,31 +72,32 @@ for making this possible.</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLinkButton" id="label_donate">
+              <object class="GtkLinkButton" id="label_donate">
                 <property name="label" translatable="yes">Donate</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="relief">none</property>
                 <property name="uri">https://getstrike.net/torrents/donate/</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-  <widget class="GtkFileChooserDialog" id="filechooserdialog">
+  </object>
+  <object class="GtkAccelGroup" id="accelgroup1"/>
+  <object class="GtkFileChooserDialog" id="filechooserdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Alluvion - Select location to save torrent</property>
@@ -107,24 +108,24 @@ for making this possible.</property>
     <property name="action">save</property>
     <property name="do_overwrite_confirmation">True</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="filechooserdialog-vbox">
+      <object class="GtkVBox" id="filechooserdialog-vbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="filechooserdialog-action_area">
+          <object class="GtkHButtonBox" id="filechooserdialog-action_area">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <widget class="GtkButton" id="button_file_save">
+              <object class="GtkButton" id="button_file_save">
                 <property name="label">gtk-save</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="on_button_file_save_clicked" swapped="no"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -132,21 +133,21 @@ for making this possible.</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="button_file_cancel">
+              <object class="GtkButton" id="button_file_cancel">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
                 <signal name="clicked" handler="on_button_file_cancel_clicked" swapped="no"/>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
@@ -157,113 +158,359 @@ for making this possible.</property>
         <child>
           <placeholder/>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-  <widget class="GtkWindow" id="window">
+    <action-widgets>
+      <action-widget response="0">button_file_save</action-widget>
+      <action-widget response="0">button_file_cancel</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-properties</property>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name item text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">N/A</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Anime</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Applications</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Music</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">TV</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XXX</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="liststore2">
+    <columns>
+      <!-- column-name item text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">N/A</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">3D Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">AAC</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Academic</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Android</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Animation</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Anime Music Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Asian</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Audio books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Bollywood</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Comics</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Concerts</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Documentary</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Dubbed Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Ebooks</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">English-translated</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Fiction</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">HD Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Handheld</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Hentai</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Highres Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">iOS</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Karaoke</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Linux</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Lossless</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Mac</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Magazines</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Movie clips</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Mp3</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Music videos</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Newspapers</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Non-fiction</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Anime</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Applications</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Books</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Games</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Movies</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other Music</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other TV</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Other XXX</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PC</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PS2</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PS3</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">PSP</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Pictures</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Poetry</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Radio Shows</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Sound clips</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Soundtrack</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Subtitles</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Textbooks</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Trailer</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Transcode</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Tutorials</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">UNIX</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">UltraHD</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Unsorted</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Video</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Wallpapers</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Wii</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Windows</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">XBOX360</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Alluvion</property>
     <property name="window_position">mouse</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="icon">alluvion_48.png</property>
+    <accel-groups>
+      <group name="accelgroup1"/>
+    </accel-groups>
     <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
     <child>
-      <widget class="GtkVBox" id="vbox_main">
+      <object class="GtkVBox" id="vbox_main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <widget class="GtkMenuBar" id="menubar">
+          <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_file">
+              <object class="GtkMenuItem" id="menuitem_file">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu_file">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_file">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="menu_file_quit">
+                      <object class="GtkImageMenuItem" id="menu_file_quit">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
                         <signal name="activate" handler="gtk_main_quit" swapped="no"/>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_edit">
+              <object class="GtkMenuItem" id="menuitem_edit">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu_edit">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_edit">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="menu_edit_preferences">
+                      <object class="GtkImageMenuItem" id="menu_edit_preferences">
                         <property name="label">_Preferences</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
+                        <property name="image">image1</property>
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="on_menu_edit_preferences_activate" swapped="no"/>
-                        <child internal-child="image">
-                          <widget class="GtkImage" id="image1">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-properties</property>
-                          </widget>
-                        </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_view">
+              <object class="GtkMenuItem" id="menuitem_view">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
-              </widget>
+              </object>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="menuitem_help">
+              <object class="GtkMenuItem" id="menuitem_help">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
-                <child>
-                  <widget class="GtkMenu" id="menu_help">
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu_help">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkImageMenuItem" id="menu_help_about">
+                      <object class="GtkImageMenuItem" id="menu_help_about">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <property name="accel_group">accelgroup1</property>
                         <signal name="activate" handler="on_about_clicked" swapped="no"/>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                 </child>
-              </widget>
+              </object>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
@@ -271,21 +518,21 @@ for making this possible.</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkNotebook" id="notebook">
+          <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="tab_hborder">10</property>
             <property name="homogeneous">True</property>
             <child>
-              <widget class="GtkVBox" id="vbox_hashlookup">
+              <object class="GtkVBox" id="vbox_hashlookup">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <widget class="GtkHBox" id="hbox_hashlookup">
+                  <object class="GtkHBox" id="hbox_hashlookup">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkEntry" id="entry_hash">
+                      <object class="GtkEntry" id="entry_hash">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
@@ -295,7 +542,7 @@ for making this possible.</property>
                         <property name="secondary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">True</property>
                         <property name="secondary_icon_sensitive">True</property>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
@@ -303,20 +550,20 @@ for making this possible.</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button_hash">
+                      <object class="GtkButton" id="button_hash">
                         <property name="label" translatable="yes">Search hash</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <signal name="clicked" handler="on_button_hash_clicked" swapped="no"/>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
@@ -324,27 +571,27 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow_hash">
+                  <object class="GtkScrolledWindow" id="scrolledwindow_hash">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <child>
-                      <widget class="GtkViewport" id="viewport_hash">
+                      <object class="GtkViewport" id="viewport_hash">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <widget class="GtkVBox" id="vbox_hashinfo">
+                          <object class="GtkVBox" id="vbox_hashinfo">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">5</property>
                             <child>
-                              <widget class="GtkLabel" id="desc_torrent_hash">
+                              <object class="GtkLabel" id="desc_torrent_hash">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Info Hash:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -352,12 +599,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_torrent_hash">
+                              <object class="GtkLabel" id="label_torrent_hash">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -365,10 +612,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator1">
+                              <object class="GtkHSeparator" id="hseparator1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -376,13 +623,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_torrent_title">
+                              <object class="GtkLabel" id="desc_torrent_title">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Torrent Title:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -390,12 +637,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_torrent_title">
+                              <object class="GtkLabel" id="label_torrent_title">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -403,10 +650,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator10">
+                              <object class="GtkHSeparator" id="hseparator10">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -414,13 +661,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_torrent_category">
+                              <object class="GtkLabel" id="desc_torrent_category">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Category:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -428,12 +675,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_torrent_category">
+                              <object class="GtkLabel" id="label_torrent_category">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -441,10 +688,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator2">
+                              <object class="GtkHSeparator" id="hseparator2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -452,13 +699,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_sub_category">
+                              <object class="GtkLabel" id="desc_sub_category">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Sub Category:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -466,12 +713,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_sub_category">
+                              <object class="GtkLabel" id="label_sub_category">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -479,10 +726,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator3">
+                              <object class="GtkHSeparator" id="hseparator3">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -490,13 +737,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_seeds">
+                              <object class="GtkLabel" id="desc_seeds">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Seeders:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -504,12 +751,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_seeds">
+                              <object class="GtkLabel" id="label_seeds">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -517,10 +764,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator8">
+                              <object class="GtkHSeparator" id="hseparator8">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -528,13 +775,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_leeches">
+                              <object class="GtkLabel" id="desc_leeches">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Leechers:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -542,12 +789,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_leeches">
+                              <object class="GtkLabel" id="label_leeches">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -555,10 +802,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator4">
+                              <object class="GtkHSeparator" id="hseparator4">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -566,13 +813,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_file_count">
+                              <object class="GtkLabel" id="desc_file_count">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;File Count:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -580,12 +827,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_file_count">
+                              <object class="GtkLabel" id="label_file_count">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -593,10 +840,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator9">
+                              <object class="GtkHSeparator" id="hseparator9">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -604,13 +851,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_size">
+                              <object class="GtkLabel" id="desc_size">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Size:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -618,12 +865,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_size">
+                              <object class="GtkLabel" id="label_size">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -631,10 +878,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator5">
+                              <object class="GtkHSeparator" id="hseparator5">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -642,13 +889,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_uploader_username">
+                              <object class="GtkLabel" id="desc_uploader_username">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Uploader Username:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -656,12 +903,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_uploader_username">
+                              <object class="GtkLabel" id="label_uploader_username">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -669,10 +916,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator6">
+                              <object class="GtkHSeparator" id="hseparator6">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -680,13 +927,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_upload_date">
+                              <object class="GtkLabel" id="desc_upload_date">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Upload Date:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -694,12 +941,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_upload_date">
+                              <object class="GtkLabel" id="label_upload_date">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -707,10 +954,10 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkHSeparator" id="hseparator7">
+                              <object class="GtkHSeparator" id="hseparator7">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -718,13 +965,13 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="desc_magnet_uri">
+                              <object class="GtkLabel" id="desc_magnet_uri">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Magnet URI:&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
@@ -732,12 +979,12 @@ for making this possible.</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkLabel" id="label_magnet_uri">
+                              <object class="GtkLabel" id="label_magnet_uri">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="selectable">True</property>
-                              </widget>
+                              </object>
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
@@ -747,41 +994,40 @@ for making this possible.</property>
                             <child>
                               <placeholder/>
                             </child>
-                          </widget>
+                          </object>
                         </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
-              </widget>
+              </object>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label_hash_lookup">
+            <child type="tab">
+              <object class="GtkLabel" id="label_hash_lookup">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Hash Lookup</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox_query">
+              <object class="GtkVBox" id="vbox_query">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <widget class="GtkHBox" id="hbox_query">
+                  <object class="GtkHBox" id="hbox_query">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkEntry" id="entry_query">
+                      <object class="GtkEntry" id="entry_query">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
@@ -791,7 +1037,7 @@ for making this possible.</property>
                         <property name="secondary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">True</property>
                         <property name="secondary_icon_sensitive">True</property>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
@@ -799,13 +1045,13 @@ for making this possible.</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button_query">
+                      <object class="GtkButton" id="button_query">
                         <property name="label" translatable="yes">Search</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
@@ -813,21 +1059,21 @@ for making this possible.</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button_query_clear">
+                      <object class="GtkButton" id="button_query_clear">
                         <property name="label">gtk-clear</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
@@ -835,10 +1081,10 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHSeparator" id="hseparator_query">
+                  <object class="GtkHSeparator" id="hseparator_query">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
@@ -846,16 +1092,16 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox_category">
+                  <object class="GtkHBox" id="hbox_category">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <widget class="GtkLabel" id="label_category">
+                      <object class="GtkLabel" id="label_category">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Category</property>
-                      </widget>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
@@ -864,23 +1110,20 @@ for making this possible.</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkComboBox" id="combobox_category">
+                      <object class="GtkComboBox" id="combobox_category">
                         <property name="width_request">130</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="model">liststore1</property>
                         <property name="active">0</property>
-                        <property name="items" translatable="yes">N/A
-Anime
-Applications
-Books
-Games
-Movies
-Music
-Other
-TV
-XXX</property>
                         <signal name="changed" handler="on_combobox_category_changed" swapped="no"/>
-                      </widget>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
@@ -891,83 +1134,26 @@ XXX</property>
                       <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkComboBox" id="combobox_subcategory">
+                      <object class="GtkComboBox" id="combobox_subcategory">
                         <property name="width_request">150</property>
                         <property name="can_focus">False</property>
+                        <property name="model">liststore2</property>
                         <property name="active">0</property>
-                        <property name="items">N/A
-3D Movies
-AAC
-Academic
-Android
-Animation
-Anime Music Video
-Asian
-Audio books
-Bollywood
-Books
-Comics
-Concerts
-Documentary
-Dubbed Movies
-Ebooks
-English-translated
-Fiction
-Games
-HD Video
-Handheld
-Hentai
-Highres Movies
-iOS
-Karaoke
-Linux
-Lossless
-Mac
-Magazines
-Movie clips
-Mp3
-Music videos
-Newspapers
-Non-fiction
-Other Anime
-Other Applications
-Other Books
-Other Games
-Other Movies
-Other Music
-Other TV
-Other XXX
-PC
-PS2
-PS3
-PSP
-Pictures
-Poetry
-Radio Shows
-Sound clips
-Soundtrack
-Subtitles
-Textbooks
-Trailer
-Transcode
-Tutorials
-UNIX
-UltraHD
-Unsorted
-Video
-Wallpapers
-Wii
-Windows
-XBOX360</property>
                         <signal name="changed" handler="on_combobox_subcategory_changed" swapped="no"/>
-                      </widget>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">3</property>
                       </packing>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
@@ -975,16 +1161,16 @@ XBOX360</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow_query">
+                  <object class="GtkScrolledWindow" id="scrolledwindow_query">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <child>
-                      <widget class="GtkViewport" id="viewport_query">
+                      <object class="GtkViewport" id="viewport_query">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <widget class="GtkVBox" id="vbox_query_results">
+                          <object class="GtkVBox" id="vbox_query_results">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="border_width">5</property>
@@ -992,57 +1178,55 @@ XBOX360</property>
                             <child>
                               <placeholder/>
                             </child>
-                          </widget>
+                          </object>
                         </child>
-                      </widget>
+                      </object>
                     </child>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label_search_query">
+            <child type="tab">
+              <object class="GtkLabel" id="label_search_query">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Search Query</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="PLACEHOLDER">
+              <object class="GtkLabel" id="PLACEHOLDER">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">&lt;placeholder&gt;</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">2</property>
               </packing>
             </child>
-            <child>
-              <widget class="GtkLabel" id="label_favourites">
+            <child type="tab">
+              <object class="GtkLabel" id="label_favourites">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Favourites</property>
-              </widget>
+              </object>
               <packing>
                 <property name="position">2</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
@@ -1050,16 +1234,16 @@ XBOX360</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkStatusbar" id="statusbar">
+          <object class="GtkStatusbar" id="statusbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="border_width">5</property>
             <property name="spacing">2</property>
             <child>
-              <widget class="GtkLabel" id="label_indexed_total">
+              <object class="GtkLabel" id="label_indexed_total">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
@@ -1067,9 +1251,9 @@ XBOX360</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkSpinner" id="spinner">
+              <object class="GtkSpinner" id="spinner">
                 <property name="can_focus">False</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
@@ -1080,14 +1264,14 @@ XBOX360</property>
             <child>
               <placeholder/>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+  </object>
+</interface>

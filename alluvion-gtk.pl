@@ -1,7 +1,16 @@
 #!/usr/bin/env perl
-# alluvion
-# A gtk2/perl frontend for the 'strike' API
+# --------------------------------------------------------------------
+# Alluvion 0.1pre
+# Perl/Gtk2 torrent search utility (strike API)
 #
+# Usage:
+#    ./$0 
+#    @TODO@ add --debug/-d flag for toggling $debug
+#
+# --------------------------------------------------------------------
+# Strike API information   : https://getstrike.net/api/
+# Alluvion @ GitHub        : https://github.com/Jigoku/alluvion
+# --------------------------------------------------------------------
 # Copyright (C) 2015 Ricky K. Thomson
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,9 +24,6 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-#NOTES
-# API information url:
-#    https://getstrike.net/api/
 
 use strict;
 use warnings;
@@ -45,7 +51,7 @@ my $ua = LWP::UserAgent->new;
 	print $ua->agent ."\n";
 
 my $data = $Bin . "/data/";
-my $xml = $data . "alluvion-gtk.xml";
+my $xml = $data . "alluvion.glade";
 
 my (
 	$builder, 
