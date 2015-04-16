@@ -196,7 +196,8 @@ sub on_button_query_clicked {
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n".$!); return; }
 	
 	$button->set_sensitive(0);
-	$spinner->visible(1);
+	$spinner->start;
+	$spinner->set_visible(1);
 	
 	my $thread = threads->create(
 		sub {
@@ -232,9 +233,7 @@ sub on_button_query_clicked {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
 	
-	$button->set_sensitive(1);
-	$spinner->visible(0);
-	
+
 	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
 	
 	my $json =  JSON->new;
@@ -260,7 +259,9 @@ sub on_button_query_clicked {
 		);	
 	}
 	
-
+	$button->set_sensitive(1);
+	$spinner->set_visible(0);
+	$spinner->stop;
 }
 
 sub bytes2mb($) {
@@ -290,7 +291,9 @@ sub add_separated_item {
 				
 	my $eventbox = Gtk2::EventBox->new;
 	
-	## iterate between shaded/non shaded
+	
+	## TODO
+	## iterate between shaded/non shaded if possible
 	#if ($n % 2) { 
 	#	$eventbox->modify_bg(
 	#		"normal",
