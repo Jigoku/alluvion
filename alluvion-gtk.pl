@@ -35,6 +35,9 @@ use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
 
+use lib $Bin.'Alluvion';
+use Alluvion::Misc;
+
 die "[ -] Glib::Object thread safety failed"
         unless Glib::Object->set_threadsafe (TRUE);
         
@@ -110,7 +113,7 @@ sub set_index_total {
 		
 				for ($data) {
 					Gtk2::Gdk::Threads->enter();
-					$label->set_markup("".commify($_->{message}) . " indexed torrents");
+					$label->set_markup("".Alluvion::Misc::commify($_->{message}) . " indexed torrents");
 					Gtk2::Gdk::Threads->leave();	
 				}
 			} else {
@@ -163,7 +166,7 @@ sub on_button_hash_clicked {
 			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
 			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-			$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
+			$builder->get_object( 'label_size' )->set_text(Alluvion::Misc::commify(Alluvion::Misc::bytes2mb(($_->{size})))."MB");
 			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
@@ -267,7 +270,7 @@ sub on_button_query_clicked {
 			$vbox, #container to append
 			$n,	# number of item
 			$_->{torrent_title},
-			"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
+			"Seeders: <span color='green'><b>". Alluvion::Misc::commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". Alluvion::Misc::commify($_->{leeches}) ."</b></span> | Size: <b>" . Alluvion::Misc::commify(Alluvion::Misc::bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 			$_->{magnet_uri},
 			uc $_->{torrent_hash}
 		);	
@@ -285,10 +288,7 @@ sub on_button_query_clear_clicked {
 }
 
 
-sub bytes2mb($) {
-	my $bytes = shift;
-	return sprintf "%.0f",($bytes / (1024 * 1024));
-}
+
 
 sub splice_thread {
 		my $i = 0;
@@ -296,20 +296,8 @@ sub splice_thread {
 		splice @threads, $i, 1;
 }
 
-sub convert_special_char {
-	# replaces any characters that complain
-	# about being set with set_markup
-	my $str = shift;
-	# use markup safe ampersands
-	$str =~ s/&/&amp;/g;
-	# some titles have html tags? remove them...
-	$str =~ s/<(\/|!)?[-.a-zA-Z0-9]*.*?>//g;
-	return $str
-}
 
-sub xdgopen($) {
-	system("xdg-open '". shift ."'");
-}
+
 
 # adds a label with markup and separator to a vbox (For list of items)
 sub add_separated_item($$$$$$) {
@@ -348,7 +336,7 @@ sub add_separated_item($$$$$$) {
 		
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
-	$label_title->set_markup("<b>".convert_special_char($torrent_title) ."</b>");
+	$label_title->set_markup("<b>".Alluvion::Misc::convert_special_char($torrent_title) ."</b>");
 	$label_title->set_width_chars(65); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
@@ -364,7 +352,7 @@ sub add_separated_item($$$$$$) {
 	# magnet uri
 	my $button_magnet = Gtk2::Button->new_from_stock("gtk-execute");
 		#$button_magnet->set_label("open magnet");
-		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
+		$button_magnet->signal_connect('clicked', sub { Alluvion::Misc::xdgopen($magnet_uri); });
 		
 	my $tooltip_magnet = Gtk2::Tooltips->new;
 		$tooltip_magnet->set_tip( $button_magnet, "Open magnet with xdg-open\n(your preffered torrent client)" );
@@ -516,13 +504,6 @@ sub spawn_error {
 	
 	my $response = $dialog->run;
 	$dialog->destroy;
-}
-
-# add commas to an integer
-sub commify($) {
-	local $_ = shift;
-	1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
-	return $_;
 }
 
 sub debug($) {
