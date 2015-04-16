@@ -88,14 +88,14 @@ sub main {
 
 sub set_index_total {
 	
-	debug("[ !] set_index_total() thread #". (scalar(@threads)+1) ." started\n");
-	
 	my $label = $builder->get_object( 'label_indexed_total' );
 
 	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
 	
 	my $thread = threads->create({'void' => 1},
 		sub {
+			debug("[ !] set_index_total() thread #". threads->self->tid ." started\n");
+			
 			my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
 			
 			if ($response->is_success) {
@@ -125,8 +125,9 @@ sub set_index_total {
 	}
 	
 	$thread->join;
-	
 	debug( "[ !] set_index_total() thread #" .$tid ." finished\n");
+	
+	splice_thread($thread);
 }
 
 sub on_button_hash_clicked {
@@ -193,7 +194,7 @@ sub on_button_query_clicked {
 	# must be at least 4 characters for API
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
 	
-	debug("[ !] on_button_query_clicked() thread #". (scalar(@threads)+1) ." started\n");
+	
 	
 	$button->set_sensitive(0);
 	$spinner->start;
@@ -201,7 +202,7 @@ sub on_button_query_clicked {
 		
 	my $thread = threads->create(
 		sub {
-
+			debug("[ !] on_button_query_clicked() thread #". threads->self->tid ." started\n");
 			# check for connection
 			if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
 
@@ -233,9 +234,6 @@ sub on_button_query_clicked {
 	while ($thread->is_running) {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
-	
-
-	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
 
 	$button->set_sensitive(1);
 	$spinner->set_visible(0);
@@ -244,6 +242,9 @@ sub on_button_query_clicked {
 	my $json =  JSON->new;
 	# should check if it is json data before trying to parse...
 	my $data = $json->decode($thread->join);
+
+	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
+	splice_thread($thread);
 
 	for ($data) { 
 		my $label = Gtk2::Label->new;
@@ -265,6 +266,7 @@ sub on_button_query_clicked {
 			uc $_->{torrent_hash}
 		);	
 	}
+
 }
 
 
@@ -280,6 +282,12 @@ sub on_button_query_clear_clicked {
 sub bytes2mb($) {
 	my $bytes = shift;
 	return sprintf "%.0f",($bytes / (1024 * 1024));
+}
+
+sub splice_thread {
+		my $i = 0;
+		$i++ until $threads[$i] eq shift or $i > $#threads;
+		splice @threads, $i, 1;
 }
 
 sub convert_special_char {
@@ -515,6 +523,10 @@ sub debug($) {
 		if ($debug == 1) { print shift };
 }
 sub gtk_main_quit {
+	
+	for (@threads) {
+			print $_ . "\n";
+	}
 	
 	$_->detach for threads->list;
 
