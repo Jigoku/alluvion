@@ -3,21 +3,19 @@ Unofficial Perl/Gtk2 frontend for [strike API](https://getstrike.net/api/)
 
 ## Features
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
-* lookup an info hash
 * search for torrents
 * filter search queries by category
 * download *.torrent file
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
 
-## Alpha preview
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7173907/e49526bc-e3f6-11e4-964d-e58836c73c2d.png)
+## Preview
+![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
-## NOTE
-This is alpha software, features are missing and/or may not exist in the intial release.
+## Releases
+[0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
 
 ## Modules required
-* FindBin
 * Gtk2
 * JSON
 * LWP::UserAgent
@@ -25,7 +23,7 @@ This is alpha software, features are missing and/or may not exist in the intial 
 
 (these should be available on most linux distributions, it's likely they are already installed) 
 
-If you cannot find them in your distributions package repository, try installing missing modules with:
+If you cannot find them in your distributions package repository, try installing missing modules like so:
 ```
 # perl -MCPAN -e 'install JSON'
 ```
