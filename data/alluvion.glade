@@ -1064,8 +1064,7 @@ XBOX360</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkSpinner" id="spinner_loading">
-                <property name="visible">True</property>
+              <widget class="GtkSpinner" id="spinner">
                 <property name="can_focus">False</property>
               </widget>
               <packing>

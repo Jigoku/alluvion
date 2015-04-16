@@ -25,12 +25,18 @@
 use strict;
 use warnings;
 use FindBin qw($Bin);
-use Gtk2 qw(-init);
 use JSON;
+use threads;
 use LWP::UserAgent;
 use URI::Escape;
+use Gtk2 qw(-threads-init -init);
+use Glib qw(TRUE FALSE);
+Glib::Object->set_threadsafe (TRUE);
+
+$|++;
 
 my $VERSION = "0.1pre";
+my $debug = 1;
 
 my $ua = LWP::UserAgent->new;
 	# provide user agent 
@@ -49,6 +55,7 @@ my (
 	$preferences,
 	$filechooser,
 	$filechooser_get,
+	@threads,
 );
 
 my ($category_filter, $subcategory_filter) = ("","");
@@ -81,26 +88,45 @@ sub main {
 }
 
 sub set_index_total {
-
+	
+	debug("[ !] thread #". (scalar(@threads)+1) ." started\n");
+	
 	my $label = $builder->get_object( 'label_indexed_total' );
+	my $spinner = $builder->get_object( 'spinner' );
 	
 	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
 	
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
+	my $thread = threads->create(
+		sub {
+			my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
 	
-	if ($response->is_success) {
-		my $json =  JSON->new;
-		my $data = $json->decode($response->decoded_content);
+			if ($response->is_success) {
+				my $json =  JSON->new;
+				my $data = $json->decode($response->decoded_content);
 		
-		for ($data) {
-			$label->set_markup("".commify($_->{message}) . " indexed torrents");
+				for ($data) {
+					Gtk2::Gdk::Threads->enter();
+					$label->set_markup("".commify($_->{message}) . " indexed torrents");
+					Gtk2::Gdk::Threads->leave();	
+				}
+			} else {
+				if ($response->status_line =~ m/404 Not Found/) {
+					Gtk2::Gdk::Threads->enter();
+					spawn_error("Error", "Could not set index total");
+					Gtk2::Gdk::Threads->leave();
+				}
+			}
 		}
-	} else {
-		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Could not set index total");
-		}
+	);
+	
+	push (@threads, $thread);
+	my $tid = $thread->tid;
+	
+	while ($thread->is_running) {
+		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
 	
+	debug( "[ !] thread #" .$tid ." finished\n");
 }
 
 sub on_button_hash_clicked {
@@ -416,11 +442,13 @@ sub commify($) {
 	return $_;
 }
 
+sub debug($) {
+		if ($debug == 1) { print shift };
+}
 sub gtk_main_quit {
-	# cleanup and exit
-	$window->destroy;
+	
+	$_->detach for threads->list;
 
-	# bye bye
 	Gtk2->main_quit();
 	exit(0);
 }

@@ -1210,8 +1210,7 @@ for making this possible.</property>
               </packing>
             </child>
             <child>
-              <object class="GtkSpinner" id="spinner_loading">
-                <property name="visible">True</property>
+              <object class="GtkSpinner" id="spinner">
                 <property name="can_focus">False</property>
               </object>
               <packing>

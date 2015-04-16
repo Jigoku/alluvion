@@ -12,23 +12,40 @@ use strict;
 use warnings;
 use POSIX;
 use threads;
+use IO::Socket::Socks::Wrapper;
 use IO::Socket::SSL;
 
-
-
-my $host = "getstrike.net";
+my $host = "checkip.dyndns.com";
 my $port = 80;
 my $timeout = 5;
 
 my $data;
 my $header = <<MSG;
-GET /api/v2/torrents/info/?hashes=B425907E5755031BDA4A8D1B6DCCACA97DA14C04 HTTP/1.0
+GET /api/v2/torrents/count/ HTTP/1.0
 host:getstrike.net
 accept: text/html
 user-agent:Alluvion/0.1pre
 
 MSG
 
+$header = <<MSG;
+GET / HTTP/1.1
+host:checkip.dyndns.com
+accept: text/html
+user-agent:Alluvion/0.1pre
+
+MSG
+
+
+
+	IO::Socket::Socks::Wrapper->import( 
+		IO::Socket:: => {
+			ProxyAddr => '83.133.126.243',
+			ProxyPort =>  8080,
+			SocksDebug => 1,
+			Timeout => 10
+		}
+	);
 
 
 
@@ -44,7 +61,7 @@ sub spawn_socket {
 				#SSL_ca_path => '/etc/ssl/certs', # CA path (Linux)
 				Proto    => 'tcp',
 				Timeout => $timeout,
-			) or die $!;
+			) or return $!;
 	
 			$socket->autoflush(1);
 			print $socket $header;
@@ -56,8 +73,11 @@ sub spawn_socket {
 
 			my @response = split "\n", $data;
 			
+			#dump headers/content
+			# print $data;
+			
 			if ($response[0] =~ m/200 OK/) {
-				return $response[12];
+				return $response[$#response];
 			}
 		}
 	);
@@ -66,12 +86,14 @@ sub spawn_socket {
 			print "[ ?] $t waiting...\n";
 			sleep select(undef, undef, undef, 0.10);
 	}
-	print "[OK] $t finished...\n";
+	
+	print "[ !] $t finished...\n";
 	return $t->join;
 
 }
 
 
-my $json = &spawn_socket();
+my ($status) = &spawn_socket();
 
-print $json ."\n";
+print $status ."\n";
+
