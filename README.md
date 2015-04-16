@@ -24,3 +24,8 @@ This is alpha software, features are missing and/or may not exist in the intial 
 * URI::Escape
 
 (these should be available on most linux distributions, it's likely they are already installed) 
+
+If you cannot find them in your distributions package repository, try installing missing modules with:
+```
+# perl -MCPAN -e 'install JSON'
+```
