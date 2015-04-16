@@ -15,7 +15,7 @@ use threads;
 use IO::Socket::Socks::Wrapper;
 use IO::Socket::SSL;
 
-my $host = "checkip.dyndns.com";
+my $host = "getstrike.net";
 my $port = 80;
 my $timeout = 5;
 
@@ -28,20 +28,14 @@ user-agent:Alluvion/0.1pre
 
 MSG
 
-$header = <<MSG;
-GET / HTTP/1.1
-host:checkip.dyndns.com
-accept: text/html
-user-agent:Alluvion/0.1pre
 
-MSG
 
 
 
 	IO::Socket::Socks::Wrapper->import( 
 		IO::Socket:: => {
-			ProxyAddr => '83.133.126.243',
-			ProxyPort =>  8080,
+			ProxyAddr => '127.0.0.1',
+			ProxyPort =>  9050,
 			SocksDebug => 1,
 			Timeout => 10
 		}
@@ -83,7 +77,7 @@ sub spawn_socket {
 	);
 
 	while ($t->is_running) {
-			print "[ ?] $t waiting...\n";
+			print "[ ?] ".$t->tid." waiting...\n";
 			sleep select(undef, undef, undef, 0.10);
 	}
 	
