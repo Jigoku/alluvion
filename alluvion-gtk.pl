@@ -35,7 +35,7 @@ use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
 
-use lib $Bin.'Alluvion';
+use lib $Bin.'/lib/';
 use Alluvion::Misc;
 
 die "[ -] Glib::Object thread safety failed"
@@ -70,12 +70,12 @@ my ($category_filter, $subcategory_filter) = ("","");
 main();
 
 sub main {
-	# check libglade xml exists
+	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
     $builder = Gtk2::Builder->new();
 
- 	# load glade XML
+ 	# load gtkbuilder interface
 	$builder->add_from_file( $xml );
 
 	# get top level objects
@@ -85,6 +85,7 @@ sub main {
 	
 	$builder->connect_signals( undef );
 
+	# start thread for statusbar display
 	set_index_total();
 
 	# draw the window
