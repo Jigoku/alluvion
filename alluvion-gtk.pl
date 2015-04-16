@@ -75,32 +75,25 @@ foreach my $arg (@ARGV) {
 
 
 
-# print mem usage
-if ($debug == 1) {
-	my $thread = threads->create({'void' => 1},
-		sub {
-			while (1) {
-				chomp( my $size = `grep VmSize /proc/$$/status`);
-				chomp( my $peak = `grep VmPeak /proc/$$/status`);
-				chomp( my $threads = `grep Threads /proc/$$/status`);
-				print "PID:\t".$$." | ".$size." | ".$peak." | ".$threads ."\n";
-				sleep 1;
-			}
-			
-		}
-	)->detach;
-}
 
 # sleeping thread, for some reason this stops segfaults at exit
 # and several random GLib-GObject-CRITICAL errors
 my $sleeper = threads->create({'void' => 1},
-		sub {
-			while (1) {
-				sleep 1;
+	sub {
+		while (1) {
+			if ($debug == 1) {
+				# print mem usage
+				chomp( my $size = `grep VmSize /proc/$$/status`);
+				chomp( my $peak = `grep VmPeak /proc/$$/status`);
+				chomp( my $threads = `grep Threads /proc/$$/status`);
+				print "PID:\t".$$." | ".$size." | ".$peak." | ".$threads ."\n";
 			}
-			
-		}
+			sleep 1;
+		}		
+	}
 )->detach;
+
+
 
 my ($category_filter, $subcategory_filter) = ("","");
 
