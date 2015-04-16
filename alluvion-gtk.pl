@@ -35,8 +35,10 @@ use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
 
+
 use lib $Bin.'/lib/';
 use Alluvion::Misc;
+
 
 die "[ -] Glib::Object thread safety failed"
         unless Glib::Object->set_threadsafe (TRUE);
@@ -65,6 +67,23 @@ my (
 	@threads,
 );
 
+
+# print mem usage
+if ($debug == 1) {
+	my $thread = threads->create({'void' => 1},
+		sub {
+			while (1) {
+				print qx{ grep VmSize /proc/$$/status };
+				sleep 1;
+			}
+			
+		}
+	)->detach;
+}
+
+
+
+
 my ($category_filter, $subcategory_filter) = ("","");
 
 main();
@@ -92,9 +111,11 @@ sub main {
 	$window->show();
 
 	# main loop
-	Gtk2->main_iteration while Gtk2->events_pending;
+	#Gtk2->main_iteration while Gtk2->events_pending;
 	Gtk2->main(); gtk_main_quit();
 }
+
+
 
 sub set_index_total {
 	
@@ -510,6 +531,10 @@ sub spawn_error {
 sub debug($) {
 		if ($debug == 1) { print shift };
 }
+
+
+
+
 
 sub gtk_main_quit {
 	
