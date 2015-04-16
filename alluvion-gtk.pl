@@ -122,9 +122,15 @@ sub main {
 
 sub set_index_total {
 	
-	my $label = $builder->get_object( 'label_indexed_total' );
-
-	if (!($ua->is_online)) { $label->set_markup("No Connection."); return; }
+	my $index_total = $builder->get_object( 'label_indexed_total' );
+	my $pending = $builder->get_object( 'label_pending' );
+	my $spinner = $builder->get_object( 'spinner' );
+	$pending->set_text("Updating index total...");
+	
+	if (!($ua->is_online)) { $index_total->set_markup("No Connection."); return; }
+	
+	$spinner->set_visible(1);
+	$spinner->start;
 	
 	my $thread = threads->create({'void' => 1},
 		sub {
@@ -138,7 +144,7 @@ sub set_index_total {
 		
 				for ($data) {
 					Gtk2::Gdk::Threads->enter();
-					$label->set_markup("".Alluvion::Misc::commify($_->{message}) . " indexed torrents");
+					$index_total->set_markup("".Alluvion::Misc::commify($_->{message}) . " indexed torrents");
 					Gtk2::Gdk::Threads->leave();	
 				}
 			} else {
@@ -161,6 +167,9 @@ sub set_index_total {
 	$thread->join;
 	debug( "[ !] set_index_total() thread #" .$tid ." finished\n");
 	
+	$spinner->set_visible(0);
+	$spinner->stop;
+	$pending->set_text("");
 	splice_thread($thread);
 }
 
@@ -218,7 +227,8 @@ sub on_button_query_clicked {
 	my $query = $builder->get_object( 'entry_query' )->get_text;
 	my $button = $builder->get_object( 'button_query' );
 	my $spinner = $builder->get_object( 'spinner' );
-
+	my $pending = $builder->get_object( 'label_pending' );
+	
 	# get top level container ready for packing results
 	my $vbox = $builder->get_object('vbox_query_results');
 	
@@ -229,7 +239,7 @@ sub on_button_query_clicked {
 	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
 	
 	
-	
+	$pending->set_text("Working...");
 	$button->set_sensitive(0);
 	$spinner->start;
 	$spinner->set_visible(1);
@@ -268,7 +278,8 @@ sub on_button_query_clicked {
 	while ($thread->is_running) {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
-
+	
+	$pending->set_text("");
 	$button->set_sensitive(1);
 	$spinner->set_visible(0);
 	$spinner->stop;
