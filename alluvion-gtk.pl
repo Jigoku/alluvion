@@ -165,7 +165,7 @@ sub json_request($) {
 			debug("[ !] thread #". threads->self->tid ." started\n");
 			
 			# check if we have a connection to network
-			if (!($ua->is_online)) {  return "2"; }
+			if (!($ua->is_online)) {  return 2; }
 	
 			my $response = $ua->get($api_uri);
 
@@ -209,53 +209,26 @@ sub json_request($) {
 sub set_index_total {
 	
 	my $index_total = $builder->get_object( 'label_indexed_total' );
-	my $pending = $builder->get_object( 'label_pending' );
 	my $spinner = $builder->get_object( 'spinner' );
-	$pending->set_text("Updating index total...");
-	
-	if (!($ua->is_online)) { $index_total->set_markup("No Connection."); return; }
 	
 	$spinner->set_visible(1);
 	$spinner->start;
+	$index_total->set_text("Updating index total...");
 	
-	my $thread = threads->create({'void' => 1},
-		sub {
-			debug("[ !] set_index_total() thread #". threads->self->tid ." started\n");
-
-			my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
-
-			if ($response->is_success) {
-				my $json =  JSON->new;
-				my $data = $json->decode($response->decoded_content);
+	my $data = json_request("https://getstrike.net/api/v2/torrents/count/");
 		
-				for ($data) {
-					Gtk2::Gdk::Threads->enter();
-					$index_total->set_markup("".Alluvion::commify($_->{message}) . " indexed torrents");
-					Gtk2::Gdk::Threads->leave();	
-				}
-			} else {
-				Gtk2::Gdk::Threads->enter();
-				spawn_dialog("error", "close", "Error", "Could not set index total");
-				Gtk2::Gdk::Threads->leave();
-
-			}
-		}
-	);
-	
-	push (@threads, $thread);
-	my $tid = $thread->tid;
-	
-	while ($thread->is_running) {
-		Gtk2->main_iteration while (Gtk2->events_pending);
+	if ($data eq "error") { 
+		spawn_dialog("error", "close", "Error", "Could not set index total\n"); 
+		$index_total->set_text("Could not set index total!");
+		return; 
 	}
 	
-	$thread->join;
-	debug( "[ !] set_index_total() thread #" .$tid ." finished\n");
+	for ($data) {
+		$index_total->set_markup("".Alluvion::commify($_->{message}) . " indexed torrents");
+	}
 	
 	$spinner->set_visible(0);
 	$spinner->stop;
-	$pending->set_text("");
-	splice_thread($thread);
 }
 
 sub on_button_hash_clicked {
