@@ -1,6 +1,9 @@
 # Alluvion
 Unofficial Perl/Gtk2 frontend for [strike API](https://getstrike.net/api/)
 
+## Releases
+[v0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
+
 ## Features
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
 * search for torrents
@@ -12,10 +15,8 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 ## Preview
 ![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
-## Releases
-[0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
-
-## Modules required
+## Additional Information
+Modules required
 * Gtk2
 * JSON
 * LWP::UserAgent
@@ -27,3 +28,6 @@ If you cannot find them in your distributions package repository, try installing
 ```
 # perl -MCPAN -e 'install JSON'
 ```
+
+## DISCLAIMER
+The author does NOT endorse distribution of copyrighted works.
