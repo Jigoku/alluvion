@@ -1,7 +1,5 @@
 Alluvion is a torrent search utility giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the [strike API](https://getstrike.net/api/) to return results based on your keywords. 
 
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
-
 ## Features
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
 * search for torrents
@@ -9,6 +7,8 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 * download *.torrent file
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
+
+![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
 ##Obtain development branch
 ```
