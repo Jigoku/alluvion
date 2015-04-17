@@ -68,9 +68,19 @@ my $ua = LWP::UserAgent->new;
 
 
 # command line arguments
+my $helpmsg = (
+"Alluvion ".$VERSION." https://jigoku.github.io/alluvion/\n".
+"Copyright (C) 2015, Ricky K. Thomson\n\n".
+"Usage: ".$0." [-d|-h|-v]\n\n".
+"Options:\t-d | --debug\t\t print verbose information\n".
+"\t\t-h | --help\t\t show help\n".
+"\t\t-v | --version\t\t show version\n"
+);
+
 foreach my $arg (@ARGV) {
 		if ($arg =~ m/^(--debug|-d)$/) { print $ua->agent ."\n"; $debug = 1; }
-		if ($arg =~ m/^(--version|-v)$/) { print $ua->agent ."\n"; exit(0); }
+		if ($arg =~ m/^(--version|-v)$/) { print $VERSION."\n"; exit(0); }
+		if ($arg =~ m/^(--help|-h)$/) { print $helpmsg; exit(0); }
 }
 
 
