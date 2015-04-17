@@ -116,12 +116,12 @@ sub main {
 	
 	$builder->connect_signals( undef );
 
-	# start thread for statusbar display
-	set_index_total();
-
 	# draw the window
 	$window->show();
-
+	
+	# start thread for statusbar display
+	set_index_total();
+	
 	# main loop
 	#Gtk2->main_iteration while Gtk2->events_pending;
 	Gtk2->main(); gtk_main_quit();
