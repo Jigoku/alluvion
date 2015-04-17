@@ -54,7 +54,7 @@ my $VERSION = "0.1";
 my $ua = LWP::UserAgent->new;
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
-	$ua->agent("Alluvion/".$VERSION." https://github.com/Jigoku/alluvion");
+	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
 	$ua->timeout(3);
 
 my $data = $Bin . "/data/";
