@@ -40,7 +40,7 @@ use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
 
 
-use lib $Bin.'/lib/';
+use lib $Bin . "/lib/";
 use Alluvion;
 
 
