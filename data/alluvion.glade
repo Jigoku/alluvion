@@ -12,7 +12,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="transient_for">window</property>
     <property name="program_name">Alluvion</property>
-    <property name="version">0.1</property>
+    <property name="version">0.2pre</property>
     <property name="copyright" translatable="yes">Copyright (C) Ricky K. Thomson 2015</property>
     <property name="website">https://jigoku.github.io/alluvion/</property>
     <property name="license" translatable="yes">Copyright (C) 2015 Ricky K. Thomson

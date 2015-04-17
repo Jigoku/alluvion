@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.1
+# Alluvion 0.2pre
 # Perl/Gtk2 torrent search utility (strike API)
 #
 # Usage:
@@ -49,7 +49,7 @@ die "[ -] Glib::Object thread safety failed"
         
 $|++;
 
-my $VERSION = "0.1";
+my $VERSION = "0.2pre";
 
 my $ua = LWP::UserAgent->new;
 	# provide user agent 
