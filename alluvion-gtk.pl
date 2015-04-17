@@ -66,6 +66,8 @@ my $ua = LWP::UserAgent->new;
 	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
 	$ua->timeout(3);
 	$ua->protocols_allowed( [ 'https', 'http' ] );
+	
+
 
 # command line arguments
 my $helpmsg = (
@@ -78,7 +80,7 @@ my $helpmsg = (
 );
 
 foreach my $arg (@ARGV) {
-		if ($arg =~ m/^(--debug|-d)$/) { print $ua->agent ."\n"; $debug = 1; }
+		if ($arg =~ m/^(--debug|-d)$/) { print $ua->agent ."\n" . ("-"x50) ."\n"; $debug = 1; }
 		if ($arg =~ m/^(--version|-v)$/) { print $VERSION."\n"; exit(0); }
 		if ($arg =~ m/^(--help|-h)$/) { print $helpmsg; exit(0); }
 }
@@ -96,7 +98,7 @@ my $sleeper = threads->create({'void' => 1},
 				chomp( my $size = `grep VmSize /proc/$$/status`);
 				chomp( my $peak = `grep VmPeak /proc/$$/status`);
 				chomp( my $threads = `grep Threads /proc/$$/status`);
-				print "PID:\t".$$." | ".$size." | ".$peak." | ".$threads ."\n";
+				print "[ &] PID:\t".$$." | ".$size." | ".$peak." | ".$threads ."\n";
 			}
 			sleep 1;
 		}		
@@ -112,6 +114,18 @@ main();
 sub main {
 	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
+
+	my $proxy;# = 1;
+	# proxy settings
+	if ($proxy) {
+		my $proxy_addr = "";
+		my $proxy_port = "";
+		$ua->proxy(['http', 'https'], "http://".$proxy_addr.":".$proxy_port."/");
+		my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
+		if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { debug("[ *] proxy connection established (" . $1 . ":".$proxy_port.")\n");  }
+
+	}	
+
 
     $builder = Gtk2::Builder->new();
 
@@ -147,8 +161,9 @@ sub json_request($) {
 	my $thread = threads->create(
 		sub {
 			debug("[ !] thread #". threads->self->tid ." started\n");
-			my $response = $ua->get($api_uri);
 			
+			my $response = $ua->get($api_uri);
+
 			if ($response->is_success) {
 				# the json text as a string
 				return $response->decoded_content;
