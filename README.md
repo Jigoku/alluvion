@@ -1,7 +1,4 @@
-# About Alluvion
 Alluvion is a torrent search utility giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the [strike API](https://getstrike.net/api/) to return results based on your keywords. 
-
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
 ## Features
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
@@ -11,16 +8,12 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
 
-## Downloads
+![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
-Stable releases
-* [v0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
-
-Obtain development branch
+##Obtain development branch
 ```
 $ git clone https://github.com/Jigoku/alluvion.git
 ```
-
 
 ## Running Alluvion
 Alluvion can be started by simply running the main script:
@@ -47,7 +40,7 @@ If you cannot find them in your distributions package repository, try installing
 # perl -MCPAN -e 'install JSON'
 ```
 
-### Why "Alluvion" ?
+## Why Alluvion?
 An Alluvion is "The flow of water against a shore or bank.", hence a torrent is "A stream of water which rapidly flows".
 
 Alluvion brings the torrents directly to you.
