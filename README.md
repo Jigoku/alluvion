@@ -1,8 +1,7 @@
-# Alluvion
-Unofficial Perl/Gtk2 frontend for [strike API](https://getstrike.net/api/)
+# About
+Alluvion is a torrent search utility giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the [strike API](https://getstrike.net/api/) to return results based on your keywords. 
 
-## Releases
-[v0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
+![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
 
 ## Features
 Allows you to lookup and search torrent information indexed by http://getstrike.net/
@@ -12,11 +11,22 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
 
-## Preview
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png)
+## Downloads
+[v0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
 
-## Additional Information
-Modules required
+## Running Alluvion
+Alluvion can be started by simply running the main script:
+```
+$ ./alluvion-gtk.pl
+```
+
+Available command line options:
+```
+ --debug (shows verbose information)
+ --version (prints the version and exits)
+```
+
+Perl modules required:
 * Gtk2
 * JSON
 * LWP::UserAgent
