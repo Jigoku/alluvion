@@ -65,7 +65,7 @@ my $ua = LWP::UserAgent->new;
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
 	$ua->timeout(3);
-	$ua->protocols_allowed( [ 'https'] );
+	$ua->protocols_allowed( [ 'https', 'http' ] );
 
 # command line arguments
 my $helpmsg = (
