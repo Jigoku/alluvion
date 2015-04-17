@@ -157,11 +157,10 @@ sub set_index_total {
 					Gtk2::Gdk::Threads->leave();	
 				}
 			} else {
-				#if ($response->status_line =~ m/404 Not Found/) {
 				Gtk2::Gdk::Threads->enter();
-					spawn_error("Error", "Could not set index total");
+				spawn_error("Error", "Could not set index total");
 				Gtk2::Gdk::Threads->leave();
-				#}
+
 			}
 		}
 	);
@@ -184,41 +183,79 @@ sub set_index_total {
 
 sub on_button_hash_clicked {
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
-
+	my $pending = $builder->get_object( 'label_pending' );
+	my $spinner = $builder->get_object( 'spinner' );
+	my $button = $builder->get_object( 'button_hash' );
+	
 	# check for valid info hash before doing anything
 	if ((length($hash) != 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
 		spawn_error("Error", "Invalid info hash");
 		return;
 	}
 	
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n $!"); return; }
+	$button->set_sensitive(0);
+	$pending->set_text("Working...");
+	$spinner->set_visible(1);
+	$spinner->start;
 	
-	my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
+	my $thread = threads->create(
+		sub {
+			debug("[ !] on_button_hash_clicked thread #". threads->self->tid ." started\n");
+			
+			if (!($ua->is_online)) { spawn_error("Error", "No network connection\n $!"); return; }
+	
+			my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 		
-	if ($response->is_success) {
-		#parse json api result
-		my $json =  JSON->new;
-		my $data = $json->decode($response->decoded_content);
+			if ($response->is_success) {
+				return $response->decoded_content;
+			} else {
+				if ($response->status_line =~ m/404 Not Found/) {
+					Gtk2::Gdk::Threads->enter();
+					spawn_error("Error", "Info hash not found\n". $!);
+					Gtk2::Gdk::Threads->leave();
+				} else {
+					Gtk2::Gdk::Threads->enter();
+					spawn_error("Error", "Unknown error\n". $!);
+					Gtk2::Gdk::Threads->leave();
+				}
+				
+			}
+		}
+	);
 
-		# apply data to labels
-		for (@{$data->{torrents}}) {
-			$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
-			$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
-			$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
-			$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
-			$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
-			$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
-			$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-			$builder->get_object( 'label_size' )->set_text(Alluvion::commify(Alluvion::bytes2mb(($_->{size})))."MB");
-			$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
-			$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
-			$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
-		}
+	push (@threads, $thread);
+	my $tid = $thread->tid;
 	
-	} else {
-		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Info hash not found\n". $!);
-		}
+
+	while ($thread->is_running) {
+		Gtk2->main_iteration while (Gtk2->events_pending);
+	}
+	
+	$button->set_sensitive(1);
+	$pending->set_text("");
+	$spinner->set_visible(0);
+	$spinner->stop;
+			
+	#parse json api result
+	my $json =  JSON->new;
+	my $data = $json->decode($thread->join);
+	
+	debug( "[ !] on_button_hash_clicked() thread #" .$tid ." finished\n");
+	splice_thread($thread);
+	
+	# apply data to labels
+	for (@{$data->{torrents}}) {
+		$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
+		$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
+		$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
+		$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
+		$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
+		$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
+		$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
+		$builder->get_object( 'label_size' )->set_text(Alluvion::commify(Alluvion::bytes2mb(($_->{size})))."MB");
+		$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
+		$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
+		$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
 	}
 	
 }
@@ -245,15 +282,14 @@ sub on_button_query_clicked {
 	# remove previous results
 	destroy_children($vbox);
 	
+	# must be at least 4 characters for API
+	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
+	
 	# setup progress spinner for vbox
 	$vbox->pack_start($vbox_spinner, 1, 1, 175);
 	$vbox_spinner->start;
 	$vbox_spinner->set_visible(1);
 	$vbox->show_all;
-	
-	# must be at least 4 characters for API
-	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
-	
 	
 	$pending->set_text("Working...");
 	$button->set_sensitive(0);
