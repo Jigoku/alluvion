@@ -11,16 +11,10 @@ Allows you to lookup and search torrent information indexed by http://getstrike.
 * copy info hash to clipboard
 * launch magnet with torrent client (via `xdg-open')
 
-## Downloads
-
-Stable releases
-* [v0.1](https://github.com/Jigoku/alluvion/releases/tag/0.1)
-
-Obtain development branch
+##Obtain development branch
 ```
 $ git clone https://github.com/Jigoku/alluvion.git
 ```
-
 
 ## Running Alluvion
 Alluvion can be started by simply running the main script:
