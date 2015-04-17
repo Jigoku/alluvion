@@ -128,7 +128,45 @@ sub main {
 	Gtk2->main(); gtk_main_quit();
 }
 
+sub json_request {
+	my $api_uri = shift;
+	
+	if (!($ua->is_online)) {  return "error"; }
+	
+	my $thread = threads->create(
+		sub {
+			debug("[ !] thread #". threads->self->tid ." started\n");
+			my $response = $ua->get($api_uri);
+			
+			if ($response->is_success) {
+				return $response->decoded_content;
+			} else {
+				return 2;
+			}
+		}
+	);
+		
+	push (@threads, $thread);
+	my $tid = $thread->tid;
+	
+	while ($thread->is_running) {
+		Gtk2->main_iteration while (Gtk2->events_pending);
+	}
+	
+	my $data = $thread->join;
 
+	if ($data eq 2) {
+		return "error";
+	}
+	
+	debug( "[ !] thread #" .$tid ." finished\n");
+	splice_thread($thread);
+	
+	# json api result
+	my $json = JSON->new;
+	return $json->decode($data);
+
+}
 
 sub set_index_total {
 	
@@ -199,50 +237,16 @@ sub on_button_hash_clicked {
 	$spinner->set_visible(1);
 	$spinner->start;
 	
-	my $thread = threads->create(
-		sub {
-			debug("[ !] on_button_hash_clicked thread #". threads->self->tid ." started\n");
-			
-			if (!($ua->is_online)) { spawn_dialog("error", "close", "Error", "No network connection\n $!"); return; }
+	my $data = json_request("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 	
-			my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
-		
-			if ($response->is_success) {
-				return $response->decoded_content;
-			} else {
-				if ($response->status_line =~ m/404 Not Found/) {
-					Gtk2::Gdk::Threads->enter();
-					spawn_dialog("error", "close", "Error", "Info hash not found\n". $!);
-					Gtk2::Gdk::Threads->leave();
-				} else {
-					Gtk2::Gdk::Threads->enter();
-					spawn_dialog("error", "close", "Error", "Unknown error\n". $!);
-					Gtk2::Gdk::Threads->leave();
-				}
-				
-			}
-		}
-	);
-
-	push (@threads, $thread);
-	my $tid = $thread->tid;
-	
-
-	while ($thread->is_running) {
-		Gtk2->main_iteration while (Gtk2->events_pending);
-	}
+	if ($data eq "error") { spawn_dialog("error", "close", "Error", "Failed to find info hash\n");}
 	
 	$button->set_sensitive(1);
 	$pending->set_text("");
 	$spinner->set_visible(0);
 	$spinner->stop;
 			
-	#parse json api result
-	my $json =  JSON->new;
-	my $data = $json->decode($thread->join);
-	
-	debug( "[ !] on_button_hash_clicked() thread #" .$tid ." finished\n");
-	splice_thread($thread);
+
 	
 	# apply data to labels
 	for (@{$data->{torrents}}) {
