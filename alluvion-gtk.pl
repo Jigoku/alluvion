@@ -64,7 +64,7 @@ my $ua = LWP::UserAgent->new;
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
-	$ua->timeout(3);
+	$ua->timeout(10);
 	$ua->protocols_allowed( [ 'https', 'http' ] );
 	
 
@@ -84,6 +84,7 @@ foreach my $arg (@ARGV) {
 		if ($arg =~ m/^(--version|-v)$/) { print $VERSION."\n"; exit(0); }
 		if ($arg =~ m/^(--help|-h)$/) { print $helpmsg; exit(0); }
 }
+
 
 
 # sleeping thread, for some reason this stops segfaults at exit
@@ -115,17 +116,6 @@ sub main {
 	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
-	my $proxy;# = 1;
-	# proxy settings
-	if ($proxy) {
-		my $proxy_addr = "";
-		my $proxy_port = "";
-		$ua->proxy(['http', 'https'], "http://".$proxy_addr.":".$proxy_port."/");
-		my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
-		if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { debug("[ *] proxy connection established (" . $1 . ":".$proxy_port.")\n");  }
-
-	}	
-
 
     $builder = Gtk2::Builder->new();
 
@@ -142,6 +132,21 @@ sub main {
 	# draw the window
 	$window->show();
 	
+	
+	my $proxy; # =1;
+	# supports only http/https proxies
+	my $proxy_addr = "";
+	my $proxy_port = "";
+	
+		# proxy settings
+		if ($proxy) {
+			$ua->proxy([ 'http', 'https' ], "http://".$proxy_addr.":".$proxy_port);
+			my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
+			if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
+				debug("[ *] proxy connection established (" . $1 . ":".$proxy_port.")\n");  
+			}
+		}	
+	
 	# start thread for statusbar display
 	set_index_total();
 	
@@ -154,14 +159,14 @@ sub json_request($) {
 	# api uri twhich should contain json output
 	my $api_uri = shift;
 	
-	# check if we have a connection to network
-	if (!($ua->is_online)) {  return "error"; }
-	
 	# start a new thread
 	my $thread = threads->create(
 		sub {
 			debug("[ !] thread #". threads->self->tid ." started\n");
 			
+			# check if we have a connection to network
+			if (!($ua->is_online)) {  return "2"; }
+	
 			my $response = $ua->get($api_uri);
 
 			if ($response->is_success) {
@@ -216,9 +221,9 @@ sub set_index_total {
 	my $thread = threads->create({'void' => 1},
 		sub {
 			debug("[ !] set_index_total() thread #". threads->self->tid ." started\n");
-			
+
 			my $response = $ua->get("https://getstrike.net/api/v2/torrents/count/");
-			
+
 			if ($response->is_success) {
 				my $json =  JSON->new;
 				my $data = $json->decode($response->decoded_content);
