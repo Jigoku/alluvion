@@ -153,14 +153,14 @@ sub json_request {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
 	
+	debug( "[ !] thread #" .$tid ." finished\n");
+	splice_thread($thread);
+	
 	my $data = $thread->join;
 
 	if ($data eq 2) {
 		return "error";
 	}
-	
-	debug( "[ !] thread #" .$tid ." finished\n");
-	splice_thread($thread);
 	
 	# json api result
 	my $json = JSON->new;
@@ -239,15 +239,15 @@ sub on_button_hash_clicked {
 	
 	my $data = json_request("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 	
-	if ($data eq "error") { spawn_dialog("error", "close", "Error", "Failed to find info hash\n");}
-	
 	$button->set_sensitive(1);
 	$pending->set_text("");
 	$spinner->set_visible(0);
 	$spinner->stop;
-			
-
 	
+	if ($data eq "error") { spawn_dialog("error", "close", "Error", "Failed to find info hash\n"); return; }
+	
+
+			
 	# apply data to labels
 	for (@{$data->{torrents}}) {
 		$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
@@ -301,54 +301,22 @@ sub on_button_query_clicked {
 	$spinner->start;
 	$spinner->set_visible(1);
 		
-	my $thread = threads->create(
-		sub {
-			debug("[ !] on_button_query_clicked() thread #". threads->self->tid ." started\n");
-			# check for connection
-			if (!($ua->is_online)) { spawn_dialog("error", "close", "Error", "No network connection\n".$!); return; }
-
-			# send request
-			my $response = $ua->get(
-				"https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter
-			);
-
-			if ($response->is_success) {
-				return $response->decoded_content;
-				
-			} else {
-				Gtk2::Gdk::Threads->enter();
-				$vbox_spinner->destroy;
-				my $label = Gtk2::Label->new;
-				$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
-				$vbox->pack_start($label, 0, 0, 5);
-				$vbox->show_all;
-				Gtk2::Gdk::Threads->leave();
-				return $response->decoded_content;
-			}
-	
-		}
-	);
-	
-	push (@threads, $thread);
-	my $tid = $thread->tid;
-	
-
-	while ($thread->is_running) {
-		Gtk2->main_iteration while (Gtk2->events_pending);
-	}
-	
+	my $data = json_request("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
+		
 	$pending->set_text("");
 	$button->set_sensitive(1);
 	$spinner->set_visible(0);
 	$spinner->stop;
 	$vbox_spinner->destroy;
-	
-	my $json =  JSON->new;
-	# should check if it is json data before trying to parse...
-	my $data = $json->decode($thread->join);
-
-	debug( "[ !] on_button_query_clicked() thread #" .$tid ." finished\n");
-	splice_thread($thread);
+		
+	if ($data eq "error") { 
+		$vbox_spinner->destroy;
+		my $label = Gtk2::Label->new;
+		$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
+		$vbox->pack_start($label, 0, 0, 5);
+		$vbox->show_all;	
+		return;	
+	}
 
 	for ($data) { 
 		my $label = Gtk2::Label->new;
