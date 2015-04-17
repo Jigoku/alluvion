@@ -27,6 +27,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+my $VERSION = "0.2pre";
 
 use strict;
 use warnings;
@@ -38,31 +39,15 @@ use LWP::UserAgent;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
-
-
 use lib $Bin . "/lib/";
 use Alluvion;
-
-
-die "[ -] Glib::Object thread safety failed"
-        unless Glib::Object->set_threadsafe (TRUE);
-        
 $|++;
-
-my $VERSION = "0.2pre";
-
-my $ua = LWP::UserAgent->new;
-	# provide user agent 
-	# (cloudflare blocks libwww-perl/*.*)
-	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
-	$ua->timeout(3);
 
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
 my $debug = 0;
 
 my (
-
 	$builder, 
 	$window,
 	$preferences,
@@ -70,6 +55,17 @@ my (
 	$filechooser_get,
 	@threads,
 );
+
+die "[ -] Glib::Object thread safety failed"
+        unless Glib::Object->set_threadsafe (TRUE);
+        
+
+my $ua = LWP::UserAgent->new;
+	# provide user agent 
+	# (cloudflare blocks libwww-perl/*.*)
+	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
+	$ua->timeout(3);
+
 
 # command line arguments
 foreach my $arg (@ARGV) {
@@ -79,7 +75,9 @@ foreach my $arg (@ARGV) {
 
 
 # sleeping thread, for some reason this stops segfaults at exit
-# and several random GLib-GObject-CRITICAL errors
+# and several random GLib-GObject-CRITICAL errors, as long as a thread
+# is started befor eth interface is visible, this seems to work.
+# -- useful for showing momentary debug output too.
 my $sleeper = threads->create({'void' => 1},
 	sub {
 		while (1) {
@@ -128,32 +126,42 @@ sub main {
 	Gtk2->main(); gtk_main_quit();
 }
 
-sub json_request {
+sub json_request($) {
+	# api uri twhich should contain json output
 	my $api_uri = shift;
 	
+	# check if we have a connection to network
 	if (!($ua->is_online)) {  return "error"; }
 	
+	# start a new thread
 	my $thread = threads->create(
 		sub {
 			debug("[ !] thread #". threads->self->tid ." started\n");
 			my $response = $ua->get($api_uri);
 			
 			if ($response->is_success) {
+				# the json text as a string
 				return $response->decoded_content;
 			} else {
+				# error code
 				return 2;
 			}
 		}
 	);
 		
+	# track the thread
 	push (@threads, $thread);
 	my $tid = $thread->tid;
 	
+	# continue to  update the interface while thread is alive
 	while ($thread->is_running) {
 		Gtk2->main_iteration while (Gtk2->events_pending);
 	}
 	
+	# thread has finished
 	debug( "[ !] thread #" .$tid ." finished\n");
+	
+	# stop tracking the thread
 	splice_thread($thread);
 	
 	my $data = $thread->join;
@@ -162,7 +170,7 @@ sub json_request {
 		return "error";
 	}
 	
-	# json api result
+	# return api result as JSON object
 	my $json = JSON->new;
 	return $json->decode($data);
 
