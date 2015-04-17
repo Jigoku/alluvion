@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Alluvion : Perl/Gtk2 torrent search utility (strike API)">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Alluvion</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Jigoku/alluvion">View on GitHub</a>
+
+          <h1 id="project_title">Alluvion</h1>
+          <h2 id="project_tagline">Perl/Gtk2 torrent search utility (strike API)</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Jigoku/alluvion/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Jigoku/alluvion/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="about-alluvion" class="anchor" href="#about-alluvion" aria-hidden="true"><span class="octicon octicon-link"></span></a>About Alluvion</h1>
+
+<p>Alluvion is a torrent search utility giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the <a href="https://getstrike.net/api/">strike API</a> to return results based on your keywords. </p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png" alt="screenshot"></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<p>Allows you to lookup and search torrent information indexed by <a href="http://getstrike.net/">http://getstrike.net/</a></p>
+
+<ul>
+<li>search for torrents</li>
+<li>filter search queries by category</li>
+<li>download *.torrent file</li>
+<li>copy info hash to clipboard</li>
+<li>launch magnet with torrent client (via `xdg-open')</li>
+</ul>
+
+<h2>
+<a id="downloads" class="anchor" href="#downloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>Downloads</h2>
+
+<p>Stable releases</p>
+
+<ul>
+<li><a href="https://github.com/Jigoku/alluvion/releases/tag/0.1">v0.1</a></li>
+</ul>
+
+<p>Obtain development branch</p>
+
+<pre><code>$ git clone https://github.com/Jigoku/alluvion.git
+</code></pre>
+
+<h2>
+<a id="running-alluvion" class="anchor" href="#running-alluvion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Alluvion</h2>
+
+<p>Alluvion can be started by simply running the main script:</p>
+
+<pre><code>$ ./alluvion-gtk.pl
+</code></pre>
+
+<p>Available command line options:</p>
+
+<pre><code> --debug (shows verbose information)
+ --version (prints the version and exits)
+</code></pre>
+
+<p>Perl modules required:</p>
+
+<ul>
+<li>Gtk2</li>
+<li>JSON</li>
+<li>LWP::UserAgent</li>
+<li>URI::Escape</li>
+</ul>
+
+<p>(these should be available on most linux distributions, it's likely they are already installed) </p>
+
+<p>If you cannot find them in your distributions package repository, try installing missing modules like so:</p>
+
+<pre><code># perl -MCPAN -e 'install JSON'
+</code></pre>
+
+<h2>
+<a id="disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span class="octicon octicon-link"></span></a>DISCLAIMER</h2>
+
+<p>The author does NOT endorse distribution of copyrighted works.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Alluvion maintained by <a href="https://github.com/Jigoku">Jigoku</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
