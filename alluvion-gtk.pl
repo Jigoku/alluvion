@@ -158,7 +158,7 @@ sub set_index_total {
 				}
 			} else {
 				Gtk2::Gdk::Threads->enter();
-				spawn_error("Error", "Could not set index total");
+				spawn_dialog("error", "Error", "Could not set index total");
 				Gtk2::Gdk::Threads->leave();
 
 			}
@@ -189,7 +189,7 @@ sub on_button_hash_clicked {
 	
 	# check for valid info hash before doing anything
 	if ((length($hash) != 40) || ($hash =~ m/[^a-zA-Z0-9]/)) {
-		spawn_error("Error", "Invalid info hash");
+		spawn_dialog("error", "Error", "Invalid info hash");
 		return;
 	}
 	
@@ -202,7 +202,7 @@ sub on_button_hash_clicked {
 		sub {
 			debug("[ !] on_button_hash_clicked thread #". threads->self->tid ." started\n");
 			
-			if (!($ua->is_online)) { spawn_error("Error", "No network connection\n $!"); return; }
+			if (!($ua->is_online)) { spawn_dialog("error", "Error", "No network connection\n $!"); return; }
 	
 			my $response = $ua->get("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 		
@@ -211,11 +211,11 @@ sub on_button_hash_clicked {
 			} else {
 				if ($response->status_line =~ m/404 Not Found/) {
 					Gtk2::Gdk::Threads->enter();
-					spawn_error("Error", "Info hash not found\n". $!);
+					spawn_dialog("error", "Error", "Info hash not found\n". $!);
 					Gtk2::Gdk::Threads->leave();
 				} else {
 					Gtk2::Gdk::Threads->enter();
-					spawn_error("Error", "Unknown error\n". $!);
+					spawn_dialog("error", "Error", "Unknown error\n". $!);
 					Gtk2::Gdk::Threads->leave();
 				}
 				
@@ -283,7 +283,7 @@ sub on_button_query_clicked {
 	destroy_children($vbox);
 	
 	# must be at least 4 characters for API
-	if (length($query) < 4) { spawn_error("Error", "Query must be at least 4 characters\n"); return; }
+	if (length($query) < 4) { spawn_dialog("error", "Error", "Query must be at least 4 characters\n"); return; }
 	
 	# setup progress spinner for vbox
 	$vbox->pack_start($vbox_spinner, 1, 1, 175);
@@ -300,7 +300,7 @@ sub on_button_query_clicked {
 		sub {
 			debug("[ !] on_button_query_clicked() thread #". threads->self->tid ." started\n");
 			# check for connection
-			if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
+			if (!($ua->is_online)) { spawn_dialog("error", "Error", "No network connection\n".$!); return; }
 
 			# send request
 			my $response = $ua->get(
@@ -530,7 +530,7 @@ sub on_about_clicked {
 sub on_button_file_save_clicked {
 	$filechooser->hide;
 	
-	if (!($ua->is_online)) { spawn_error("Error", "No network connection\n".$!); return; }
+	if (!($ua->is_online)) { spawn_dialog("error", "Error", "No network connection\n".$!); return; }
 	
 	# could add threading here 
 	my $request = HTTP::Request->new( GET => $filechooser_get );
@@ -545,7 +545,7 @@ sub on_button_file_save_clicked {
 		
 	} else {
 		if ($response->status_line =~ m/404 Not Found/) {
-			spawn_error("Error", "Torrent not found\n".$!);
+			spawn_dialog("error", "Error", "Torrent not found\n".$!);
 		}
 	}
 }
@@ -601,13 +601,13 @@ sub apply_filefilter($$$) {
 }
 
 # create an error dialog
-sub spawn_error {
-	my ($title, $message) = @_;
+sub spawn_dialog {
+	my ($type, $title, $message) = @_;
 
 	 my $dialog = Gtk2::MessageDialog->new (
 		$window,
 		'destroy-with-parent',
-		'error',
+		$type,
 		'close',
 		$title
 	);
