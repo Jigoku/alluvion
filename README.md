@@ -47,5 +47,8 @@ If you cannot find them in your distributions package repository, try installing
 # perl -MCPAN -e 'install JSON'
 ```
 
+### Why "Alluvion" ?
+An Alluvion is "The flow of water against a shore or bank.", hence a torrent is a stream of water which rapidly flows. It just makes sense that Alluvion brings you the torrent.
+
 ## DISCLAIMER
 The author does NOT endorse distribution of copyrighted works.
