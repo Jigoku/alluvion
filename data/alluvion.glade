@@ -562,6 +562,7 @@ for making this possible.</property>
                         <property name="secondary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">True</property>
                         <property name="secondary_icon_sensitive">True</property>
+                        <signal name="activate" handler="on_button_query_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -748,6 +749,7 @@ for making this possible.</property>
                         <property name="secondary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">True</property>
                         <property name="secondary_icon_sensitive">True</property>
+                        <signal name="activate" handler="on_button_hash_clicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
