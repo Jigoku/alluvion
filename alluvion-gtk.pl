@@ -40,8 +40,7 @@ use LWP::UserAgent;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
-use lib $Bin . "/lib/";
-use Alluvion;
+
 $|++;
 
 # default paths
@@ -53,6 +52,7 @@ my $debug = 0;
 # default user settings
 my 	%settings = (
 	"timeout" 		 => "10",
+	"filesize_type"  => "",
 	"proxy_enabled"  => 0,
 	"proxy_addr"	 => "",
 	"proxy_port" 	 => "",
@@ -126,6 +126,7 @@ sub main {
 			# perl 5.10 experimental functions
 			given($_) {
 				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
+				when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
 				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
 				when (m/^proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"proxy_addr"} = $1; }
 				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
@@ -261,7 +262,7 @@ sub set_index_total {
 	}
 	
 	for ($data) {
-		$index_total->set_markup("".Alluvion::commify($_->{message}) . " indexed torrents");
+		$index_total->set_markup("".commify($_->{message}) . " indexed torrents");
 	}
 	
 	$spinner->set_visible(0);
@@ -305,7 +306,7 @@ sub on_button_hash_clicked {
 		$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
 		$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
 		$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-		$builder->get_object( 'label_size' )->set_text(Alluvion::commify(Alluvion::bytes2mb(($_->{size})))."MB");
+		$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
 		$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 		$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 		$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
@@ -385,7 +386,7 @@ sub on_button_query_clicked {
 			$vbox, #container to append
 			$n,	# number of item
 			$_->{torrent_title},
-			"Seeders: <span color='green'><b>". Alluvion::commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". Alluvion::commify($_->{leeches}) ."</b></span> | Size: <b>" . Alluvion::commify(Alluvion::bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
+			"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 			$_->{magnet_uri},
 			uc $_->{torrent_hash}
 		);	
@@ -460,7 +461,7 @@ sub add_separated_item($$$$$$) {
 		
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
-	$label_title->set_markup("<b><u>".Alluvion::convert_special_char($torrent_title) ."</u></b>");
+	$label_title->set_markup("<b><u>".convert_special_char($torrent_title) ."</u></b>");
 	$label_title->set_width_chars(65); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
@@ -475,7 +476,7 @@ sub add_separated_item($$$$$$) {
 	# magnet uri
 	my $button_magnet = Gtk2::Button->new_from_stock("gtk-execute");
 		#$button_magnet->set_label("open magnet");
-		$button_magnet->signal_connect('clicked', sub { Alluvion::xdgopen($magnet_uri); });
+		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
 		
 	my $tooltip_magnet = Gtk2::Tooltips->new;
 		$tooltip_magnet->set_tip( $button_magnet, "Open magnet with xdg-open\n(your preffered torrent client)" );
@@ -668,6 +669,34 @@ sub spawn_dialog {
 	$dialog->destroy;
 }
 
+
+sub convert_special_char {
+	# replaces any characters that complain
+	# about being set with set_markup
+	my $str = shift;
+	# use markup safe ampersands
+	$str =~ s/&/&amp;/g;
+	# some titles have html tags? remove them...
+	$str =~ s/<(\/|!)?[-.a-zA-Z0-9]*.*?>//g;
+	return $str
+}
+
+sub xdgopen($) {
+	system("xdg-open '". shift ."'");
+}
+
+sub bytes2mb($) {
+	my $bytes = shift;
+	return sprintf "%.0f",($bytes / (1024 * 1024));
+}
+
+# add commas to an integer
+sub commify($) {
+	local $_ = shift;
+	1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
+	return $_;
+}
+
 sub debug($) {
 		if ($debug == 1) { print shift };
 }
@@ -679,6 +708,7 @@ sub write_config($) {
 	open FILE, ">$file" or die "Could not open config: $!\n";
 	print FILE "# alluvion $VERSION - user settings\n";
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
+	print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
 	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
 	print FILE "proxy_addr=\"".$settings{"proxy_addr"}."\"\n";
 	print FILE "proxy_port=\"".$settings{"proxy_port"}."\"\n";
