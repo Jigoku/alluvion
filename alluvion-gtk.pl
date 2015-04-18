@@ -29,6 +29,7 @@
 
 my $VERSION = "0.2pre";
 
+use feature ":5.10";
 use strict;
 use warnings;
 use FindBin qw($Bin);
@@ -43,14 +44,27 @@ use lib $Bin . "/lib/";
 use Alluvion;
 $|++;
 
+# default paths
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
+my $conf = $ENV{ HOME } . "/.alluvion";
 my $debug = 0;
+
+# default user settings
+my 	%settings = (
+	"timeout" 		 => "10",
+	"proxy_enabled"  => 0,
+	"proxy_addr"	 => "",
+	"proxy_port" 	 => "",
+	"statusbar"      => 1
+);
+
 
 my (
 	$builder, 
 	$window,
 	$preferences,
+	$ua,
 	$filechooser,
 	$filechooser_get,
 	@threads,
@@ -58,16 +72,6 @@ my (
 
 die "[ -] Glib::Object thread safety failed"
         unless Glib::Object->set_threadsafe (TRUE);
-        
-
-my $ua = LWP::UserAgent->new;
-	# provide user agent 
-	# (cloudflare blocks libwww-perl/*.*)
-	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
-	$ua->timeout(10);
-	$ua->protocols_allowed( [ 'https', 'http' ] );
-	
-
 
 # command line arguments
 my $helpmsg = (
@@ -80,7 +84,7 @@ my $helpmsg = (
 );
 
 foreach my $arg (@ARGV) {
-		if ($arg =~ m/^(--debug|-d)$/) { print $ua->agent ."\n" . ("-"x50) ."\n"; $debug = 1; }
+		if ($arg =~ m/^(--debug|-d)$/) { print "Alluvion ". $VERSION ."\n" . ("-"x50) ."\n"; $debug = 1; }
 		if ($arg =~ m/^(--version|-v)$/) { print $VERSION."\n"; exit(0); }
 		if ($arg =~ m/^(--help|-h)$/) { print $helpmsg; exit(0); }
 }
@@ -113,6 +117,34 @@ my ($category_filter, $subcategory_filter) = ("","");
 main();
 
 sub main {
+	
+	# read ~/.alluvion config
+	if (-e $conf) {
+		open FILE, "<$conf" or die "[ -] Could not read config: $!\n";
+		for (<FILE>) {
+			no warnings;
+			# perl 5.10 experimental functions
+			given($_) {
+				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
+				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
+				when (m/^proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"proxy_addr"} = $1; }
+				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
+				when (m/^statusbar=\"(.+)\"/) { $settings{"statusbar"} = $1; }
+			}
+		}
+	}
+	
+	$ua = LWP::UserAgent->new;
+	
+	# provide user agent 
+	# (cloudflare blocks libwww-perl/*.*)
+	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
+	$ua->protocols_allowed( [ 'https', 'http' ] );
+	
+	# request timeout
+	$ua->timeout(10);
+	
+	
 	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
@@ -129,23 +161,28 @@ sub main {
 	
 	$builder->connect_signals( undef );
 
+	# adjust user settings for interface
+	$builder->get_object( 'view_statusbar' )->set_active($settings{"statusbar"});
+
 	# draw the window
 	$window->show();
 	
 	
-	my $proxy; # =1;
-	# supports only http/https proxies
-	my $proxy_addr = "";
-	my $proxy_port = "";
-	
-		# proxy settings
-		if ($proxy) {
-			$ua->proxy([ 'http', 'https' ], "http://".$proxy_addr.":".$proxy_port);
-			my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
-			if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
-				debug("[ *] proxy connection established (" . $1 . ":".$proxy_port.")\n");  
+	# proxy settings
+	if ($settings{"proxy_enabled"} eq 1) {
+		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+		
+		# make sure we are routed correctly
+		my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
+		
+		if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
+			if ($1 eq $ip) {
+				debug("[ *] proxy connection established (" . $1 . ":".$settings{"proxy_port"}.")\n");  
+			} else {
+				warn "tried to use proxy, but endpoint seems to be different...\n";
 			}
-		}	
+		}
+	}	
 	
 	# start thread for statusbar display
 	set_index_total();
@@ -595,8 +632,10 @@ sub on_view_statusbar_toggled {
 	
 	if ($check->get_active == TRUE) {
 		$statusbar->set_visible(TRUE);
+		$settings{"statusbar"} = 1;
 	} else {
 		$statusbar->set_visible(FALSE);
+		$settings{"statusbar"} = 0;
 	}
 }
 
@@ -634,8 +673,22 @@ sub debug($) {
 }
 
 
-sub gtk_main_quit {
+sub write_config($) {
+	# write the changed settings to ~/.alluvion config
+	my $file = shift;
+	open FILE, ">$file" or die "Could not open config: $!\n";
+	print FILE "# alluvion $VERSION - user settings\n";
+	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
+	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
+	print FILE "proxy_addr=\"".$settings{"proxy_addr"}."\"\n";
+	print FILE "proxy_port=\"".$settings{"proxy_port"}."\"\n";
+	print FILE "statusbar=\"".$settings{"statusbar"}."\"\n";
+	close FILE;
+}
 
+			
+sub gtk_main_quit {
+	
 	for (@threads) {
 		#show any threads that are still alive
 		debug( $_."\n");
@@ -643,6 +696,7 @@ sub gtk_main_quit {
 	
 	$_->detach for threads->list;
 
+	write_config($conf);	
 	
 	Gtk2->main_quit();
 	exit(0);
