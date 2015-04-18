@@ -193,6 +193,49 @@ sub main {
 	Gtk2->main(); gtk_main_quit();
 }
 
+sub file_request($) {
+	# file to fetch
+	my $file_uri = shift;
+	
+	# start a new thread
+	my $thread = threads->create(
+		sub {
+			debug("[ !] thread #". threads->self->tid ." started\n");
+			
+			# check if we have a connection to network
+			if (!($ua->is_online)) {  return 2; }
+			
+			my $request = HTTP::Request->new( GET => $file_uri );
+			my $response = $ua->request($request);
+
+			if ($response->is_success) {
+				return $response->content;
+			
+			} else {
+					return 2;
+			}
+		}
+	);
+		
+	# track the thread
+	push (@threads, $thread);
+	my $tid = $thread->tid;
+	
+	# continue to  update the interface while thread is alive
+	while ($thread->is_running) {
+		Gtk2->main_iteration while (Gtk2->events_pending);
+	}
+	
+	# thread has finished
+	debug( "[ !] thread #" .$tid ." finished\n");
+	
+	# stop tracking the thread
+	splice_thread($thread);
+	
+	return $thread->join;
+}
+	
+	
 sub json_request($) {
 	# api uri twhich should contain json output
 	my $api_uri = shift;
@@ -551,52 +594,22 @@ sub on_about_clicked {
 
 sub on_button_file_save_clicked {
 	$filechooser->hide;
+	
 	# save the torrent to disk
-	my $thread = threads->create(
-		sub {
-			debug("[ !] on_button_file_save_clicked() thread #". threads->self->tid ." started\n");
-				if (!($ua->is_online)) { spawn_dialog("error", "close", "Error", "No network connection\n".$!); return; }
-	
-			my $request = HTTP::Request->new( GET => $filechooser_get );
-			my $response = $ua->request($request);
-
-			if ($response->is_success) {
-				return $response->content;
-				
-			} else {
-				if ($response->status_line =~ m/404 Not Found/) {
-					Gtk2::Gdk::Threads->enter();
-					spawn_dialog("error", "close",  "Error", "Torrent not found\n".$!);
-					Gtk2::Gdk::Threads->leave();
-					return "error";
-				}
-			}
-		}
-	);
-	
-	push (@threads, $thread);
-	my $tid = $thread->tid;
-	
-
-	while ($thread->is_running) {
-		Gtk2->main_iteration while (Gtk2->events_pending);
+	my $data = file_request($filechooser_get);
+		
+	if ($data eq 2) {
+		spawn_dialog("error", "close", "Error", "Failed to fetch torrent\n".$!);
+		return;
 	}
 	
-	my $data = $thread->join;
-	debug("[ !] on_button_file_save_clicked() thread #". threads->self->tid ." finished\n");
-	splice_thread($thread);
-		
-	if (!($data =~ m/^error$/)) {
-		open FILE, ">", $filechooser->get_filename or die $!;
-		binmode FILE;
-		print FILE $data;
-		close FILE;
+	open FILE, ">", $filechooser->get_filename or die $!;
+	binmode FILE;
+	print FILE $data;
+	close FILE;
 
-		spawn_dialog("info", "ok", "Torrent Saved", $filechooser->get_filename. "\n");
-	} else {
-		spawn_dialog("error", "close", "Error", "Could not save torrent\n".$!);
-	}
-		
+	spawn_dialog("info", "ok", "Torrent Saved", $filechooser->get_filename. "\n");
+
 }
 
 sub on_button_file_cancel_clicked {
