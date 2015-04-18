@@ -302,21 +302,21 @@ sub on_button_query_clicked {
 	if (length($query) < 4) { spawn_dialog("error", "close", "Error", "Query must be at least 4 characters\n"); return; }
 	
 	# setup progress spinner for vbox
-	$vbox->pack_start($vbox_spinner, 1, 1, 175);
+	$vbox->pack_start($vbox_spinner, TRUE, TRUE, 175);
 	$vbox_spinner->start;
-	$vbox_spinner->set_visible(1);
+	$vbox_spinner->set_visible(TRUE);
 	$vbox->show_all;
 	
 	$pending->set_text("Working...");
-	$button->set_sensitive(0);
+	$button->set_sensitive(FALSE);
 	$spinner->start;
-	$spinner->set_visible(1);
+	$spinner->set_visible(TRUE);
 		
 	my $data = json_request("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
 		
 	$pending->set_text("");
-	$button->set_sensitive(1);
-	$spinner->set_visible(0);
+	$button->set_sensitive(TRUE);
+	$spinner->set_visible(FALSE);
 	$spinner->stop;
 	$vbox_spinner->destroy;
 		
@@ -324,7 +324,7 @@ sub on_button_query_clicked {
 		$vbox_spinner->destroy;
 		my $label = Gtk2::Label->new;
 		$label->set_markup("<span size='large'><b>0 torrents found</b></span>");
-		$vbox->pack_start($label, 0, 0, 5);
+		$vbox->pack_start($label, FALSE, FALSE, 5);
 		$vbox->show_all;	
 		return;	
 	}
@@ -336,7 +336,7 @@ sub on_button_query_clicked {
 		
 		
 		$label->set_markup("<span size='large'><b>".($results == 1 ? "1 torrent" : $results . " torrents")." found</b></span>");
-		$vbox->pack_start($label, 0, 0, 5);
+		$vbox->pack_start($label, FALSE, FALSE, 5);
 	}
 
 	my $n = 0;
@@ -409,7 +409,7 @@ sub add_separated_item($$$$$$) {
 		
 	
 	my $hbox = Gtk2::HBox->new;
-		$hbox->set_homogeneous(0);
+		$hbox->set_homogeneous(FALSE);
 		
 	# item number of result
 	my $number = Gtk2::Label->new;
@@ -475,24 +475,24 @@ sub add_separated_item($$$$$$) {
 		
 	# container for buttons
 	my $buttonbox = Gtk2::HBox->new;
-		$buttonbox->set_homogeneous(0);
+		$buttonbox->set_homogeneous(FALSE);
 		
 	# add everything
 
-	$vbox->pack_start($hseparator, 0, 0, 0);
-	$hbox->pack_start($number, 0, 0, 5);
-	$vboxinfo->pack_start($label_title, 0, 0, 0);
-	$vboxinfo->pack_start ($label, 0, 0, 0);
+	$vbox->pack_start($hseparator, FALSE, FALSE, 0);
+	$hbox->pack_start($number, FALSE, FALSE, 5);
+	$vboxinfo->pack_start($label_title, FALSE, FALSE, 0);
+	$vboxinfo->pack_start ($label, FALSE, FALSE, 0);
 		
-	$buttonbox->pack_end ($button_magnet, 0, 0, 0);
-	$buttonbox->pack_end ($button_torrent, 0, 0, 0);
-	$buttonbox->pack_end ($button_hash, 0, 0, 0);
+	$buttonbox->pack_end ($button_magnet, FALSE, FALSE, 0);
+	$buttonbox->pack_end ($button_torrent, FALSE, FALSE, 0);
+	$buttonbox->pack_end ($button_hash, FALSE, FALSE, 0);
 		
-	$hbox->pack_start ($vboxinfo, 0, 0, 0);
-	$hbox->pack_end ($buttonbox, 0, 0, 0);
+	$hbox->pack_start ($vboxinfo, FALSE, FALSE, 0);
+	$hbox->pack_end ($buttonbox, FALSE, FALSE, 0);
 	$eventbox->add ($hbox);
-	$vbox->pack_start ($eventbox, 0, 0, 0);
-	$vbox->set_homogeneous(0);
+	$vbox->pack_start ($eventbox, FALSE, FALSE, 0);
+	$vbox->set_homogeneous(FALSE);
 	
 	$vbox->show_all;
 	
@@ -572,7 +572,7 @@ sub on_combobox_category_changed {
 	my $category = $combobox->get_active_text;
 	if ($category =~ m/N\/A/) { 
 		$category_filter = ""; 
-		$combobox2->set_visible(0);
+		$combobox2->set_visible(FALSE);
 		$subcategory_filter = "";
 		return; 
 		
@@ -593,10 +593,10 @@ sub on_view_statusbar_toggled {
 	my $check 	  = $builder->get_object( 'view_statusbar' );
 	my $statusbar = $builder->get_object( 'statusbar' );
 	
-	if ($check->get_active == 1) {
-		$statusbar->set_visible(1);
+	if ($check->get_active == TRUE) {
+		$statusbar->set_visible(TRUE);
 	} else {
-		$statusbar->set_visible(0);
+		$statusbar->set_visible(FALSE);
 	}
 }
 
