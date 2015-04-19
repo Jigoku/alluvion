@@ -236,7 +236,7 @@ sub json_request($) {
 			if (!($ua->is_online)) {  return 3; }
 	
 			my $response = $ua->get($api_uri);
-
+			print "[ !] ". $response->request->{proxy} . "\n";
 			if ($response->is_success) {
 				# the json text as a string
 				return $response->decoded_content;
@@ -302,14 +302,15 @@ sub set_index_total {
 		$index_total->set_text("Could not set index total!");
 		$spinner->set_visible(0);
 		$spinner->stop;
+		debug("[ -] Failed to parse json data\n");
 		return; 
 	}
 	
 	if ($data eq "connection") { 
-		$index_total->set_text("Could not set index total!");
+		$index_total->set_text("Connection failed");
 		$spinner->set_visible(0);
 		$spinner->stop;
-		spawn_dialog("error", "close", "Error", "Could not establish a connection\n");
+		debug("[ -] Failed to get a connection\n");
 		return; 
 	}
 	
