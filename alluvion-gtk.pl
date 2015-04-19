@@ -472,9 +472,10 @@ sub on_button_query_clear_clicked {
 
 
 sub splice_thread {
-		my $i = 0;
-		$i++ until $threads[$i] eq shift or $i > $#threads;
-		splice @threads, $i, 1;
+	my $t = shift;
+	my $i = 0;
+	$i++ until $threads[$i] eq $t or $i > $#threads;
+	splice @threads, $i, 1;
 }
 
 
