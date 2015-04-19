@@ -143,7 +143,7 @@ sub main {
 	$ua->protocols_allowed( [ 'https', 'http' ] );
 	
 	# request timeout
-	$ua->timeout(10);
+	$ua->timeout($settings{"timeout"});
 	
 	
 	# check gtkbuilder interface exists
