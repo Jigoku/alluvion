@@ -84,9 +84,10 @@ my $helpmsg = (
 );
 
 foreach my $arg (@ARGV) {
-		if ($arg =~ m/^(--debug|-d)$/) { print "Alluvion ". $VERSION ."\n" . ("-"x50) ."\n"; $debug = 1; }
 		if ($arg =~ m/^(--version|-v)$/) { print $VERSION."\n"; exit(0); }
 		if ($arg =~ m/^(--help|-h)$/) { print $helpmsg; exit(0); }
+		if ($arg =~ m/^(--reset|-r)$/) { no warnings; write_config($conf); print "Wrote default settings to $conf\n"; exit(0); }
+		if ($arg =~ m/^(--debug|-d)$/) { print "Alluvion ". $VERSION ."\n" . ("-"x50) ."\n"; $debug = 1; }
 }
 
 
@@ -170,7 +171,7 @@ sub main {
 					debug("[ *] proxy connection established (" . $1 . ":".$settings{"proxy_port"}.")\n");  
 			}
 		}
-	}	
+	}
 	
 	# start thread for statusbar display
 	set_index_total();
@@ -236,7 +237,11 @@ sub json_request($) {
 			if (!($ua->is_online)) {  return 3; }
 	
 			my $response = $ua->get($api_uri);
-			print "[ !] ". $response->request->{proxy} . "\n";
+			
+			if ($debug == 1 && 	$settings{"proxy_enabled"} eq 1) { 
+				print "[ *] requested via proxy (". $response->request->{proxy} . ")\n";
+			}
+				
 			if ($response->is_success) {
 				# the json text as a string
 				return $response->decoded_content;
@@ -609,8 +614,12 @@ sub on_menu_edit_preferences_activate {
 	$builder->get_object( 'entry_timeout' )->set_text($settings{"timeout"});
 	
 	if ($settings{"proxy_enabled"} eq 1) {
+		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
+		$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
 		$builder->get_object( 'checkbutton_proxy' )->set_active(1);
 	} else {
+		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
+		$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
 		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
 	}
 
@@ -643,6 +652,16 @@ sub on_button_pref_ok_clicked {
 	
 	write_config($conf);
 
+}
+
+sub on_checkbutton_proxy_toggled {
+		if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
+			$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
+			$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
+		} else {
+			$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
+			$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
+		}
 }
 
 sub on_button_pref_cancel_clicked {

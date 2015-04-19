@@ -584,6 +584,7 @@ for making this possible.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="on_checkbutton_proxy_toggled" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
