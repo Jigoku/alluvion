@@ -514,7 +514,7 @@ sub add_separated_item($$$$$$) {
 		
 	# item number of result
 	my $number = Gtk2::Label->new;
-	$number->set_markup("<span size='large'><b>".$n.".</b></span>");
+	$number->set_markup("<span size='large'>".$n.".</span>");
 	$number->set_alignment(0,.5);
 	$number->set_width_chars(3);
 
@@ -524,7 +524,7 @@ sub add_separated_item($$$$$$) {
 		
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
-	$label_title->set_markup("<b><u>".convert_special_char($torrent_title) ."</u></b>");
+	$label_title->set_markup("<span size='large'><b>".convert_special_char($torrent_title) ."</b></span>");
 	$label_title->set_width_chars(65); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
