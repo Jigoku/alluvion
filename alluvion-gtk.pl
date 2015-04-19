@@ -2,13 +2,15 @@
 # --------------------------------------------------------------------
 # Alluvion 0.2pre
 # Perl/Gtk2 torrent search utility (strike API)
-#
+# --------------------------------------------------------------------
 # Usage:
 #    ./$0 <option>
-#
+# --------------------------------------------------------------------
 # Options:
-#	-d  | --debug           enable debug output
-#	-v  | --version 		print version
+#	-d  | --debug          enable debug output
+#	-v  | --version        print version
+#   -h  | --help           show help
+#   -r  | --reset          rewrite user config with default settings
 #
 # --------------------------------------------------------------------
 # Strike API information   : https://getstrike.net/api/
@@ -40,14 +42,15 @@ use LWP::UserAgent;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
-
 $|++;
+
+die "[ -] Glib::Object thread safety failed"
+        unless Glib::Object->set_threadsafe (TRUE);
 
 # default paths
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
 my $conf = $ENV{ HOME } . "/.alluvion";
-my $debug = 0;
 
 # default user settings
 my 	%settings = (
@@ -59,7 +62,11 @@ my 	%settings = (
 	"statusbar"      => 1
 );
 
+my ($category_filter, $subcategory_filter) = ("","");
 
+my $debug = 0;
+
+# global objects
 my (
 	$builder, 
 	$window,
@@ -69,9 +76,6 @@ my (
 	$filechooser_get,
 	@threads,
 );
-
-die "[ -] Glib::Object thread safety failed"
-        unless Glib::Object->set_threadsafe (TRUE);
 
 # command line arguments
 my $helpmsg = (
@@ -89,8 +93,6 @@ foreach my $arg (@ARGV) {
 		if ($arg =~ m/^(--reset|-r)$/) { no warnings; write_config($conf); print "Wrote default settings to $conf\n"; exit(0); }
 		if ($arg =~ m/^(--debug|-d)$/) { print "Alluvion ". $VERSION ."\n" . ("-"x50) ."\n"; $debug = 1; }
 }
-
-
 
 # sleeping thread, for some reason this stops segfaults at exit
 # and several random GLib-GObject-CRITICAL errors, as long as a thread
@@ -111,8 +113,6 @@ my $sleeper = threads->create({'void' => 1},
 	}
 )->detach;
 
-
-my ($category_filter, $subcategory_filter) = ("","");
 
 main();
 
@@ -139,7 +139,7 @@ sub main {
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
 
-    $builder = Gtk2::Builder->new();
+	$builder = Gtk2::Builder->new();
 
  	# load gtkbuilder interface
 	$builder->add_from_file( $xml );
@@ -177,7 +177,6 @@ sub main {
 	set_index_total();
 	
 	# main loop
-	#Gtk2->main_iteration while Gtk2->events_pending;
 	Gtk2->main(); gtk_main_quit();
 }
 
@@ -193,6 +192,7 @@ sub file_request($) {
 			# check if we have a connection to network
 			if (!($ua->is_online)) {  return 3; }
 			
+			# get the file
 			my $request = HTTP::Request->new( GET => $file_uri );
 			my $response = $ua->request($request);
 
@@ -200,7 +200,7 @@ sub file_request($) {
 				return $response->content;
 			
 			} else {
-					return 2;
+					return 2; # error code
 			}
 		}
 	);
@@ -245,9 +245,8 @@ sub json_request($) {
 			if ($response->is_success) {
 				# the json text as a string
 				return $response->decoded_content;
-			} else {
-				# error code
-				return 2;
+			} else {	
+				return 2; # error code
 			}
 		}
 	);
@@ -269,17 +268,18 @@ sub json_request($) {
 	
 	my $data = $thread->join;
 
-	#errors
+	# check for error from thread
 	if ($data eq 2) { return "error"; }
 	if ($data eq 3) { return "connection"; }
 	
-	# return api result as JSON object
+	# otherwise return api result as JSON object
 	my $json = JSON->new;
 	return $json->decode($data);
 
 }
 
 sub ua_init {
+	# reinitialize when called
 	$ua = LWP::UserAgent->new;
 
 	# provide user agent 
@@ -301,6 +301,7 @@ sub set_index_total {
 	$spinner->start;
 	$index_total->set_text("Updating index total...");
 	
+	# threaded request
 	my $data = json_request("https://getstrike.net/api/v2/torrents/count/");
 		
 	if ($data eq "error") { 
@@ -319,7 +320,7 @@ sub set_index_total {
 		return; 
 	}
 	
-	
+	# display the indexed total in statusbar
 	for ($data) {
 		$index_total->set_markup("".commify($_->{message}) . " indexed torrents");
 	}
@@ -345,6 +346,7 @@ sub on_button_hash_clicked {
 	$spinner->set_visible(1);
 	$spinner->start;
 	
+	# returns data from threaded request
 	my $data = json_request("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 	
 	$button->set_sensitive(1);
@@ -412,7 +414,8 @@ sub on_button_query_clicked {
 	$button->set_sensitive(FALSE);
 	$spinner->start;
 	$spinner->set_visible(TRUE);
-		
+	
+	# retrusn data from threaded request	
 	my $data = json_request("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
 		
 	$pending->set_text("");
@@ -437,11 +440,11 @@ sub on_button_query_clicked {
 		return; 
 	}
 
+	# results header "X torrent(s) found"
 	for ($data) { 
 		my $label = Gtk2::Label->new;
 		my $results = $_->{results};
 		if (not defined $results) { $results = 0; }
-		
 		
 		$label->set_markup("<span size='large'><b>".($results == 1 ? "1 torrent" : $results . " torrents")." found</b></span>");
 		$vbox->pack_start($label, FALSE, FALSE, 5);
@@ -451,10 +454,9 @@ sub on_button_query_clicked {
 				
 	for (@{$data->{torrents}}) {
 		$n++;
-
 		add_separated_item(
-			$vbox, #container to append
-			$n,	# number of item
+			$vbox, # container to append result
+			$n,	# number of item result
 			$_->{torrent_title},
 			"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
 			$_->{magnet_uri},
@@ -464,8 +466,8 @@ sub on_button_query_clicked {
 
 }
 
-
 sub on_button_query_clear_clicked {
+	# clear the search results/entry
 	my $query = $builder->get_object( 'entry_query' );
 	$query->set_text("");
 	
@@ -473,23 +475,17 @@ sub on_button_query_clear_clicked {
 	destroy_children($vbox);
 }
 
-
-
-
 sub splice_thread {
+	# removes specified thread from @threads
 	my $t = shift;
 	my $i = 0;
 	$i++ until $threads[$i] eq $t or $i > $#threads;
 	splice @threads, $i, 1;
 }
 
-
-
-
-# adds a label with markup and separator to a vbox 
-# (For list of search results)
 sub add_separated_item($$$$$$) {
-
+	# adds a label with markup and separator to a vbox 
+	# (For list of search results)
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 				
 	my $eventbox = Gtk2::EventBox->new;
@@ -586,8 +582,7 @@ sub add_separated_item($$$$$$) {
 	my $buttonbox = Gtk2::HBox->new;
 		$buttonbox->set_homogeneous(FALSE);
 		
-	# add everything
-
+	# pack everything
 	$vbox->pack_start($hseparator, FALSE, FALSE, 0);
 	$hbox->pack_start($number, FALSE, FALSE, 5);
 	$vboxinfo->pack_start($label_title, FALSE, FALSE, 0);
@@ -604,11 +599,10 @@ sub add_separated_item($$$$$$) {
 	$vbox->set_homogeneous(FALSE);
 	
 	$vbox->show_all;
-	
-	
 }
 
 sub on_menu_edit_preferences_activate {
+	# initialize the preferences dialog with currently stored settings
 	my $preferences = $builder->get_object( 'preferences' );
 	
 	$builder->get_object( 'entry_timeout' )->set_text($settings{"timeout"});
@@ -626,16 +620,18 @@ sub on_menu_edit_preferences_activate {
 	$builder->get_object( 'entry_proxy_addr' )->set_text($settings{"proxy_addr"});
 	$builder->get_object( 'entry_proxy_port' )->set_text($settings{"proxy_port"});
 	
-	$preferences->run;
+	$preferences->run; # loops here
 	$preferences->hide;
 }
 
 sub on_button_pref_ok_clicked {
-	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_text();
+	# update the changed settings within preferences
 	
+	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_text();
 	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
 	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_text();
 	
+	# check if we enabled/disabled the HTTP/HTTPS proxy option
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
 		$settings{"proxy_enabled"} = 1;
 		
@@ -650,21 +646,23 @@ sub on_button_pref_ok_clicked {
 		ua_init();
 	}
 	
+	# update the config on disk
 	write_config($conf);
-
 }
 
 sub on_checkbutton_proxy_toggled {
-		if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
-			$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
-			$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
-		} else {
-			$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
-			$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
-		}
+	# filter input when proxy toggle state changed
+	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
+		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
+		$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
+	} else {
+		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
+		$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
+	}
 }
 
 sub on_button_pref_cancel_clicked {
+	# close the preferences dialog
 	$builder->get_object( 'preferences' )->hide;
 }
 
@@ -688,6 +686,7 @@ sub on_button_file_save_clicked {
 		return;
 	}
 	
+	# write the torrent file to disk in specified path
 	open FILE, ">", $filechooser->get_filename or die $!;
 	binmode FILE;
 	print FILE $data;
@@ -703,6 +702,7 @@ sub on_button_file_cancel_clicked {
 
 
 sub on_combobox_category_changed {
+	# check if the category was changed
 	my $combobox = $builder->get_object( 'combobox_category' );
 	my $combobox2 = $builder->get_object( 'combobox_subcategory' );
 	my $category = $combobox->get_active_text;
@@ -719,6 +719,7 @@ sub on_combobox_category_changed {
 }
 
 sub on_combobox_subcategory_changed {
+	# check if the subcategory was changed
 	my $combobox = $builder->get_object( 'combobox_subcategory' );
 	my $subcategory = $combobox->get_active_text;
 	if ($subcategory =~ m/N\/A/) { $subcategory_filter = ""; return; }
@@ -727,6 +728,8 @@ sub on_combobox_subcategory_changed {
 
 
 sub on_view_statusbar_toggled {
+	# toggle the visibility of the statusbar
+	# and update user settings to reflect that
 	my $check 	  = $builder->get_object( 'view_statusbar' );
 	my $statusbar = $builder->get_object( 'statusbar' );
 	
@@ -750,10 +753,13 @@ sub apply_filefilter($$$) {
 	$object->add_filter($filter);
 }
 
-# create an error dialog
+
 sub spawn_dialog {
+	# creates a dialog for errors/info
 	my ($type, $button, $title, $message) = @_;
 
+	# $type   can be for example; error, info
+	# $button can be for example; ok, cancel, close
 	 my $dialog = Gtk2::MessageDialog->new (
 		$window,
 		'destroy-with-parent',
@@ -762,6 +768,7 @@ sub spawn_dialog {
 		$title
 	);
 	
+	# the error message
 	$dialog->format_secondary_text($message);
 	
 	my $response = $dialog->run;
@@ -785,12 +792,14 @@ sub xdgopen($) {
 }
 
 sub bytes2mb($) {
+	# convert bytes to megabytes
 	my $bytes = shift;
 	return sprintf "%.0f",($bytes / (1024 * 1024));
 }
 
-# add commas to an integer
+
 sub commify($) {
+	# add commas to an integer
 	local $_ = shift;
 	1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
 	return $_;
@@ -819,15 +828,20 @@ sub write_config($) {
 sub gtk_main_quit {
 	
 	for (@threads) {
-		#show any threads that are still alive
+		# show any threads that are still alive
 		debug( $_."\n");
 	}
 	
+	# detach all remaining threads ( if any)
 	$_->detach for threads->list;
 
+	# update stored preferences
 	write_config($conf);	
 	
+	# cleanup gtk2
 	Gtk2->main_quit();
+	
+	#exit
 	exit(0);
 }
 
