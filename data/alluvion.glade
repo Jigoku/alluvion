@@ -522,6 +522,7 @@ for making this possible.</property>
                   <object class="GtkEntry" id="entry_timeout">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">3</property>
                     <property name="invisible_char">●</property>
                     <property name="invisible_char_set">True</property>
                     <property name="primary_icon_activatable">False</property>
@@ -579,7 +580,7 @@ for making this possible.</property>
             </child>
             <child>
               <object class="GtkCheckButton" id="checkbutton_proxy">
-                <property name="label" translatable="yes">Enable Proxy</property>
+                <property name="label" translatable="yes">Enable HTTP/HTTPS Proxy</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -600,7 +601,7 @@ for making this possible.</property>
                   <object class="GtkLabel" id="label_proxyhost">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Proxy Host</property>
+                    <property name="label" translatable="yes">Host</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -612,6 +613,7 @@ for making this possible.</property>
                   <object class="GtkEntry" id="entry_proxy_addr">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">15</property>
                     <property name="invisible_char">●</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
@@ -640,7 +642,7 @@ for making this possible.</property>
                   <object class="GtkLabel" id="label_proxyport">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Proxy Port</property>
+                    <property name="label" translatable="yes">Port</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -652,6 +654,7 @@ for making this possible.</property>
                   <object class="GtkEntry" id="entry_proxy_port">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">5</property>
                     <property name="invisible_char">●</property>
                     <property name="invisible_char_set">True</property>
                     <property name="primary_icon_activatable">False</property>

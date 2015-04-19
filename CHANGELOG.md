@@ -1,11 +1,11 @@
 # master (development version)
-* threaded file request
-* user settings storage
-* now requires perl >= 5.10 for experimental features (given/when)
+* user preferences (saved/loaded)
 * http/https proxy support
+* threaded file requests
+* now requires perl >= 5.10 for experimental features (given/when)
 * command line switches for debug/help/version
 * many bug fixes/improvements
-* cleanup threads
+* cleanup threads when not needed anymore
 * return key now activates text entry widgets for appropriate button action
 
 # Alluvion v0.1 (16/04/2015)
