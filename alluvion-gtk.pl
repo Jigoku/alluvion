@@ -111,7 +111,6 @@ my $sleeper = threads->create({'void' => 1},
 )->detach;
 
 
-
 my ($category_filter, $subcategory_filter) = ("","");
 
 main();
@@ -135,17 +134,6 @@ sub main {
 		}
 	}
 	
-	$ua = LWP::UserAgent->new;
-	
-	# provide user agent 
-	# (cloudflare blocks libwww-perl/*.*)
-	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
-	$ua->protocols_allowed( [ 'https', 'http' ] );
-	
-	# request timeout
-	$ua->timeout($settings{"timeout"});
-	
-	
 	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
@@ -167,19 +155,19 @@ sub main {
 	# draw the window
 	$window->show();
 	
+	# initialize LWP::UserAgent with some default settings
+	ua_init();
 	
 	# proxy settings
 	if ($settings{"proxy_enabled"} eq 1) {
 		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
 		
-		# make sure we are routed correctly
-		my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
+		if ($debug == 1) {
+			# make sure we are routed correctly, show real endpoint address
+			my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
 		
-		if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
-			if ($1 eq $ip) {
-				debug("[ *] proxy connection established (" . $1 . ":".$settings{"proxy_port"}.")\n");  
-			} else {
-				warn "tried to use proxy, but endpoint seems to be different...\n";
+			if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
+					debug("[ *] proxy connection established (" . $1 . ":".$settings{"proxy_port"}.")\n");  
 			}
 		}
 	}	
@@ -285,6 +273,19 @@ sub json_request($) {
 	return $json->decode($data);
 
 }
+
+sub ua_init {
+	$ua = LWP::UserAgent->new;
+
+	# provide user agent 
+	# (cloudflare blocks libwww-perl/*.*)
+	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
+	$ua->protocols_allowed( [ 'https', 'http' ] );
+	
+	# request timeout
+	$ua->timeout($settings{"timeout"});
+}
+
 
 sub set_index_total {
 	
@@ -626,10 +627,16 @@ sub on_button_pref_ok_clicked {
 	
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
 		$settings{"proxy_enabled"} = 1;
+		
+		# reinitialize with proxy
+		ua_init();
 		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+		
 	} else {
 		$settings{"proxy_enabled"} = 0;
-		$ua->proxy(undef, undef);
+		
+		# reinitialize without proxy
+		ua_init();
 	}
 	
 	write_config($conf);
