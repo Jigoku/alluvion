@@ -632,6 +632,7 @@ sub on_button_pref_ok_clicked {
 		$ua->proxy(undef, undef);
 	}
 	
+	write_config($conf);
 
 }
 
