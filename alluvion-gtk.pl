@@ -157,7 +157,6 @@ sub main {
 
 	# get top level objects
 	$window = $builder->get_object( 'window' );
-	$preferences = $builder->get_object( 'preferences' );
 	$filechooser = $builder->get_object( 'filechooserdialog' );
 	
 	$builder->connect_signals( undef );
@@ -581,8 +580,40 @@ sub add_separated_item($$$$$$) {
 }
 
 sub on_menu_edit_preferences_activate {
-	$preferences->show; # not implemented
+	my $preferences = $builder->get_object( 'preferences' );
+	
+	$builder->get_object( 'entry_timeout' )->set_text($settings{"timeout"});
+	
+	if ($settings{"proxy_enabled"} eq 1) {
+		$builder->get_object( 'checkbutton_proxy' )->set_active(1);
+	} else {
+		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
+	}
+
+	$builder->get_object( 'entry_proxy_addr' )->set_text($settings{"proxy_addr"});
+	$builder->get_object( 'entry_proxy_port' )->set_text($settings{"proxy_port"});
+	
+	$preferences->run;
+	$preferences->hide;
 }
+
+sub on_button_pref_ok_clicked {
+	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_text();
+	
+	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
+		$settings{"proxy_enabled"} = 1;
+	} else {
+		$settings{"proxy_enabled"} = 0;
+	}
+	
+	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
+	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_text();
+}
+
+sub on_button_pref_cancel_clicked {
+	$builder->get_object( 'preferences' )->hide;
+}
+
 
 sub on_about_clicked {
 	# launch about dialog
@@ -639,6 +670,7 @@ sub on_combobox_subcategory_changed {
 	if ($subcategory =~ m/N\/A/) { $subcategory_filter = ""; return; }
 	$subcategory_filter = $subcategory;
 }
+
 
 sub on_view_statusbar_toggled {
 	my $check 	  = $builder->get_object( 'view_statusbar' );

@@ -422,7 +422,7 @@ for making this possible.</property>
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">alluvion_48.png</property>
-    <property name="type_hint">dialog</property>
+    <property name="type_hint">utility</property>
     <property name="transient_for">window</property>
     <property name="has_separator">True</property>
     <child internal-child="vbox">
@@ -442,6 +442,7 @@ for making this possible.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button_pref_ok_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -456,6 +457,7 @@ for making this possible.</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button_pref_cancel_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -503,6 +505,7 @@ for making this possible.</property>
               <object class="GtkHBox" id="hbox_timeout">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel" id="label_timeout">
                     <property name="visible">True</property>
@@ -516,10 +519,11 @@ for making this possible.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="spinbutton_timeout">
+                  <object class="GtkEntry" id="entry_timeout">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">●</property>
+                    <property name="invisible_char_set">True</property>
                     <property name="primary_icon_activatable">False</property>
                     <property name="secondary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">True</property>
