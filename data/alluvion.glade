@@ -418,11 +418,10 @@ for making this possible.</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Alluvion - Preferences</property>
     <property name="resizable">False</property>
-    <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">alluvion_48.png</property>
-    <property name="type_hint">utility</property>
+    <property name="type_hint">dialog</property>
     <property name="transient_for">window</property>
     <property name="has_separator">True</property>
     <child internal-child="vbox">

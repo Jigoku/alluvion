@@ -202,7 +202,7 @@ sub file_request($) {
 			debug("[ !] thread #". threads->self->tid ." started\n");
 			
 			# check if we have a connection to network
-			if (!($ua->is_online)) {  return 2; }
+			if (!($ua->is_online)) {  return 3; }
 			
 			my $request = HTTP::Request->new( GET => $file_uri );
 			my $response = $ua->request($request);
@@ -245,7 +245,7 @@ sub json_request($) {
 			debug("[ !] thread #". threads->self->tid ." started\n");
 			
 			# check if we have a connection to network
-			if (!($ua->is_online)) {  return 2; }
+			if (!($ua->is_online)) {  return 3; }
 	
 			my $response = $ua->get($api_uri);
 
@@ -276,9 +276,9 @@ sub json_request($) {
 	
 	my $data = $thread->join;
 
-	if ($data eq 2) {
-		return "error";
-	}
+	#errors
+	if ($data eq 2) { return "error"; }
+	if ($data eq 3) { return "connection"; }
 	
 	# return api result as JSON object
 	my $json = JSON->new;
@@ -298,10 +298,20 @@ sub set_index_total {
 	my $data = json_request("https://getstrike.net/api/v2/torrents/count/");
 		
 	if ($data eq "error") { 
-		spawn_dialog("error", "close", "Error", "Could not set index total\n"); 
 		$index_total->set_text("Could not set index total!");
+		$spinner->set_visible(0);
+		$spinner->stop;
 		return; 
 	}
+	
+	if ($data eq "connection") { 
+		$index_total->set_text("Could not set index total!");
+		$spinner->set_visible(0);
+		$spinner->stop;
+		spawn_dialog("error", "close", "Error", "Could not establish a connection\n");
+		return; 
+	}
+	
 	
 	for ($data) {
 		$index_total->set_markup("".commify($_->{message}) . " indexed torrents");
@@ -336,7 +346,11 @@ sub on_button_hash_clicked {
 	$spinner->stop;
 	
 	if ($data eq "error") { spawn_dialog("error", "close", "Error", "Failed to find info hash\n"); return; }
-	
+		
+	if ($data eq "connection") { 
+		spawn_dialog("error", "close", "Error", "Could not establish a connection\n");
+		return; 
+	}
 
 			
 	# apply data to labels
@@ -407,6 +421,13 @@ sub on_button_query_clicked {
 		$vbox->pack_start($label, FALSE, FALSE, 5);
 		$vbox->show_all;	
 		return;	
+	}
+
+		
+	if ($data eq "connection") { 
+		$vbox_spinner->destroy;
+		spawn_dialog("error", "close", "Error", "Could not establish a connection\n");
+		return; 
 	}
 
 	for ($data) { 
@@ -600,14 +621,18 @@ sub on_menu_edit_preferences_activate {
 sub on_button_pref_ok_clicked {
 	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_text();
 	
-	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
-		$settings{"proxy_enabled"} = 1;
-	} else {
-		$settings{"proxy_enabled"} = 0;
-	}
-	
 	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
 	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_text();
+	
+	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
+		$settings{"proxy_enabled"} = 1;
+		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+	} else {
+		$settings{"proxy_enabled"} = 0;
+		$ua->proxy(undef, undef);
+	}
+	
+
 }
 
 sub on_button_pref_cancel_clicked {
