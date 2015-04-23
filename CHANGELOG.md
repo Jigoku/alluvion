@@ -1,14 +1,17 @@
 # master (development version)
 
-* user preferences (saved/loaded)
+* now requires perl >= 5.10 for experimental features
+* user preferences dialog
+* settings file stored to $HOME/.alluvion
 * http/https proxy support
-* threaded file requests
-* now requires perl >= 5.10 for experimental features (given/when)
-* many bug fixes/improvements
-* cleanup threads when not needed anymore
+* configurable connection timeout
+* threaded file requests - file_request()
+* threaded json requests - json_request()
+* lots of bug fixes/improvements
+* cleaner exit when closing application
 * return key now activates text entry widgets for appropriate button action
 * --debug (show debug/verbose output)
-* --reset (rewrites local config with default settings)
+* --reset (reset local config with default settings)
 * --help (shows help)
 * --version (prints version)
 
