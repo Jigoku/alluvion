@@ -12,7 +12,6 @@ use strict;
 use warnings;
 use POSIX;
 use threads;
-use IO::Socket::Socks::Wrapper;
 use IO::Socket::SSL;
 
 my $host = "getstrike.net";
@@ -28,18 +27,6 @@ user-agent:Alluvion/0.1pre
 
 MSG
 
-
-
-
-
-	IO::Socket::Socks::Wrapper->import( 
-		IO::Socket:: => {
-			ProxyAddr => '127.0.0.1',
-			ProxyPort =>  9050,
-			SocksDebug => 1,
-			Timeout => 10
-		}
-	);
 
 
 

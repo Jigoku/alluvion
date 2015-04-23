@@ -7,8 +7,8 @@
 #    ./$0 <option>
 # --------------------------------------------------------------------
 # Options:
-#	-d  | --debug          enable debug output
-#	-v  | --version        print version
+#   -d  | --debug          enable debug output
+#   -v  | --version        print version
 #   -h  | --help           show help
 #   -r  | --reset          rewrite user config with default settings
 #
@@ -303,7 +303,6 @@ sub set_index_total {
 	
 	# threaded request
 	my $data = json_request("https://getstrike.net/api/v2/torrents/count/");
-		
 	if ($data eq "error") { 
 		$index_total->set_text("Could not set index total!");
 		$spinner->set_visible(0);
@@ -605,7 +604,7 @@ sub on_menu_edit_preferences_activate {
 	# initialize the preferences dialog with currently stored settings
 	my $preferences = $builder->get_object( 'preferences' );
 	
-	$builder->get_object( 'entry_timeout' )->set_text($settings{"timeout"});
+	$builder->get_object( 'entry_timeout' )->set_value($settings{"timeout"});
 	
 	if ($settings{"proxy_enabled"} eq 1) {
 		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
@@ -618,7 +617,7 @@ sub on_menu_edit_preferences_activate {
 	}
 
 	$builder->get_object( 'entry_proxy_addr' )->set_text($settings{"proxy_addr"});
-	$builder->get_object( 'entry_proxy_port' )->set_text($settings{"proxy_port"});
+	$builder->get_object( 'entry_proxy_port' )->set_value($settings{"proxy_port"});
 	
 	$preferences->run; # loops here
 	$preferences->hide;
@@ -627,9 +626,9 @@ sub on_menu_edit_preferences_activate {
 sub on_button_pref_ok_clicked {
 	# update the changed settings within preferences
 	
-	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_text();
+	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_value();
 	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
-	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_text();
+	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_value();
 	
 	# check if we enabled/disabled the HTTP/HTTPS proxy option
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
