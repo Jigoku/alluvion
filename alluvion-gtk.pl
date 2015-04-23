@@ -55,7 +55,7 @@ my $conf = $ENV{ HOME } . "/.alluvion";
 # default user settings
 my 	%settings = (
 	"timeout" 		 => "10",
-	"filesize_type"  => "",
+	#"filesize_type"  => "",
 	"proxy_enabled"  => 0,
 	"proxy_addr"	 => "",
 	"proxy_port" 	 => "",
@@ -126,7 +126,7 @@ sub main {
 			# perl 5.10 experimental functions
 			given($_) {
 				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
-				when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
+				#when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
 				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
 				when (m/^proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"proxy_addr"} = $1; }
 				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
@@ -341,7 +341,7 @@ sub on_button_hash_clicked {
 	}
 	
 	$button->set_sensitive(0);
-	$pending->set_text("Working...");
+	$pending->set_text("Loading");
 	$spinner->set_visible(1);
 	$spinner->start;
 	
@@ -409,7 +409,7 @@ sub on_button_query_clicked {
 	$vbox_spinner->set_visible(TRUE);
 	$vbox->show_all;
 	
-	$pending->set_text("Working...");
+	$pending->set_text("Loading");
 	$button->set_sensitive(FALSE);
 	$spinner->start;
 	$spinner->set_visible(TRUE);
@@ -815,7 +815,7 @@ sub write_config($) {
 	open FILE, ">$file" or die "Could not open config: $!\n";
 	print FILE "# alluvion $VERSION - user settings\n";
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
-	print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
+	#print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
 	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
 	print FILE "proxy_addr=\"".$settings{"proxy_addr"}."\"\n";
 	print FILE "proxy_port=\"".$settings{"proxy_port"}."\"\n";
