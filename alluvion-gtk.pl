@@ -390,6 +390,7 @@ sub on_button_query_clicked {
 	
 	my $query = $builder->get_object( 'entry_query' )->get_text;
 	my $button = $builder->get_object( 'button_query' );
+	my $button_clear = $builder->get_object( 'button_query_clear' );
 	my $spinner = $builder->get_object( 'spinner' );
 	my $vbox_spinner = Gtk2::Spinner->new;
 	my $pending = $builder->get_object( 'label_pending' );
@@ -411,6 +412,7 @@ sub on_button_query_clicked {
 	
 	$pending->set_text("Loading");
 	$button->set_sensitive(FALSE);
+	$button_clear->set_sensitive(FALSE);
 	$spinner->start;
 	$spinner->set_visible(TRUE);
 	
@@ -419,6 +421,7 @@ sub on_button_query_clicked {
 		
 	$pending->set_text("");
 	$button->set_sensitive(TRUE);
+	$button_clear->set_sensitive(TRUE);
 	$spinner->set_visible(FALSE);
 	$spinner->stop;
 	$vbox_spinner->destroy;
