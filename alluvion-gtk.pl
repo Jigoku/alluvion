@@ -280,15 +280,18 @@ sub json_request($) {
 
 sub ua_init {
 	# reinitialize when called
-	$ua = LWP::UserAgent->new;
-
+	$ua = LWP::UserAgent->new(
+		keep_alive => 1,
+	);
+	
+	# request timeout
+	$ua->timeout($settings{"timeout"});
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
 	$ua->protocols_allowed( [ 'https', 'http' ] );
 	
-	# request timeout
-	$ua->timeout($settings{"timeout"});
+
 }
 
 
@@ -633,6 +636,18 @@ sub on_button_pref_ok_clicked {
 	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
 	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_value();
 	
+	# TODO implement:
+	# [use proxy] [YES/NO]
+		#  *  Socks
+		#	    (host)(post)
+		#  *  HTTP/HTTPS 
+		#	    (host)(post)
+	
+	#### addd support for environment proxy   EG:
+	#if ($builder->get_object( 'checkbutton_env_proxy' )->get_active() == TRUE) {	
+	#	$ua->proxy( ['http'], $ENV{HTTP_PROXY} ) if exists $ENV{HTTP_PROXY};
+	#}
+	
 	# check if we enabled/disabled the HTTP/HTTPS proxy option
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
 		$settings{"proxy_enabled"} = 1;
@@ -640,6 +655,7 @@ sub on_button_pref_ok_clicked {
 		# reinitialize with proxy
 		ua_init();
 		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+	
 		
 	} else {
 		$settings{"proxy_enabled"} = 0;
@@ -648,7 +664,8 @@ sub on_button_pref_ok_clicked {
 		ua_init();
 	}
 	
-	# update the config on disk
+	# update the config on disk now, if application crashes
+	# before shutdown, updated  settings won't be lost.
 	write_config($conf);
 }
 
