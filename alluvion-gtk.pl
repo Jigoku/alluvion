@@ -51,7 +51,10 @@ die "[ -] Glib::Object thread safety failed"
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
 my $confdir = $ENV{ HOME } . "/.alluvion/";
+
+# config files
 my $conf = $confdir . "config";
+my $bookmarks = $confdir . "bookmarks";
 
 # default user settings
 my 	%settings = (
@@ -76,6 +79,7 @@ my (
 	$filechooser,
 	$filechooser_get,
 	@threads,
+	@bookmark,
 );
 
 # command line arguments
@@ -123,7 +127,7 @@ sub main {
 	
 	# read ~/.alluvion config
 	if (-e $conf) {
-		open FILE, "<$conf" or die "[ -] Could not read config: $!\n";
+		open FILE, "<$conf" or die "[ -] $conf: $!\n";
 		for (<FILE>) {
 			no warnings;
 			# perl 5.10 experimental functions
@@ -135,6 +139,13 @@ sub main {
 				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
 				when (m/^statusbar=\"(.+)\"/) { $settings{"statusbar"} = $1; }
 			}
+		}
+	}
+	
+	if (-e $bookmarks) {
+		open FILE, "<$bookmarks" or die "[ -] $bookmarks: $!\n";
+		for (<FILE>) {
+			push @bookmark, $_;
 		}
 	}
 	
@@ -178,6 +189,9 @@ sub main {
 	
 	# start thread for statusbar display
 	set_index_total();
+	
+	# restore saved bookmarks
+	populate_bookmarks();
 	
 	# main loop
 	Gtk2->main(); gtk_main_quit();
@@ -279,6 +293,23 @@ sub json_request($) {
 	my $json = JSON->new;
 	return $json->decode($data);
 
+}
+
+sub populate_bookmarks {
+	my $vbox = $builder->get_object( 'vbox_bookmarks' );
+	chomp(@bookmark);
+	
+	for my $item (@bookmark) {
+		my $button = Gtk2::Button->new;
+		$button->set_label($item);
+		$button->signal_connect('clicked', 
+			sub { 
+				print $item . "\n";
+			}
+		);
+		$vbox->pack_start ($button, FALSE, FALSE, 0);
+	}
+	$vbox->show_all;
 }
 
 sub ua_init {
