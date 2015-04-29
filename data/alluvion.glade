@@ -902,7 +902,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">3</property>
+                        <property name="border_width">2</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
                       </object>

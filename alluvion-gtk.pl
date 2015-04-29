@@ -305,6 +305,9 @@ sub populate_bookmarks {
 		$button->signal_connect('clicked', 
 			sub { 
 				print $item . "\n";
+				$builder->get_object( 'notebook' )->set_current_page(0);
+				$builder->get_object( 'entry_query' )->set_text($item);
+				on_button_query_clicked();
 			}
 		);
 		$vbox->pack_start ($button, FALSE, FALSE, 0);
