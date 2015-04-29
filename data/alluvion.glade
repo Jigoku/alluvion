@@ -1025,7 +1025,18 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                             <property name="border_width">5</property>
                             <property name="spacing">5</property>
                             <child>
-                              <placeholder/>
+                              <object class="GtkLabel" id="label_intro">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">&lt;span size='large'&gt;&lt;b&gt;Enter a search query&lt;/b&gt;&lt;/span&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">5</property>
+                                <property name="position">0</property>
+                              </packing>
                             </child>
                           </object>
                         </child>
