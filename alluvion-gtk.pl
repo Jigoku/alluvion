@@ -62,7 +62,7 @@ my 	%settings = (
 	#"filesize_type"  => "",
 	"proxy_enabled"  => 0,
 	"proxy_addr"	 => "",
-	"proxy_port" 	 => "",
+	"proxy_port" 	 => 8080,
 	"statusbar"      => 1,
 	"category_filter" => 1
 );
