@@ -812,6 +812,16 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                         <signal name="toggled" handler="on_view_statusbar_toggled" swapped="no"/>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_category">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Category Filter</property>
+                        <property name="use_underline">True</property>
+                        <property name="active">True</property>
+                        <signal name="toggled" handler="on_view_category_toggled" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

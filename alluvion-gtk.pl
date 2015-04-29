@@ -63,7 +63,8 @@ my 	%settings = (
 	"proxy_enabled"  => 0,
 	"proxy_addr"	 => "",
 	"proxy_port" 	 => "",
-	"statusbar"      => 1
+	"statusbar"      => 1,
+	"category_filter" => 1
 );
 
 my ($category_filter, $subcategory_filter) = ("","");
@@ -138,6 +139,7 @@ sub main {
 				when (m/^proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"proxy_addr"} = $1; }
 				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
 				when (m/^statusbar=\"(.+)\"/) { $settings{"statusbar"} = $1; }
+				when (m/^category_filter=\"(.+)\"/) { $settings{"category_filter"} = $1; }
 			}
 		}
 	}
@@ -166,7 +168,8 @@ sub main {
 
 	# adjust user settings for interface
 	$builder->get_object( 'view_statusbar' )->set_active($settings{"statusbar"});
-
+	$builder->get_object( 'view_category' )->set_active($settings{"category_filter"});
+	
 	# draw the window
 	$window->show();
 	
@@ -800,6 +803,28 @@ sub on_view_statusbar_toggled {
 	}
 }
 
+sub on_view_category_toggled {
+	# toggle the visibility of the category filter
+	# and update user settings to reflect that
+	my $check = $builder->get_object( 'view_category' );
+	my $hbox = $builder->get_object( 'hbox_category' );
+	
+	if ($check->get_active == TRUE) {
+		$hbox->set_visible(TRUE);
+		$settings{"category_filter"} = 1;
+	} else {
+		$hbox->set_visible(FALSE);
+		$settings{"category_filter"} = 0;
+		my $combobox = $builder->get_object( 'combobox_category' );
+		my $combobox2 = $builder->get_object( 'combobox_subcategory' );
+		$combobox->set_active(0);
+		$combobox2->set_active(0);
+		$category_filter = ""; 
+		$subcategory_filter = "";
+	}
+}
+
+
 
 sub apply_filefilter($$$) {
 	#create a file filter
@@ -879,6 +904,7 @@ sub write_config($) {
 	print FILE "proxy_addr=\"".$settings{"proxy_addr"}."\"\n";
 	print FILE "proxy_port=\"".$settings{"proxy_port"}."\"\n";
 	print FILE "statusbar=\"".$settings{"statusbar"}."\"\n";
+	print FILE "category_filter=\"".$settings{"category_filter"}."\"\n";
 	close FILE;
 }
 
