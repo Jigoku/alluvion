@@ -50,7 +50,8 @@ die "[ -] Glib::Object thread safety failed"
 # default paths
 my $data = $Bin . "/data/";
 my $xml = $data . "alluvion.glade";
-my $conf = $ENV{ HOME } . "/.alluvion";
+my $confdir = $ENV{ HOME } . "/.alluvion/";
+my $conf = $confdir . "config";
 
 # default user settings
 my 	%settings = (
@@ -117,6 +118,8 @@ my $sleeper = threads->create({'void' => 1},
 main();
 
 sub main {
+	# create local config directory
+	if ( ! -e $confdir ) { mkdir $confdir or die $!; };
 	
 	# read ~/.alluvion config
 	if (-e $conf) {
@@ -286,12 +289,11 @@ sub ua_init {
 	
 	# request timeout
 	$ua->timeout($settings{"timeout"});
+	
 	# provide user agent 
 	# (cloudflare blocks libwww-perl/*.*)
 	$ua->agent("Alluvion/".$VERSION." https://jigoku.github.io/alluvion/");
-	$ua->protocols_allowed( [ 'https', 'http' ] );
-	
-
+	$ua->protocols_allowed( [ 'https', 'http' ] );	
 }
 
 
@@ -441,8 +443,11 @@ sub on_button_query_clicked {
 		
 	if ($data eq "connection") { 
 		$vbox_spinner->destroy;
-		spawn_dialog("error", "close", "Error", "Could not establish a connection\n");
-		return; 
+		my $label = Gtk2::Label->new;
+		$label->set_markup("<span size='large'><b>Could not establish a connection</b></span>");
+		$vbox->pack_start($label, FALSE, FALSE, 5);
+		$vbox->show_all;	
+		return;	
 	}
 
 	# results header "X torrent(s) found"
