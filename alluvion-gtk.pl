@@ -528,6 +528,11 @@ sub on_button_query_clear_clicked {
 	
 	my $vbox = $builder->get_object('vbox_query_results');
 	destroy_children($vbox);
+	
+	my $label = Gtk2::Label->new;
+	$label->set_markup("<span size='large'><b>Enter a search query</b></span>");
+	$vbox->pack_start ($label, FALSE, FALSE, 5);
+	$vbox->show_all;
 }
 
 sub splice_thread {
@@ -850,6 +855,9 @@ sub on_view_category_toggled {
 	}
 }
 
+sub on_view_bookmarks_activate    { populate_bookmarks(); $builder->get_object( 'notebook' )->set_current_page(2); }
+sub on_view_hash_lookup_activate  { $builder->get_object( 'notebook' )->set_current_page(1); }
+sub on_view_search_query_activate { $builder->get_object( 'notebook' )->set_current_page(0); }
 
 
 sub apply_filefilter($$$) {

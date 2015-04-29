@@ -178,6 +178,21 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
     <property name="can_focus">False</property>
     <property name="stock">gtk-save</property>
   </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-info</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-directory</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-jump-to</property>
+  </object>
   <object class="GtkListStore" id="liststore_category">
     <columns>
       <!-- column-name item -->
@@ -818,6 +833,42 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
+                      <object class="GtkImageMenuItem" id="view_search_query">
+                        <property name="label" translatable="yes">Search Query</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image6</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_view_search_query_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="view_hash_lookup">
+                        <property name="label" translatable="yes">Hash Lookup</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image4</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_view_hash_lookup_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="view_bookmarks">
+                        <property name="label" translatable="yes">Bookmarks</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image5</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_view_bookmarks_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="view_separator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkCheckMenuItem" id="view_statusbar">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -877,6 +928,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="show_tabs">False</property>
             <property name="tab_hborder">10</property>
             <property name="homogeneous">True</property>
             <signal name="switch-page" handler="on_notebook_switch_page" swapped="no"/>
@@ -885,9 +937,21 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
+                  <object class="GtkHSeparator" id="hseparator13">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkHBox" id="hbox_query">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">3</property>
                     <child>
                       <object class="GtkEntry" id="entry_query">
                         <property name="visible">True</property>
@@ -941,7 +1005,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
@@ -952,26 +1016,16 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox_category">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">5</property>
                     <child>
-                      <object class="GtkLabel" id="label_category">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Category</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="padding">5</property>
-                        <property name="position">0</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combobox_category">
@@ -1021,7 +1075,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -1061,7 +1115,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
               </object>
@@ -1581,6 +1635,7 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
               <object class="GtkVBox" id="vbox_bookmarks">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="border_width">10</property>
                 <child>
                   <placeholder/>
                 </child>
