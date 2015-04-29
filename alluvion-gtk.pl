@@ -444,7 +444,13 @@ sub on_button_query_clicked {
 	destroy_children($vbox);
 	
 	# must be at least 4 characters for API
-	if (length($query) < 4) { spawn_dialog("error", "close", "Error", "Query must be at least 4 characters\n"); return; }
+	if (length($query) < 4) { 
+		my $label = Gtk2::Label->new;
+		$label->set_markup("<span size='large'><b>Query must be at least 4 characters.</b></span>");
+		$vbox->pack_start($label, FALSE, FALSE, 5);
+		$vbox->show_all;	 
+		return; 
+	}
 	
 	# setup progress spinner for vbox
 	$vbox->pack_start($vbox_spinner, TRUE, TRUE, 175);
