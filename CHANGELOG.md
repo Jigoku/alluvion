@@ -5,6 +5,7 @@
 * settings file stored to $HOME/.alluvion
 * http/https proxy support
 * configurable connection timeout
+* create bookmarks for search querys
 * threaded file requests - file_request()
 * threaded json requests - json_request()
 * lots of bug fixes/improvements
