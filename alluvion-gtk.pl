@@ -300,6 +300,8 @@ sub json_request($) {
 
 sub populate_bookmarks {
 	my $vbox = $builder->get_object( 'vbox_bookmarks' );
+	
+	destroy_children($vbox);
 	chomp(@bookmark);
 	
 	for my $item (@bookmark) {
@@ -742,6 +744,24 @@ sub on_about_clicked {
 	$about->hide;
 }
 
+sub on_menu_file_create_bookmark_activate {
+	my $query = $builder->get_object( 'entry_query' )->get_text;
+	if (length($query) < 4) {
+		spawn_dialog("error", "close", "Error", "Query must be at least 4 characters\n".$!);
+		return;
+	}
+	push @bookmark, $query;
+}
+
+sub on_notebook_switch_page {
+		my $notebook = $builder->get_object( 'notebook' );
+		
+		if ($notebook->get_current_page eq 1) {
+			my $vbox = $builder->get_object( 'vbox_bookmarks' );
+			populate_bookmarks();
+		}
+}
+
 sub on_button_file_save_clicked {
 	$filechooser->hide;
 	
@@ -900,9 +920,9 @@ sub debug($) {
 
 
 sub write_config($) {
-	# write the changed settings to ~/.alluvion config
+	# write the changed settings to ~/.alluvion/config
 	my $file = shift;
-	open FILE, ">$file" or die "Could not open config: $!\n";
+	open FILE, ">$file" or die "$file: $!\n";
 	print FILE "# alluvion $VERSION - user settings\n";
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
 	#print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
@@ -914,6 +934,14 @@ sub write_config($) {
 	close FILE;
 }
 
+sub write_bookmarks($) {
+	# write the bookmarks to ~/.alluvion/bookmarks
+	my $file = shift;
+	open FILE, ">$file" or die "$file: $!\n";
+	for (@bookmark) {
+		print FILE $_ . "\n";
+	}
+}
 			
 sub gtk_main_quit {
 	
@@ -927,6 +955,9 @@ sub gtk_main_quit {
 
 	# update stored preferences
 	write_config($conf);	
+	
+	# update bookmarks
+	write_bookmarks($bookmarks);	
 	
 	# cleanup gtk2
 	Gtk2->main_quit();

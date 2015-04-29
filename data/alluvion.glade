@@ -173,6 +173,11 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
     <property name="can_focus">False</property>
     <property name="stock">gtk-properties</property>
   </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-save</property>
+  </object>
   <object class="GtkListStore" id="liststore_category">
     <columns>
       <!-- column-name item -->
@@ -737,6 +742,16 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
+                      <object class="GtkImageMenuItem" id="menu_file_create_bookmark">
+                        <property name="label">Create Bookmark</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_menu_file_create_bookmark_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkImageMenuItem" id="menu_file_refresh">
                         <property name="label">gtk-refresh</property>
                         <property name="visible">True</property>
@@ -863,8 +878,8 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="tab_hborder">10</property>
-            <property name="enable_popup">True</property>
             <property name="homogeneous">True</property>
+            <signal name="switch-page" handler="on_notebook_switch_page" swapped="no"/>
             <child>
               <object class="GtkVBox" id="vbox_query">
                 <property name="visible">True</property>
