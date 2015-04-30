@@ -39,6 +39,7 @@ use File::Basename;
 use JSON;
 use threads;
 use LWP::UserAgent;
+use LWP::Protocol::socks;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
@@ -58,13 +59,17 @@ my $bookmarks = $confdir . "bookmarks";
 
 # default user settings
 my 	%settings = (
-	"timeout" 		 => "10",
-	#"filesize_type"  => "",
-	"proxy_enabled"  => 0,
-	"proxy_addr"	 => "",
-	"proxy_port" 	 => 8080,
-	"statusbar"      => 1,
-	"category_filter" => 1
+	"timeout" 		 	=> "10",
+	#"filesize_type"  	=> "",
+	"proxy_enabled"  	=> 0,
+	"http_proxy_addr"	=> "",
+	"http_proxy_port" 	=> 8080,
+	#"socks4_proxy_addr"	=> "",
+	#"socks4_proxy_port" => 1080,
+	#"socks5_proxy_addr"	=> "",
+	#"socks5_proxy_port" => 1080,
+	"statusbar"      	=> 1,
+	"category_filter" 	=> 1
 );
 
 my ($category_filter, $subcategory_filter) = ("","");
@@ -136,8 +141,12 @@ sub main {
 				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
 				#when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
 				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
-				when (m/^proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"proxy_addr"} = $1; }
-				when (m/^proxy_port=\"(\d+)\"/) { $settings{"proxy_port"} = $1; }
+				when (m/^http_proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"http_proxy_addr"} = $1; }
+				when (m/^http_proxy_port=\"(\d+)\"/) { $settings{"http_proxy_port"} = $1; }
+				#when (m/^socks4_proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"socks4_proxy_addr"} = $1; }
+				#when (m/^socks4_proxy_port=\"(\d+)\"/) { $settings{"socks4_proxy_port"} = $1; }
+				#when (m/^socks5_proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"socks5_proxy_addr"} = $1; }
+				#when (m/^socks5_proxy_port=\"(\d+)\"/) { $settings{"socks5_proxy_port"} = $1; }
 				when (m/^statusbar=\"(.+)\"/) { $settings{"statusbar"} = $1; }
 				when (m/^category_filter=\"(.+)\"/) { $settings{"category_filter"} = $1; }
 			}
@@ -178,14 +187,14 @@ sub main {
 	
 	# proxy settings
 	if ($settings{"proxy_enabled"} eq 1) {
-		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+		$ua->proxy([ 'http', 'https' ], "http://".$settings{"http_proxy_addr"}.":".$settings{"http_proxy_port"});
 		
 		if ($debug == 1) {
 			# make sure we are routed correctly, show real endpoint address
 			my $ip = $ua->get("http://checkip.dyndns.org")->decoded_content;
 		
 			if ($ip =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) { 
-					debug("[ *] proxy connection established (" . $1 . ":".$settings{"proxy_port"}.")\n");  
+					debug("[ *] proxy connection established (" . $1 . ":".$settings{"http_proxy_port"}.")\n");  
 			}
 		}
 	}
@@ -668,17 +677,17 @@ sub on_menu_edit_preferences_activate {
 	$builder->get_object( 'entry_timeout' )->set_value($settings{"timeout"});
 	
 	if ($settings{"proxy_enabled"} eq 1) {
-		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
-		$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
+		$builder->get_object( 'entry_http_proxy_addr' )->set_sensitive(1); 
+		$builder->get_object( 'entry_http_proxy_port' )->set_sensitive(1); 
 		$builder->get_object( 'checkbutton_proxy' )->set_active(1);
 	} else {
-		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
-		$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
+		$builder->get_object( 'entry_http_proxy_addr' )->set_sensitive(0); 
+		$builder->get_object( 'entry_http_proxy_port' )->set_sensitive(0); 
 		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
 	}
 
-	$builder->get_object( 'entry_proxy_addr' )->set_text($settings{"proxy_addr"});
-	$builder->get_object( 'entry_proxy_port' )->set_value($settings{"proxy_port"});
+	$builder->get_object( 'entry_http_proxy_addr' )->set_text($settings{"http_proxy_addr"});
+	$builder->get_object( 'entry_http_proxy_port' )->set_value($settings{"http_proxy_port"});
 	
 	$preferences->run; # loops here
 	$preferences->hide;
@@ -688,17 +697,10 @@ sub on_button_pref_ok_clicked {
 	# update the changed settings within preferences
 	
 	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_value();
-	$settings{"proxy_addr"} = $builder->get_object( 'entry_proxy_addr' )->get_text();
-	$settings{"proxy_port"} = $builder->get_object( 'entry_proxy_port' )->get_value();
+	$settings{"http_proxy_addr"} = $builder->get_object( 'entry_http_proxy_addr' )->get_text();
+	$settings{"http_proxy_port"} = $builder->get_object( 'entry_http_proxy_port' )->get_value();
 	
-	# TODO implement:
-	# [use proxy] [YES/NO]
-		#  *  Socks
-		#	    (host)(post)
-		#  *  HTTP/HTTPS 
-		#	    (host)(post)
-	
-	#### addd support for environment proxy   EG:
+	#### add support for environment proxy   EG:
 	#if ($builder->get_object( 'checkbutton_env_proxy' )->get_active() == TRUE) {	
 	#	$ua->proxy( ['http'], $ENV{HTTP_PROXY} ) if exists $ENV{HTTP_PROXY};
 	#}
@@ -709,7 +711,7 @@ sub on_button_pref_ok_clicked {
 		
 		# reinitialize with proxy
 		ua_init();
-		$ua->proxy([ 'http', 'https' ], "http://".$settings{"proxy_addr"}.":".$settings{"proxy_port"});
+		$ua->proxy([ 'http', 'https' ], "http://".$settings{"http_proxy_addr"}.":".$settings{"http_proxy_port"});
 	
 		
 	} else {
@@ -727,11 +729,11 @@ sub on_button_pref_ok_clicked {
 sub on_checkbutton_proxy_toggled {
 	# filter input when proxy toggle state changed
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
-		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(1); 
-		$builder->get_object( 'entry_proxy_port' )->set_sensitive(1); 
+		$builder->get_object( 'entry_http_proxy_addr' )->set_sensitive(1); 
+		$builder->get_object( 'entry_http_proxy_port' )->set_sensitive(1); 
 	} else {
-		$builder->get_object( 'entry_proxy_addr' )->set_sensitive(0); 
-		$builder->get_object( 'entry_proxy_port' )->set_sensitive(0); 
+		$builder->get_object( 'entry_http_proxy_addr' )->set_sensitive(0); 
+		$builder->get_object( 'entry_http_proxy_port' )->set_sensitive(0); 
 	}
 }
 
@@ -935,8 +937,12 @@ sub write_config($) {
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
 	#print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
 	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
-	print FILE "proxy_addr=\"".$settings{"proxy_addr"}."\"\n";
-	print FILE "proxy_port=\"".$settings{"proxy_port"}."\"\n";
+	print FILE "http_proxy_addr=\"".$settings{"http_proxy_addr"}."\"\n";
+	print FILE "http_proxy_port=\"".$settings{"http_proxy_port"}."\"\n";
+	#print FILE "socks4_proxy_addr=\"".$settings{"socks4_proxy_addr"}."\"\n";
+	#print FILE "socks4_proxy_port=\"".$settings{"socks4_proxy_port"}."\"\n";
+	#print FILE "socks5_proxy_addr=\"".$settings{"socks5_proxy_addr"}."\"\n";
+	#print FILE "socks5_proxy_port=\"".$settings{"socks5_proxy_port"}."\"\n";
 	print FILE "statusbar=\"".$settings{"statusbar"}."\"\n";
 	print FILE "category_filter=\"".$settings{"category_filter"}."\"\n";
 	close FILE;
