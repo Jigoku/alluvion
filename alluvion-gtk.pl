@@ -778,12 +778,22 @@ sub on_checkbutton_proxy_toggled {
 		$builder->get_object( 'vbox_http_proxy' )->set_sensitive(1); 
 		$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(1); 
 		$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(1); 
+		
+		####### workaround for issue #19
+		# https://github.com/Jigoku/alluvion/issues/19
+		if ($builder->get_object( 'radio_http'   )->get_active() == TRUE ) { ua_init_http(); }
+		if ($builder->get_object( 'radio_socks4' )->get_active() == TRUE ) { ua_init_socks4(); }
+		if ($builder->get_object( 'radio_socks5' )->get_active() == TRUE ) { ua_init_socks5(); }
+		
+		
 	} else {
 		$settings{"proxy_type"} = "none";
 		$builder->get_object( 'vbox_http_proxy' )->set_sensitive(0); 
 		$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(0); 
 		$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(0); 
 	}
+	
+
 }
 
 sub on_button_pref_cancel_clicked {
