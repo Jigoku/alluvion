@@ -4,6 +4,8 @@
 * user preferences dialog
 * settings file stored to $HOME/.alluvion
 * http/https proxy support
+* socks4 proxy support
+* socks5 proxy support
 * configurable connection timeout
 * create bookmarks for search querys
 * threaded file requests - file_request()
