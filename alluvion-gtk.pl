@@ -39,7 +39,7 @@ use File::Basename;
 use JSON;
 use threads;
 use LWP::UserAgent;
-use LWP::Protocol::socks;
+#use LWP::Protocol::socks;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
