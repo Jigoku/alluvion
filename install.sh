@@ -13,3 +13,10 @@ install -Dm644 data/alluvion_128.png $PREFIX/share/alluvion/alluvion_128.png
 install -Dm755 alluvion-gtk $PREFIX/bin/alluvion-gtk
 
 rm -f alluvion-gtk
+
+# If you want to 'uninstall' alluvion, simply delete these files;
+#
+# $PREFIX/share/alluvion/alluvion.glade
+# $PREFIX/share/alluvion/alluvion_128.png
+# $PREFIX/share/alluvion/alluvion_48.png
+# $PREFIX/bin/alluvion-gtk
