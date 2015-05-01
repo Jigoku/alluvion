@@ -184,37 +184,9 @@ sub main {
 	# draw the window
 	$window->show();
 	
+	# set previous proxy settings
+	assign_proxy();
 
-
-	debug("[ !] proxy mode: ".$settings{"proxy_type"} . "\n");
-		
-	given($settings{"proxy_type"}) {
-		# set http proxy
-		when (m/^http$/) { 
-			$builder->get_object( 'radio_http' )->set_active(1); 
-			debug("[ !] setting ua_init_http()\n");
-			ua_init_http();
-		}
-		# set socks4
-		when (m/^socks4$/) { 
-			$builder->get_object( 'radio_socks4' )->set_active(1);
-			debug("[ !] setting ua_init_socks4()\n");
-			ua_init_socks4();
-		}
-		# set socks 5		
-		when (m/^socks5$/) { 
-			$builder->get_object( 'radio_socks5' )->set_active(1);
-			debug("[ !] setting ua_init_socks5()\n");
-			ua_init_socks5();
-		}
-		when (m/^none$/) { 
-			$builder->get_object( 'vbox_http_proxy' )->set_sensitive(0); 
-			$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(0); 
-			$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(0); 
-			# initialize LWP::UserAgent with no proxy
-			ua_init();
-		}
-	}
 	
 	# start thread for statusbar display
 	set_index_total();
@@ -229,9 +201,13 @@ sub main {
 sub debug_address {
 	if ($debug eq 1) {
 		print "[ ~] checking end address...\n";
-		my $data = $ua->get("http://checkip.dyndns.org/")->decoded_content;
-		if ($data =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) {
-			print "[ !] $1\n";	
+		my $response = $ua->get("http://checkip.dyndns.org/");
+		if ($response->is_success) {
+			if ($response->decoded_content =~ m/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/) {
+				print "[ !] $1\n";	
+			}
+		} else {
+			print "[ -] $!\n";
 		}
 		
 	}
@@ -386,7 +362,38 @@ sub ua_init_socks5 {
 	$settings{"proxy_type"} = "socks5";
 }
 
-
+sub assign_proxy {
+	debug("[ !] proxy mode: ".$settings{"proxy_type"} . "\n");
+		
+	no warnings;
+	given($settings{"proxy_type"}) {
+		# set http proxy
+		when (m/^http$/) { 
+			$builder->get_object( 'radio_http' )->set_active(1); 
+			debug("[ !] setting ua_init_http()\n");
+			ua_init_http();
+		}
+		# set socks4
+		when (m/^socks4$/) { 
+			$builder->get_object( 'radio_socks4' )->set_active(1);
+			debug("[ !] setting ua_init_socks4()\n");
+			ua_init_socks4();
+		}
+		# set socks 5		
+		when (m/^socks5$/) { 
+			$builder->get_object( 'radio_socks5' )->set_active(1);
+			debug("[ !] setting ua_init_socks5()\n");
+			ua_init_socks5();
+		}
+		when (m/^none$/) { 
+			$builder->get_object( 'vbox_http_proxy' )->set_sensitive(0); 
+			$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(0); 
+			$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(0); 
+			# initialize LWP::UserAgent with no proxy
+			ua_init();
+		}
+	}
+}
 
 sub set_index_total {
 	debug_address();
