@@ -869,14 +869,6 @@ sub on_about_clicked {
 	$about->hide;
 }
 
-sub on_menu_file_create_bookmark_activate {
-	my $query = $builder->get_object( 'entry_query' )->get_text;
-	if (length($query) < 4) {
-		spawn_dialog("error", "close", "Error", "Query must be at least 4 characters\n".$!);
-		return;
-	}
-	push @bookmark, $query;
-}
 
 sub on_notebook_switch_page {
 		my $notebook = $builder->get_object( 'notebook' );
