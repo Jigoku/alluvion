@@ -328,17 +328,36 @@ sub populate_bookmarks {
 	chomp(@bookmark);
 	
 	for my $item (@bookmark) {
-		my $button = Gtk2::Button->new;
-		$button->set_label($item);
-		$button->signal_connect('clicked', 
+		my $hbox = Gtk2::HBox->new;
+		my $label = Gtk2::Label->new;
+		$label->set_markup("<span size='large'><b>".$item."</b></span>");
+		
+		my $button_search = Gtk2::Button->new;
+		$button_search->set_label("search");
+		$button_search->signal_connect('clicked', 
 			sub { 
-				print $item . "\n";
 				$builder->get_object( 'notebook' )->set_current_page(0);
 				$builder->get_object( 'entry_query' )->set_text($item);
 				on_button_query_clicked();
 			}
 		);
-		$vbox->pack_start ($button, FALSE, FALSE, 0);
+		
+		my $button_remove = Gtk2::Button->new;
+		$button_remove->set_label("remove");
+		$button_remove->signal_connect('clicked', 
+			sub { 
+				remove_bookmark($item);
+				populate_bookmarks();
+			}
+		);
+		
+		my $hseparator = new Gtk2::HSeparator();
+		
+		$hbox->pack_start($label, FALSE,FALSE,0);
+		$hbox->pack_end($button_remove, FALSE,FALSE,0);
+		$hbox->pack_end($button_search, FALSE,FALSE,0);
+		$vbox->pack_start ($hbox, FALSE, FALSE, 0);
+		$vbox->pack_start($hseparator, FALSE,FALSE,5);
 	}
 	$vbox->show_all;
 }
@@ -577,6 +596,20 @@ sub on_button_query_clicked {
 		$vbox->pack_start($label, FALSE, FALSE, 5);
 	}
 
+	# bookmark button
+	my $button_bookmark = Gtk2::Button->new;
+		$button_bookmark->set_label("Bookmark this search");
+		$button_bookmark->set_image(Gtk2::Image->new_from_stock("gtk-add", 'button'));
+		
+		$button_bookmark->signal_connect('clicked', 
+			sub { 
+				my $query = $builder->get_object( 'entry_query' )->get_text;
+				push @bookmark, $query;
+			}
+		);
+	$vbox->pack_start($button_bookmark, FALSE, FALSE, 5);
+	
+	# the results
 	my $n = 0;
 				
 	for (@{$data->{torrents}}) {
@@ -615,6 +648,13 @@ sub splice_thread {
 	splice @threads, $i, 1;
 }
 
+sub remove_bookmark($) {
+	my $item = shift;
+	my $i = 0;
+	$i++ until $bookmark[$i] eq $item or $i > $#bookmark;
+	splice @bookmark, $i, 1;
+}
+
 sub add_separated_item($$$$$$) {
 	# adds a label with markup and separator to a vbox 
 	# (For list of search results)
@@ -639,6 +679,7 @@ sub add_separated_item($$$$$$) {
 	#		}
 	#	 );
 
+	
 	my $tooltip_title = Gtk2::Tooltips->new;
 		$tooltip_title->set_tip( $eventbox, $torrent_title );
 
@@ -652,8 +693,8 @@ sub add_separated_item($$$$$$) {
 	my $number = Gtk2::Label->new;
 	$number->set_markup("<span size='large'>".$n.".</span>");
 	$number->set_alignment(0,.5);
-	$number->set_width_chars(3);
-		
+	$number->set_width_chars(4);
+	
 	my $vboxinfo = Gtk2::VBox->new;
 
 	# create new label for truncated title with tooltip
@@ -1013,7 +1054,7 @@ sub on_window_check_resize {
 	my $container = $builder->get_object( 'vbox_query_results' );
 	my @children;
 	
-	my $width_chars = int ($width * .10);
+	my $width_chars = int ($width * .09);
 	debug("[ !] width_chars =  ". $width_chars . "\n");
 	
 	# recursively loop until we find a label
