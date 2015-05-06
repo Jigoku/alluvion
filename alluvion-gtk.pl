@@ -30,7 +30,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 my $VERSION = "0.2pre";
-
 use feature ":5.10";
 use strict;
 use warnings;
@@ -43,6 +42,18 @@ use LWP::Protocol::socks;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
+
+# may be worth splitting up this huge script a little...
+# just makes it easier to find/change things
+#require $Bin . "/lib/interface.pm";
+#require $Bin . "/lib/common.pm";
+#require $Bin . "/lib/request.pm";
+#require $Bin . "/lib/proxy.pm";
+#require $Bin . "/lib/debug.pm";
+#require $Bin . "/lib/bookmarks.pm";
+#require $Bin . "/lib/searchquery.pm";
+#require $Bin . "/lib/hashlookup.pm";
+
 $|++;
 
 die "[ -] Glib::Object thread safety failed"
@@ -63,11 +74,11 @@ my 	%settings = (
 	#"filesize_type"  	=> "",
 	"proxy_enabled"  	=> 0,
 	"proxy_type"		=> "none",
-	"http_proxy_addr"	=> "127.0.0.1",
+	"http_proxy_addr"	=> "0.0.0.0",
 	"http_proxy_port" 	=> 8080,
-	"socks4_proxy_addr"	=> "127.0.0.1",
+	"socks4_proxy_addr"	=> "0.0.0.0",
 	"socks4_proxy_port" => 1080,
-	"socks5_proxy_addr"	=> "127.0.0.1",
+	"socks5_proxy_addr"	=> "0.0.0.0",
 	"socks5_proxy_port" => 1080,
 	"statusbar"      	=> 1,
 	"category_filter" 	=> 1
@@ -125,7 +136,6 @@ my $sleeper = threads->create({'void' => 1},
 	}
 )->detach;
 
-
 main();
 
 sub main {
@@ -155,13 +165,7 @@ sub main {
 		}
 	}
 	
-	if (-e $bookmarks) {
-		open FILE, "<$bookmarks" or die "[ -] $bookmarks: $!\n";
-		for (<FILE>) {
-			push @bookmark, $_;
-		}
-	}
-	
+
 	# check gtkbuilder interface exists
 	if ( ! -e $xml ) { die "Interface: '$xml' $!"; }
 
@@ -192,14 +196,23 @@ sub main {
 	set_index_total();
 	
 	# restore saved bookmarks
+	if (-e $bookmarks) {
+		open FILE, "<$bookmarks" or die "[ -] $bookmarks: $!\n";
+		for (<FILE>) {
+			push @bookmark, $_;
+		}
+	}
+	
+	# add them to the interface
 	populate_bookmarks();
+	
 	
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
 
-sub debug_address {
-	if ($debug eq 1) {
+sub debug_proxy_address {
+	if ($debug eq 1 && $settings{'proxy_enabled'} eq 1) {
 		print "[ ~] checking end address...\n";
 		my $response = $ua->get("http://checkip.dyndns.org/");
 		if ($response->is_success) {
@@ -396,7 +409,7 @@ sub assign_proxy {
 }
 
 sub set_index_total {
-	debug_address();
+	debug_proxy_address();
 	my $index_total = $builder->get_object( 'label_indexed_total' );
 	my $spinner = $builder->get_object( 'spinner' );
 	
@@ -630,21 +643,19 @@ sub add_separated_item($$$$$$) {
 		$tooltip_title->set_tip( $eventbox, $torrent_title );
 
 	my $hseparator = new Gtk2::HSeparator();
-		
 	
 	my $hbox = Gtk2::HBox->new;
 		$hbox->set_homogeneous(FALSE);
+		$hbox->set_homogeneous(0);
 		
 	# item number of result
 	my $number = Gtk2::Label->new;
 	$number->set_markup("<span size='large'>".$n.".</span>");
 	$number->set_alignment(0,.5);
 	$number->set_width_chars(3);
-
 		
 	my $vboxinfo = Gtk2::VBox->new;
-		$hbox->set_homogeneous(0);
-		
+
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
 	$label_title->set_markup("<span size='large'><b>".convert_special_char($torrent_title) ."</b></span>");
@@ -993,6 +1004,41 @@ sub commify($) {
 sub debug($) {
 		if ($debug == 1) { print shift };
 }
+
+
+sub on_window_check_resize {
+	my ($width, undef)  =  $window->get_size;
+	debug("[ !] width request: ". $width . "\n");
+	
+	my $container = $builder->get_object( 'vbox_query_results' );
+	my @children;
+	
+	my $width_chars = int ($width * .10);
+	debug("[ !] width_chars =  ". $width_chars . "\n");
+	
+	# recursively loop until we find a label
+	my $cb; 
+	$cb = sub { 
+		my $w = shift; 
+		push @children, 
+		$w if $w->isa('Gtk2::Label'); 
+		$w->foreach($cb) if $w->isa('Gtk2::Container');
+	};
+	$container->foreach($cb);
+	
+	# loop the labels
+	foreach my $child (@children) {
+		if ($child->isa('Gtk2::Label')) { 
+			# only torrent_title labels have ellipsize set to 'end'
+			if ($child->get_ellipsize eq "end") {
+				# dynamically update truncation on window resize
+				$child->set_width_chars($width_chars);
+			}
+		}
+	}
+}
+
+
 
 
 sub write_config($) {
