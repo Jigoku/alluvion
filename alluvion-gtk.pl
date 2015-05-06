@@ -605,6 +605,7 @@ sub on_button_query_clicked {
 			sub { 
 				my $query = $builder->get_object( 'entry_query' )->get_text;
 				push @bookmark, $query;
+				populate_bookmarks();
 			}
 		);
 	$vbox->pack_start($button_bookmark, FALSE, FALSE, 5);
