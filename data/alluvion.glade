@@ -667,7 +667,6 @@
                         <property name="can_focus">True</property>
                         <property name="max_length">40</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">156B69B8643BD11849A5D8F2122E13FBB61BD041</property>
                         <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="secondary_icon_activatable">False</property>
