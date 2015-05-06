@@ -7,11 +7,11 @@
 * socks4 proxy support
 * socks5 proxy support
 * configurable connection timeout
-* create bookmarks for search querys
+* bookmark manager
 * threaded file requests - file_request()
 * threaded json requests - json_request()
-* lots of bug fixes/improvements
-* cleaner exit when closing application
+* many bug fixes and UI improvements
+* cleanup properly when exiting
 * return key now activates text entry widgets for appropriate button action
 * --debug (show debug/verbose output)
 * --reset (reset local config with default settings)
