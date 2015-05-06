@@ -476,21 +476,13 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkHSeparator" id="hseparator13">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox_query">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="border_width">3</property>
+                    <property name="border_width">5</property>
                     <child>
                       <object class="GtkEntry" id="entry_query">
                         <property name="visible">True</property>
@@ -515,7 +507,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">3</property>
                         <signal name="clicked" handler="on_button_query_clicked" swapped="no"/>
                       </object>
                       <packing>
@@ -530,7 +521,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">2</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="on_button_query_clear_clicked" swapped="no"/>
                       </object>
@@ -548,15 +538,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHSeparator" id="hseparator_query">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox_category">
@@ -678,6 +660,7 @@
                   <object class="GtkHBox" id="hbox_hashlookup">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="border_width">5</property>
                     <child>
                       <object class="GtkEntry" id="entry_hash">
                         <property name="visible">True</property>
@@ -704,7 +687,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">3</property>
                         <signal name="clicked" handler="on_button_hash_clicked" swapped="no"/>
                       </object>
                       <packing>

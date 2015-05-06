@@ -185,16 +185,6 @@ sub main {
 	$builder->get_object( 'view_statusbar' )->set_active($settings{"statusbar"});
 	$builder->get_object( 'view_category' )->set_active($settings{"category_filter"});
 	
-	# draw the window
-	$window->show();
-	
-	# set previous proxy settings
-	assign_proxy();
-
-	
-	# start thread for statusbar display
-	set_index_total();
-	
 	# restore saved bookmarks
 	if (-e $bookmarks) {
 		open FILE, "<$bookmarks" or die "[ -] $bookmarks: $!\n";
@@ -206,7 +196,15 @@ sub main {
 	# add them to the interface
 	populate_bookmarks();
 	
+	# draw the window
+	$window->show();
 	
+	# set previous proxy settings
+	assign_proxy();
+
+	# start thread for statusbar display
+	set_index_total();
+
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
