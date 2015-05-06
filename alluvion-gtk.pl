@@ -333,7 +333,8 @@ sub populate_bookmarks {
 		$label->set_markup("<span size='large'><b>".$item."</b></span>");
 		
 		my $button_search = Gtk2::Button->new;
-		$button_search->set_label("search");
+		#$button_search->set_label("search");
+		$button_search->set_image(Gtk2::Image->new_from_stock("gtk-apply", 'button'));
 		$button_search->signal_connect('clicked', 
 			sub { 
 				$builder->get_object( 'notebook' )->set_current_page(0);
@@ -343,7 +344,8 @@ sub populate_bookmarks {
 		);
 		
 		my $button_remove = Gtk2::Button->new;
-		$button_remove->set_label("remove");
+		#$button_remove->set_label("remove");
+		$button_remove->set_image(Gtk2::Image->new_from_stock("gtk-clear", 'button'));
 		$button_remove->signal_connect('clicked', 
 			sub { 
 				remove_bookmark($item);
