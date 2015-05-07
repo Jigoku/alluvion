@@ -1,4 +1,4 @@
-# master (development version)
+# Alluvion 0.2 (07/05/2015)
 
 * now requires perl >= 5.10 for experimental features
 * user preferences dialog
