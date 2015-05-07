@@ -713,17 +713,19 @@ sub add_separated_item($$$$$$) {
 		
 		
 	# magnet uri
-	my $button_magnet = Gtk2::Button->new_from_stock("gtk-execute");
-		#$button_magnet->set_label("open magnet");
+	my $button_magnet = Gtk2::Button->new;
+		$button_magnet->set_image(Gtk2::Image->new_from_stock("gtk-execute", 'button'));
+		#$button_magnet->set_label("Launch");
 		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
 		
 	my $tooltip_magnet = Gtk2::Tooltips->new;
-		$tooltip_magnet->set_tip( $button_magnet, "Open magnet with xdg-open\n(your preffered torrent client)" );
+		$tooltip_magnet->set_tip( $button_magnet, "Open magnet URI" );
 		
 		
 	# *.torrent
-	my $button_torrent = Gtk2::Button->new_from_stock("gtk-save");
-		#$button_torrent->set_label("save torrent");
+	my $button_torrent = Gtk2::Button->new;
+		$button_torrent->set_image(Gtk2::Image->new_from_stock("gtk-save", 'button'));
+		#$button_torrent->set_label("Download");
 		$button_torrent->signal_connect('clicked', 
 			sub { 
 				apply_filefilter("*.torrent", "torrent files", $filechooser);
@@ -736,19 +738,24 @@ sub add_separated_item($$$$$$) {
 		);
 		
 	my $tooltip_torrent = Gtk2::Tooltips->new;
-		$tooltip_torrent->set_tip( $button_torrent, "Save *.torrent file as..." );
+		$tooltip_torrent->set_tip( $button_torrent, "Save *.torrent file" );
 		
 	# info hash
-	my $button_hash = Gtk2::Button->new_from_stock("gtk-copy");
-		#$button_hash->set_label("copy hash");
+	my $button_hash = Gtk2::Button->new;
+		$button_hash->set_image(Gtk2::Image->new_from_stock("gtk-info", 'button'));
+		#$button_hash->set_label("Info");
 		$button_hash->signal_connect('clicked', 
 			sub { 
-				my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
-				$clipboard->set_text($hash);
+				#my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
+				#$clipboard->set_text($hash);
+				
+				$builder->get_object( 'entry_hash' )->set_text($hash);
+				$builder->get_object( 'notebook' )->set_current_page(1);
+				on_button_hash_clicked();
 			}
 		);
 	my $tooltip_hash = Gtk2::Tooltips->new;
-		$tooltip_hash->set_tip( $button_hash, "Copy info hash to clipboard" );
+		$tooltip_hash->set_tip( $button_hash, "View torrent information" );
 		
 	# container for buttons
 	my $buttonbox = Gtk2::HBox->new;
