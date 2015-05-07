@@ -1290,9 +1290,7 @@ u should have received a copy of the GNU General Public License
 along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
     <property name="authors">Ricky K. Thomson
 http://github.com/jigoku/</property>
-    <property name="artists">Alluvion icon provided by OpenClips:
-http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
-</property>
+    <property name="artists">https://openclipart.org/</property>
     <property name="logo">alluvion_128.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="aboutdialog-vbox">
