@@ -205,6 +205,9 @@ sub main {
 	# start thread for statusbar display
 	set_index_total();
 
+	# check if there is a newer release
+	check_new_version();
+
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
@@ -221,6 +224,15 @@ sub debug_proxy_address {
 			print "[ -] $!\n";
 		}
 		
+	}
+}
+
+sub check_new_version {
+	my $tag = json_request("https://api.github.com/repos/jigoku/alluvion/releases/latest");
+	
+	# prompt there is a newer release
+	if ($tag->{tag_name} > $VERSION) {
+		spawn_dialog("info", "ok", "Information", "A new release is available\n");
 	}
 }
 
