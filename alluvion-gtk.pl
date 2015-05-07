@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = "0.2";
+my $VERSION = "0.1";
 use feature ":5.10";
 use strict;
 use warnings;
@@ -205,9 +205,6 @@ sub main {
 	# start thread for statusbar display
 	set_index_total();
 
-	# check if there is a newer release
-	check_new_version();
-
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
@@ -227,14 +224,21 @@ sub debug_proxy_address {
 	}
 }
 
-sub check_new_version {
-	### TODO make menu item under 'Help' to check for new release.
-	### this shouldn't be done every time the applications is started
+
+sub on_menu_help_check_release_activate {
+	# check if there is a newer release
 	my $tag = json_request("https://api.github.com/repos/jigoku/alluvion/releases/latest");
+	
+	if ($tag eq "error" || $tag eq "connection") { 
+		spawn_dialog("error", "close", "Error", "Could not determine latest version\n");
+		return;
+	}
 	
 	# prompt there is a newer release
 	if ($tag->{tag_name} > $VERSION) {
-		spawn_dialog("info", "ok", "Information", "A new release is available\n");
+		spawn_dialog("info", "ok", "Information", "A new release is available\nVersion: ".$tag->{tag_name});
+	} else {
+		spawn_dialog("info", "ok", "Information", "You are running the latest version\n");
 	}
 }
 

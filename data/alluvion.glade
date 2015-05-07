@@ -38,6 +38,11 @@
     <property name="can_focus">False</property>
     <property name="stock">gtk-refresh</property>
   </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-dialog-question</property>
+  </object>
   <object class="GtkListStore" id="liststore_category">
     <columns>
       <!-- column-name item -->
@@ -278,7 +283,7 @@
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Alluvion</property>
+    <property name="title" translatable="yes">Alluvion 0.2</property>
     <property name="window_position">mouse</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
@@ -442,6 +447,23 @@
                   <object class="GtkMenu" id="menu_help">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_help_check_release">
+                        <property name="label">Check for updates</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="image">image8</property>
+                        <property name="use_stock">False</property>
+                        <property name="accel_group">accelgroup</property>
+                        <signal name="activate" handler="on_menu_help_check_release_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="menuhelp_separator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkImageMenuItem" id="menu_help_about">
                         <property name="label">gtk-about</property>
@@ -1422,6 +1444,26 @@ http://github.com/jigoku/</property>
       <action-widget response="0">button_file_cancel</action-widget>
     </action-widgets>
   </object>
+  <object class="GtkAdjustment" id="preferences_adjustment_http_proxy_port">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="preferences_adjustment_socks4_proxy_port">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="preferences_adjustment_socks5_proxy_port">
+    <property name="upper">65535</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="preferences_adjustment_timeout">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkDialog" id="preferences">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -2005,25 +2047,5 @@ http://github.com/jigoku/</property>
       <action-widget response="0">button_pref_ok</action-widget>
       <action-widget response="0">button_pref_cancel</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkAdjustment" id="preferences_adjustment_http_proxy_port">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="preferences_adjustment_socks4_proxy_port">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="preferences_adjustment_socks5_proxy_port">
-    <property name="upper">65535</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="preferences_adjustment_timeout">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
   </object>
 </interface>
