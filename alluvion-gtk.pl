@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = "0.1";
+my $VERSION = "0.2";
 use feature ":5.10";
 use strict;
 use warnings;
