@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = "0.2pre";
+my $VERSION = "0.2";
 use feature ":5.10";
 use strict;
 use warnings;
@@ -508,7 +508,9 @@ sub on_button_hash_clicked {
 		$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
 		$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 		$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
-		$builder->get_object( 'label_magnet_uri' )->set_text($_->{magnet_uri});
+		
+
+		$builder->get_object( 'textview_magnet_uri' )->get_buffer->set_text($_->{magnet_uri});
 	}
 	
 }

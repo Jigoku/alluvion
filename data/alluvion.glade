@@ -471,6 +471,7 @@
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="tab_pos">left</property>
             <property name="tab_hborder">10</property>
             <property name="homogeneous">True</property>
             <signal name="switch-page" handler="on_notebook_switch_page" swapped="no"/>
@@ -478,9 +479,6 @@
               <object class="GtkVBox" id="vbox_query">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <child>
-                  <placeholder/>
-                </child>
                 <child>
                   <object class="GtkHBox" id="hbox_query">
                     <property name="visible">True</property>
@@ -537,11 +535,8 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">0</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkHBox" id="hbox_category">
@@ -549,7 +544,18 @@
                     <property name="can_focus">False</property>
                     <property name="border_width">5</property>
                     <child>
-                      <placeholder/>
+                      <object class="GtkLabel" id="label_category_filter">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Filter by&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkComboBox" id="combobox_category">
@@ -599,7 +605,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
@@ -640,7 +646,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
@@ -1114,11 +1120,14 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label_magnet_uri">
+                              <object class="GtkTextView" id="textview_magnet_uri">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="xalign">0</property>
-                                <property name="selectable">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="border_width">5</property>
+                                <property name="editable">False</property>
+                                <property name="wrap_mode">char</property>
+                                <property name="left_margin">5</property>
+                                <property name="right_margin">5</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -1264,7 +1273,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="transient_for">window</property>
     <property name="program_name">Alluvion</property>
-    <property name="version">0.2pre</property>
+    <property name="version">0.2</property>
     <property name="copyright" translatable="yes">Copyright (C) Ricky K. Thomson 2015</property>
     <property name="website">https://jigoku.github.io/alluvion/</property>
     <property name="license" translatable="yes">Copyright (C) 2015 Ricky K. Thomson
@@ -1311,8 +1320,9 @@ http://pixabay.com/en/plasma-globe-lightning-plasma-150074/
               <object class="GtkLabel" id="label_info">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Consider donating to the Strike API providers</property>
+                <property name="label" translatable="yes">Like this software? Consider donating to the Strike API providers</property>
                 <property name="justify">center</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">True</property>
