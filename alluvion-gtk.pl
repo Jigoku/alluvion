@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.2pre
+# Alluvion 0.2
 # Perl/Gtk2 torrent search utility (strike API)
 # --------------------------------------------------------------------
 # Usage:
@@ -251,9 +251,8 @@ sub file_request($) {
 			if (!($ua->is_online)) {  return 3; }
 			
 			# get the file
-			#my $request = HTTP::Request->new( GET => $file_uri );
-			#my $response = $ua->request($request);
 			my $response = $ua->get($file_uri);
+			
 			if ($response->is_success) {
 				return $response->content;
 			
