@@ -29,35 +29,26 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a id="about-alluvion" class="anchor" href="#about-alluvion" aria-hidden="true"><span class="octicon octicon-link"></span></a>About Alluvion</h1>
+<a id="what-is-alluvion" class="anchor" href="#what-is-alluvion" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Alluvion?</h1>
 
-<p>Alluvion is a torrent search utility giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the <a href="https://getstrike.net/api/">strike API</a> to return results based on your keywords. </p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/1535179/7192480/064044ee-e48e-11e4-8cce-7357edb18134.png" alt="screenshot"></p>
-
-<h2>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+<p>Alluvion is a GPLv3 licensed torrent search utility, giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the <a href="https://getstrike.net/api/">strike API</a> to return results based on your keywords. </p>
 
 <p>Allows you to lookup and search torrent information indexed by <a href="http://getstrike.net/">http://getstrike.net/</a></p>
 
 <ul>
 <li>search for torrents</li>
 <li>filter search queries by category</li>
-<li>download *.torrent file</li>
-<li>copy info hash to clipboard</li>
+<li>download *.torrent files directly</li>
+<li>view torrent information by supplying an info hash</li>
 <li>launch magnet with torrent client (via `xdg-open')</li>
+<li>bookmarks manager</li>
+<li>http/https proxy support</li>
+<li>socks4 proxy support</li>
+<li>socks5 proxy support</li>
 </ul>
 
 <h2>
-<a id="downloads" class="anchor" href="#downloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>Downloads</h2>
-
-<p>Stable releases</p>
-
-<ul>
-<li><a href="https://github.com/Jigoku/alluvion/releases/tag/0.1">v0.1</a></li>
-</ul>
-
-<p>Obtain development branch</p>
+<a id="obtain-development-branch" class="anchor" href="#obtain-development-branch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obtain development branch</h2>
 
 <pre><code>$ git clone https://github.com/Jigoku/alluvion.git
 </code></pre>
@@ -74,6 +65,8 @@
 
 <pre><code> --debug (shows verbose information)
  --version (prints the version and exits)
+ --reset (resets to default settings)
+ --help (shows help)
 </code></pre>
 
 <p>Perl modules required:</p>
@@ -82,6 +75,7 @@
 <li>Gtk2</li>
 <li>JSON</li>
 <li>LWP::UserAgent</li>
+<li>LWP::Protocol::socks</li>
 <li>URI::Escape</li>
 </ul>
 
@@ -91,6 +85,14 @@
 
 <pre><code># perl -MCPAN -e 'install JSON'
 </code></pre>
+
+<h2>
+<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshots</h2>
+
+<p><img src="https://cloud.githubusercontent.com/assets/1535179/7506729/a8541c4c-f45b-11e4-9d8b-0350284851f5.png" alt="screenshot">
+<img src="https://cloud.githubusercontent.com/assets/1535179/7506730/ac7809e6-f45b-11e4-86bc-a1465cfe8f5d.png" alt="screenshot">
+<img src="https://cloud.githubusercontent.com/assets/1535179/7506731/af112fe8-f45b-11e4-9afe-f6b39247b008.png" alt="sceeenshot">
+<img src="https://cloud.githubusercontent.com/assets/1535179/7506732/b135b46a-f45b-11e4-9285-c6dbc7c03d62.png" alt="screenshot"></p>
 
 <h2>
 <a id="disclaimer" class="anchor" href="#disclaimer" aria-hidden="true"><span class="octicon octicon-link"></span></a>DISCLAIMER</h2>
