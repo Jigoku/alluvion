@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.2
+# Alluvion 0.2pre
 # Perl/Gtk2 torrent search utility (strike API)
 # --------------------------------------------------------------------
 # Usage:
@@ -228,6 +228,8 @@ sub debug_proxy_address {
 }
 
 sub check_new_version {
+	### TODO make menu item under 'Help' to check for new release.
+	### this shouldn't be done every time the applications is started
 	my $tag = json_request("https://api.github.com/repos/jigoku/alluvion/releases/latest");
 	
 	# prompt there is a newer release
@@ -249,9 +251,9 @@ sub file_request($) {
 			if (!($ua->is_online)) {  return 3; }
 			
 			# get the file
-			my $request = HTTP::Request->new( GET => $file_uri );
-			my $response = $ua->request($request);
-
+			#my $request = HTTP::Request->new( GET => $file_uri );
+			#my $response = $ua->request($request);
+			my $response = $ua->get($file_uri);
 			if ($response->is_success) {
 				return $response->content;
 			
