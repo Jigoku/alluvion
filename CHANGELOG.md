@@ -7,6 +7,7 @@
 * socks4 proxy support
 * socks5 proxy support
 * configurable connection timeout
+* search query labels for torrent titles now expand when window is resized
 * bookmark manager
 * hash lookup "clipboard" button changed to show more torrent information
 * threaded file requests - file_request()
