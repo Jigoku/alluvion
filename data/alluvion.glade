@@ -322,7 +322,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                      <object class="GtkSeparatorMenuItem" id="menu_file_separator">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
@@ -378,59 +378,59 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="view_search_query">
+                      <object class="GtkImageMenuItem" id="menu_view_search_query">
                         <property name="label" translatable="yes">Search Query</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="image">image6</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="on_view_search_query_activate" swapped="no"/>
+                        <signal name="activate" handler="on_menu_view_search_query_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="view_hash_lookup">
+                      <object class="GtkImageMenuItem" id="menu_view_hash_lookup">
                         <property name="label" translatable="yes">Hash Lookup</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="image">image4</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="on_view_hash_lookup_activate" swapped="no"/>
+                        <signal name="activate" handler="on_menu_view_hash_lookup_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="view_bookmarks">
+                      <object class="GtkImageMenuItem" id="menu_view_bookmarks">
                         <property name="label" translatable="yes">Bookmarks</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="image">image5</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="on_view_bookmarks_activate" swapped="no"/>
+                        <signal name="activate" handler="on_menu_view_bookmarks_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSeparatorMenuItem" id="view_separator">
+                      <object class="GtkSeparatorMenuItem" id="menu_view_separator">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckMenuItem" id="view_statusbar">
+                      <object class="GtkCheckMenuItem" id="menu_view_statusbar">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Statusbar</property>
                         <property name="use_underline">True</property>
                         <property name="active">True</property>
-                        <signal name="toggled" handler="on_view_statusbar_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_menu_view_statusbar_toggled" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkCheckMenuItem" id="view_category">
+                      <object class="GtkCheckMenuItem" id="menu_view_category">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Category Filter</property>
                         <property name="use_underline">True</property>
                         <property name="active">True</property>
-                        <signal name="toggled" handler="on_view_category_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_menu_view_category_toggled" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -459,7 +459,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkSeparatorMenuItem" id="menuhelp_separator">
+                      <object class="GtkSeparatorMenuItem" id="menu_help_separator">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>

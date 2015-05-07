@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = "0.2";
+my $VERSION = 0.2;
 use feature ":5.10";
 use strict;
 use warnings;
@@ -182,8 +182,8 @@ sub main {
 	$builder->connect_signals( undef );
 
 	# adjust user settings for interface
-	$builder->get_object( 'view_statusbar' )->set_active($settings{"statusbar"});
-	$builder->get_object( 'view_category' )->set_active($settings{"category_filter"});
+	$builder->get_object( 'menu_view_statusbar' )->set_active($settings{"statusbar"});
+	$builder->get_object( 'menu_view_category' )->set_active($settings{"category_filter"});
 	
 	# restore saved bookmarks
 	if (-e $bookmarks) {
@@ -958,10 +958,10 @@ sub on_combobox_subcategory_changed {
 }
 
 
-sub on_view_statusbar_toggled {
+sub on_menu_view_statusbar_toggled {
 	# toggle the visibility of the statusbar
 	# and update user settings to reflect that
-	my $check 	  = $builder->get_object( 'view_statusbar' );
+	my $check 	  = $builder->get_object( 'menu_view_statusbar' );
 	my $statusbar = $builder->get_object( 'statusbar' );
 	
 	if ($check->get_active == TRUE) {
@@ -973,10 +973,10 @@ sub on_view_statusbar_toggled {
 	}
 }
 
-sub on_view_category_toggled {
+sub on_menu_view_category_toggled {
 	# toggle the visibility of the category filter
 	# and update user settings to reflect that
-	my $check = $builder->get_object( 'view_category' );
+	my $check = $builder->get_object( 'menu_view_category' );
 	my $hbox = $builder->get_object( 'hbox_category' );
 	
 	if ($check->get_active == TRUE) {
@@ -994,9 +994,9 @@ sub on_view_category_toggled {
 	}
 }
 
-sub on_view_bookmarks_activate    { populate_bookmarks(); $builder->get_object( 'notebook' )->set_current_page(2); }
-sub on_view_hash_lookup_activate  { $builder->get_object( 'notebook' )->set_current_page(1); }
-sub on_view_search_query_activate { $builder->get_object( 'notebook' )->set_current_page(0); }
+sub on_menu_view_bookmarks_activate    { populate_bookmarks(); $builder->get_object( 'notebook' )->set_current_page(2); }
+sub on_menu_view_hash_lookup_activate  { $builder->get_object( 'notebook' )->set_current_page(1); }
+sub on_menu_view_search_query_activate { $builder->get_object( 'notebook' )->set_current_page(0); }
 
 
 sub apply_filefilter($$$) {
