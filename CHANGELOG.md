@@ -8,6 +8,7 @@
 * socks5 proxy support
 * configurable connection timeout
 * bookmark manager
+* hash lookup "clipboard" button changed to show more torrent information
 * threaded file requests - file_request()
 * threaded json requests - json_request()
 * many bug fixes and UI improvements
