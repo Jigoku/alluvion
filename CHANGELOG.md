@@ -1,3 +1,11 @@
+# master (development branch)
+
+* implement file_lengths / file_names for hash lookup tool
+* check for newer version of Alluvion (Help> Check for updates)
+* reorganized preferences dialog
+* fix lockup for slow torrent clients when issuing xdgopen()
+
+
 # Alluvion 0.2 (07/05/2015)
 
 * now requires perl >= 5.10 for experimental features
