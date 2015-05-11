@@ -70,8 +70,9 @@ my $bookmarks = $confdir . "bookmarks";
 
 # default user settings
 my 	%settings = (
-	"timeout" 		 	=> "10",
+	"timeout"			=> "10",
 	#"filesize_type"  	=> "",
+	"magnet_exec"		=> "xdg-open",
 	"proxy_enabled"  	=> 0,
 	"proxy_type"		=> "none",
 	"http_proxy_addr"	=> "0.0.0.0",
@@ -150,6 +151,7 @@ sub main {
 			# perl 5.10 experimental functions
 			given($_) {
 				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
+				when (m/^magnet_exec=\"(.+)\"/) { $settings{"magnet_exec"} = $1; } 
 				#when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
 				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
 				when (m/^proxy_type=\"(.+)\"/) { $settings{"proxy_type"} = $1; }
@@ -751,7 +753,7 @@ sub add_separated_item($$$$$$) {
 	my $button_magnet = Gtk2::Button->new;
 		$button_magnet->set_image(Gtk2::Image->new_from_stock("gtk-execute", 'button'));
 		#$button_magnet->set_label("Launch");
-		$button_magnet->signal_connect('clicked', sub { xdgopen($magnet_uri); });
+		$button_magnet->signal_connect('clicked', sub { launch_magnet($magnet_uri); });
 		
 	my $tooltip_magnet = Gtk2::Tooltips->new;
 		$tooltip_magnet->set_tip( $button_magnet, "Open magnet URI" );
@@ -1059,11 +1061,11 @@ sub convert_special_char {
 	return $str
 }
 
-sub xdgopen($) {
+sub launch_magnet($) {
 	my $arg = shift;
 	threads->create(
 		sub {
-			system("xdg-open '". $arg ."'");
+			system($settings{"magnet_exec"}." '". $arg ."'");
 		}
 	)->detach;
 }
@@ -1128,6 +1130,7 @@ sub write_config($) {
 	open FILE, ">$file" or die "$file: $!\n";
 	print FILE "# alluvion $VERSION - user settings\n";
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
+	print FILE "magnet_exec=\"".$settings{"magnet_exec"}."\"\n";
 	#print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
 	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
 	print FILE "proxy_type=\"".$settings{"proxy_type"}."\"\n";
