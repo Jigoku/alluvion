@@ -279,7 +279,7 @@ sub file_request($) {
 	debug( "[ !] thread #" .$tid ." finished\n");
 	
 	# stop tracking the thread
-	splice_thread($thread, @threads);
+	splice_array($thread, @threads);
 	
 	return $thread->join;
 }
