@@ -1044,7 +1044,12 @@ sub convert_special_char {
 }
 
 sub xdgopen($) {
-	system("xdg-open '". shift ."'");
+	my $arg = shift;
+	threads->create(
+		sub {
+			system("xdg-open '". $arg ."'");
+		}
+	)->detach;
 }
 
 sub bytes2mb($) {
