@@ -525,9 +525,27 @@ sub on_button_hash_clicked {
 		$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
 		$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
 		$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
-		
 
 		$builder->get_object( 'textview_magnet_uri' )->get_buffer->set_text($_->{magnet_uri});
+	}
+	
+	my (@file_names, @file_lengths) = ();
+	
+	for (@{$data->{torrents}}) {
+		for ($_->{file_info}) {
+			for (@{$_->{file_names}}) {
+				push @file_names, $_;
+				#print $_ . "\n" ;
+			}
+			for (@{$_->{file_lengths}}) {
+				push @file_lengths, $_;
+				#print $_ ."\n";
+			}
+		}
+	}
+	
+	for (my $i=0; $i<@file_names; $i++) {
+		print $file_names[$i] . " (".$file_lengths[$i].")\n"
 	}
 	
 }
