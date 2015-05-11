@@ -515,7 +515,6 @@ sub on_button_hash_clicked {
 			
 	# apply data to labels
 	for (@{$data->{torrents}}) {
-		$builder->get_object( 'label_torrent_hash' )->set_text($_->{torrent_hash});
 		$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
 		$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
 		$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
