@@ -4,7 +4,7 @@
 * check for newer version of Alluvion (Help> Check for updates)
 * reorganized preferences dialog
 * fix lockup for slow torrent clients when issuing xdgopen()
-
+* magnet_exec config option (path/program to torrent client)
 
 # Alluvion 0.2 (07/05/2015)
 
