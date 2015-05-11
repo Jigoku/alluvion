@@ -535,19 +535,18 @@ sub on_button_hash_clicked {
 		for ($_->{file_info}) {
 			for (@{$_->{file_names}}) {
 				push @file_names, $_;
-				#print $_ . "\n" ;
 			}
 			for (@{$_->{file_lengths}}) {
 				push @file_lengths, $_;
-				#print $_ ."\n";
 			}
 		}
 	}
 	
+	my $file_list;
 	for (my $i=0; $i<@file_names; $i++) {
-		print $file_names[$i] . " (".$file_lengths[$i].")\n"
+		$file_list .=  $file_names[$i] . " (".$file_lengths[$i].")\n";
 	}
-	
+	$builder->get_object( 'label_file_list' )->set_text($file_list);
 }
 
 sub destroy_children($) {
