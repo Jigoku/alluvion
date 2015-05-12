@@ -206,7 +206,7 @@ sub main {
 
 	# start thread for statusbar display
 	set_index_total();
-
+	
 	# main loop
 	Gtk2->main(); gtk_main_quit();
 }
@@ -740,10 +740,9 @@ sub add_separated_item($$$$$$) {
 	my $label_title = Gtk2::Label->new;
 	$label_title->set_markup("<span size='large'><b>".convert_special_char($torrent_title) ."</b></span>");
 	
-	my ($width, undef)  =  $window->get_size;
-	my $width_chars = int ($width * .09);
 	
-	$label_title->set_max_width_chars($width_chars); # label character limit before truncated
+	
+	$label_title->set_width_chars(70); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
 	#$label_title->set_line_wrap(1);	
