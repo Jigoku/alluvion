@@ -739,10 +739,16 @@ sub add_separated_item($$$$$$) {
 	# create new label for truncated title with tooltip
 	my $label_title = Gtk2::Label->new;
 	$label_title->set_markup("<span size='large'><b>".convert_special_char($torrent_title) ."</b></span>");
-	$label_title->set_width_chars(65); # label character limit before truncated
+	
+	my ($width, undef)  =  $window->get_size;
+	my $width_chars = int ($width * .09);
+	
+	$label_title->set_max_width_chars($width_chars); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
-		
+	#$label_title->set_line_wrap(1);	
+	#$label_title->set_line_wrap_mode("word");	
+	
 	
 	# create new label for aditional info
 	my $label = Gtk2::Label->new;
@@ -1120,6 +1126,8 @@ sub on_window_check_resize {
 			}
 		}
 	}
+
+
 }
 
 
