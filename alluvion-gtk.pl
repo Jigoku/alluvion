@@ -281,7 +281,7 @@ sub file_request($) {
 	debug( "[ !] thread #" .$tid ." finished\n");
 	
 	# stop tracking the thread
-	splice_array($thread, @threads);
+	@threads = splice_array($thread, @threads);
 	
 	return $thread->join;
 }
@@ -324,7 +324,7 @@ sub json_request($) {
 	debug( "[ !] thread #" .$tid ." finished\n");
 	
 	# stop tracking the thread
-	splice_array($thread, @threads);
+	@threads = splice_array($thread, @threads);
 	
 	my $data = $thread->join;
 
@@ -365,7 +365,7 @@ sub populate_bookmarks {
 		$button_remove->set_image(Gtk2::Image->new_from_stock("gtk-clear", 'button'));
 		$button_remove->signal_connect('clicked', 
 			sub { 
-				splice_array($item, @bookmark);
+				@bookmark = splice_array($item, @bookmark);
 				populate_bookmarks();
 			}
 		);
@@ -683,7 +683,8 @@ sub splice_array($$) {
 	my ($i, @a) = @_;
 	my $n = 0;
 	$n++ until $a[$n] eq $i or $n > $#a;
-	splice @a, $n, 1;
+	return splice @a, $n, 1;
+
 }
 
 #sub remove_bookmark($) {
@@ -1158,6 +1159,8 @@ sub gtk_main_quit {
 	
 	for (@threads) {
 		# show any threads that are still alive
+		# if application behaved properly, this should show one reference
+		# for the sleeper thread.
 		debug( $_."\n");
 	}
 	
