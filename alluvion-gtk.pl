@@ -908,6 +908,9 @@ sub on_checkbutton_proxy_toggled {
 
 sub on_button_pref_cancel_clicked {
 	# close the preferences dialog
+	if ($settings{"proxy_type"} eq "none") {
+		ua_init();
+	}
 	$builder->get_object( 'preferences' )->hide;
 }
 
