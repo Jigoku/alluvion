@@ -281,7 +281,7 @@ sub file_request($) {
 	debug( "[ !] thread #" .$tid ." finished\n");
 	
 	# stop tracking the thread
-	@threads = splice_array($thread, @threads);
+	splice_thread($thread, @threads);
 	
 	return $thread->join;
 }
@@ -324,7 +324,7 @@ sub json_request($) {
 	debug( "[ !] thread #" .$tid ." finished\n");
 	
 	# stop tracking the thread
-	@threads = splice_array($thread, @threads);
+	splice_thread($thread, @threads);
 	
 	my $data = $thread->join;
 
@@ -365,7 +365,8 @@ sub populate_bookmarks {
 		$button_remove->set_image(Gtk2::Image->new_from_stock("gtk-clear", 'button'));
 		$button_remove->signal_connect('clicked', 
 			sub { 
-				@bookmark = splice_array($item, @bookmark);
+				remove_bookmark($item, @bookmark);
+
 				populate_bookmarks();
 			}
 		);
@@ -678,21 +679,20 @@ sub on_button_query_clear_clicked {
 	$vbox->show_all;
 }
 
-sub splice_array($$) {
-	# removes specified index from array
-	my ($i, @a) = @_;
-	my $n = 0;
-	$n++ until $a[$n] eq $i or $n > $#a;
-	return splice @a, $n, 1;
 
+sub splice_thread($) {
+	my $thread = shift;
+	my $i = 0;
+	$i++ until $threads[$i] eq $thread or $i > $#threads;
+	splice @threads, $i, 1;
 }
 
-#sub remove_bookmark($) {
-#	my $item = shift;
-#	my $i = 0;
-#	$i++ until $bookmark[$i] eq $item or $i > $#bookmark;
-#	splice @bookmark, $i, 1;
-#}
+sub remove_bookmark($) {
+	my $item = shift;
+	my $i = 0;
+	$i++ until $bookmark[$i] eq $item or $i > $#bookmark;
+	splice @bookmark, $i, 1;
+}
 
 sub add_separated_item($$$$$$) {
 	# adds a label with markup and separator to a vbox 
