@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.2
+# Alluvion 0.3
 # Perl/Gtk2 torrent search utility (strike API)
 # --------------------------------------------------------------------
 # Usage:
@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = 0.2;
+my $VERSION = 0.3;
 use feature ":5.10";
 use strict;
 use warnings;

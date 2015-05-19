@@ -2,6 +2,7 @@
 
 * implement file_lengths / file_names for hash lookup tool
 * check for newer version of Alluvion (Help> Check for updates)
+* add support for 'env HTTP_PROXY'
 * reorganized preferences dialog
 * fix lockup for slow torrent clients when issuing xdgopen()
 * magnet_exec config option (path/program to torrent client)
