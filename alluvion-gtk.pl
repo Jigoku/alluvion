@@ -72,7 +72,7 @@ my $bookmarks = $confdir . "bookmarks";
 my 	%settings = (
 	"timeout"			=> "10",
 	#"filesize_type"  	=> "",
-	"magnet_exec"		=> "xdg-open",
+	"magnet_exec"		=> "/usr/bin/xdg-open",
 	"proxy_enabled"  	=> 0,
 	"proxy_type"		=> "none",
 	"http_proxy_addr"	=> "0.0.0.0",
@@ -922,6 +922,7 @@ sub on_menu_edit_preferences_activate {
 	my $preferences = $builder->get_object( 'preferences' );
 	
 	$builder->get_object( 'entry_timeout' )->set_value($settings{"timeout"});
+	$builder->get_object( 'entry_client' )->set_text($settings{"magnet_exec"});
 	
 	if ($settings{"proxy_enabled"} eq 1) {
 		$builder->get_object( 'checkbutton_proxy' )->set_active(1);
@@ -948,6 +949,7 @@ sub on_button_pref_ok_clicked {
 	# update the changed settings within preferences
 	
 	$settings{"timeout"}    = $builder->get_object( 'entry_timeout' )->get_value();
+	$settings{"magnet_exec"}    = $builder->get_object( 'entry_client' )->get_text();
 	$settings{"http_proxy_addr"} = $builder->get_object( 'entry_http_proxy_addr' )->get_text();
 	$settings{"http_proxy_port"} = $builder->get_object( 'entry_http_proxy_port' )->get_value();
 	$settings{"socks4_proxy_addr"} = $builder->get_object( 'entry_socks4_proxy_addr' )->get_text();

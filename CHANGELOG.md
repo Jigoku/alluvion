@@ -9,7 +9,7 @@
   (previous implementation caused segfaults)
 * fixed proxy setting when "cancelling" preferences
 * magnet_exec setting for choosing client (now threaded)
-* 
+* hash lookup interface reworked 
 
 # Alluvion 0.2 (07/05/2015)
 
