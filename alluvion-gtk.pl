@@ -397,6 +397,12 @@ sub ua_init {
 	$ua->protocols_allowed( [ 'https', 'http' ] );	
 }
 
+sub ua_init_env {  
+    ua_init();
+    $ua->proxy( ['http, https'], $ENV{HTTP_PROXY} ) if exists $ENV{HTTP_PROXY};
+    $settings{"proxy_type"} = "env";
+}
+
 sub ua_init_http { 
 	ua_init();
 	$ua->proxy([ 'http', 'https' ], "http://".$settings{"http_proxy_addr"}.":".$settings{"http_proxy_port"}); 
@@ -437,10 +443,17 @@ sub assign_proxy {
 			debug("[ !] setting ua_init_socks5()\n");
 			ua_init_socks5();
 		}
+		# set env HTTP_PROXY
+		when (m/^env$/) { 
+			$builder->get_object( 'radio_env' )->set_active(1);
+			debug("[ !] setting ua_init_env()\n");
+			ua_init_env();
+		}
 		when (m/^none$/) { 
 			$builder->get_object( 'vbox_http_proxy' )->set_sensitive(0); 
 			$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(0); 
 			$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(0); 
+			$builder->get_object( 'vbox_env_proxy' )->set_sensitive(0); 
 			# initialize LWP::UserAgent with no proxy
 			ua_init();
 		}
@@ -957,10 +970,6 @@ sub on_button_pref_ok_clicked {
 	$settings{"socks5_proxy_addr"} = $builder->get_object( 'entry_socks5_proxy_addr' )->get_text();
 	$settings{"socks5_proxy_port"} = $builder->get_object( 'entry_socks5_proxy_port' )->get_value();
 	
-	#### add support for environment proxy   EG:
-	#if ($builder->get_object( 'checkbutton_env_proxy' )->get_active() == TRUE) {	
-	#	$ua->proxy( ['http'], $ENV{HTTP_PROXY} ) if exists $ENV{HTTP_PROXY};
-	#}
 	
 	# check if we enabled/disabled the HTTP/HTTPS proxy option
 	if ($builder->get_object( 'checkbutton_proxy' )->get_active() == TRUE) {
@@ -984,19 +993,21 @@ sub on_checkbutton_proxy_toggled {
 		$builder->get_object( 'vbox_http_proxy' )->set_sensitive(1); 
 		$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(1); 
 		$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(1); 
+		$builder->get_object( 'vbox_env_proxy' )->set_sensitive(1); 
 		
 		####### workaround for issue #19
 		# https://github.com/Jigoku/alluvion/issues/19
 		if ($builder->get_object( 'radio_http'   )->get_active() == TRUE ) { ua_init_http(); }
 		if ($builder->get_object( 'radio_socks4' )->get_active() == TRUE ) { ua_init_socks4(); }
 		if ($builder->get_object( 'radio_socks5' )->get_active() == TRUE ) { ua_init_socks5(); }
-		
+		if ($builder->get_object( 'radio_env'   )->get_active() == TRUE ) { ua_init_env(); }
 		
 	} else {
 		$settings{"proxy_type"} = "none";
 		$builder->get_object( 'vbox_http_proxy' )->set_sensitive(0); 
 		$builder->get_object( 'vbox_socks4_proxy' )->set_sensitive(0); 
 		$builder->get_object( 'vbox_socks5_proxy' )->set_sensitive(0); 
+		$builder->get_object( 'vbox_env_proxy' )->set_sensitive(0); 
 	}
 	
 
