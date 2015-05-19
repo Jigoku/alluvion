@@ -484,6 +484,11 @@ sub set_index_total {
 }
 
 sub on_button_hash_clicked {
+
+	my $vbox = $builder->get_object( 'vbox_hashinfo' );
+	destroy_children($vbox);
+	
+	my $vbox_spinner = Gtk2::Spinner->new;
 	my $hash = $builder->get_object( 'entry_hash' )->get_text;
 	my $pending = $builder->get_object( 'label_pending' );
 	my $spinner = $builder->get_object( 'spinner' );
@@ -495,17 +500,22 @@ sub on_button_hash_clicked {
 		return;
 	}
 	
-	$button->set_sensitive(0);
+	$button->set_sensitive(FALSE);
 	$pending->set_text("Loading");
-	$spinner->set_visible(1);
+	$vbox_spinner->set_visible(TRUE);
+	$vbox_spinner->start;
+	$vbox->pack_start($vbox_spinner, TRUE, TRUE, 175);
+	$spinner->set_visible(TRUE);
 	$spinner->start;
+	$vbox->show_all;
 	
 	# returns data from threaded request
 	my $data = json_request("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
 	
-	$button->set_sensitive(1);
+	$vbox_spinner->destroy;
+	$button->set_sensitive(TRUE);
 	$pending->set_text("");
-	$spinner->set_visible(0);
+	$spinner->set_visible(FALSE);
 	$spinner->stop;
 	
 	if ($data eq "error") { spawn_dialog("error", "close", "Error", "Failed to find info hash\n"); return; }
@@ -515,40 +525,107 @@ sub on_button_hash_clicked {
 		return; 
 	}
 
-			
 	# apply data to labels
-	for (@{$data->{torrents}}) {
-		$builder->get_object( 'label_torrent_title' )->set_text($_->{torrent_title});
-		$builder->get_object( 'label_sub_category' )->set_text($_->{sub_category});
-		$builder->get_object( 'label_torrent_category' )->set_text($_->{torrent_category});
-		$builder->get_object( 'label_seeds' )->set_markup("<span color='green'>".$_->{seeds}."</span>");
-		$builder->get_object( 'label_leeches' )->set_markup("<span color='red'>".$_->{leeches}."</span>");
-		$builder->get_object( 'label_file_count' )->set_text($_->{file_count});
-		$builder->get_object( 'label_size' )->set_text(commify(bytes2mb(($_->{size})))."MB");
-		$builder->get_object( 'label_uploader_username' )->set_text($_->{uploader_username});
-		$builder->get_object( 'label_upload_date' )->set_text($_->{upload_date});
 
-		$builder->get_object( 'textview_magnet_uri' )->get_buffer->set_text($_->{magnet_uri});
-	}
-	
-	my (@file_names, @file_lengths) = ();
-	
 	for (@{$data->{torrents}}) {
-		for ($_->{file_info}) {
-			for (@{$_->{file_names}}) {
-				push @file_names, $_;
-			}
-			for (@{$_->{file_lengths}}) {
-				push @file_lengths, $_;
-			}
-		}
-	}
+
+			my $label_title = Gtk2::Label->new;
+			$label_title->set_markup("<b>Torrent title</b>\n$_->{torrent_title}");
+			$label_title->set_alignment(0, 0.5);
+			$vbox->pack_start($label_title, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_cat= Gtk2::Label->new;
+			$label_cat->set_markup("<b>Category</b>\n$_->{category}");
+			$label_cat->set_alignment(0, 0.5);
+			$vbox->pack_start($label_cat, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_subcat= Gtk2::Label->new;
+			$label_subcat->set_markup("<b>Subcategory</b>\n$_->{sub_category}");
+			$label_subcat->set_alignment(0, 0.5);
+			$vbox->pack_start($label_subcat, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_size= Gtk2::Label->new;
+			$label_size->set_markup("<b>Size</b>\n".commify(bytes2mb($_->{size}))."MB");
+			$label_size->set_alignment(0, 0.5);
+			$vbox->pack_start($label_size, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_seeds= Gtk2::Label->new;
+			$label_seeds->set_markup("<b>Seeders</b>\n<span color='green'>".$_->{seeds}."</span>");
+			$label_seeds->set_alignment(0, 0.5);
+			$vbox->pack_start($label_seeds, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_leechers= Gtk2::Label->new;
+			$label_leechers->set_markup("<b>Leechers</b>\n<span color='red'>".$_->{leeches}."</span>");
+			$label_leechers->set_alignment(0, 0.5);
+			$vbox->pack_start($label_leechers, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+			
+			my $label_filecount= Gtk2::Label->new;
+			$label_filecount->set_markup("<b>File Count</b>\n$_->{file_count}");
+			$label_filecount->set_alignment(0, 0.5);
+			$vbox->pack_start($label_filecount, FALSE,FALSE,5);
+
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+
+			for ($_->{file_info}) {
+
+				my (@file_names, @file_lengths) = ();
+				
+				for (@{$_->{file_names}}) { $_ =~ s/^\s+|\s+$//g; push @file_names, $_; }
+				for (@{$_->{file_lengths}}) { push @file_lengths, $_; }
+				
+				my $file_list;
+				for (my $i=0; $i<@file_names; $i++) {
+					$file_list .= "<i>".$file_names[$i]."</i>" . "\t(".commify(bytes2mb($file_lengths[$i]))."MB)\n";
+				}
 	
-	my $file_list;
-	for (my $i=0; $i<@file_names; $i++) {
-		$file_list .=  $file_names[$i] . " (".$file_lengths[$i].")\n";
+				my $label_fileinfo = Gtk2::Label->new;
+				$label_fileinfo->set_markup("<b>File Info</b>\n".$file_list);
+				$label_fileinfo->set_alignment(0, 0.5);
+				$vbox->pack_start($label_fileinfo, FALSE,FALSE,5);
+			}
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+
+			my $label_uploader= Gtk2::Label->new;
+			$label_uploader->set_markup("<b>Uploaded by</b>\n$_->{uploader_username}");
+			$label_uploader->set_alignment(0, 0.5);
+			$vbox->pack_start($label_uploader, FALSE,FALSE,5);
+
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+
+			my $label_uploaddate= Gtk2::Label->new;
+			$label_uploaddate->set_markup("<b>Upload Date</b>\n$_->{upload_date}");
+			$label_uploaddate->set_alignment(0, 0.5);
+			$vbox->pack_start($label_uploaddate, FALSE,FALSE,5);
+			
+			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
+
+			my $label_magnet= Gtk2::Label->new;
+			my $textview = Gtk2::TextView->new;
+			$label_magnet->set_markup("<b>Magnet URI</b>");
+			$label_magnet->set_alignment(0, 0.5);
+			$vbox->pack_start($label_magnet, FALSE,FALSE,5);
+			$textview->get_buffer->set_text($_->{magnet_uri});
+			$textview->set_wrap_mode("GTK_WRAP_CHAR");
+			$textview->set_border_width(10);
+			$textview->set_editable(0);
+			$vbox->pack_start($textview, FALSE,FALSE,5);
+		
 	}
-	$builder->get_object( 'label_file_list' )->set_text($file_list);
+
+	$vbox->show_all;
 }
 
 sub destroy_children($) {

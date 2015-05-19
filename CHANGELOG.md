@@ -5,6 +5,11 @@
 * reorganized preferences dialog
 * fix lockup for slow torrent clients when issuing xdgopen()
 * magnet_exec config option (path/program to torrent client)
+* torrent title labels no longer dynamically truncate 
+  (previous implementation caused segfaults)
+* fixed proxy setting when "cancelling" preferences
+* magnet_exec setting for choosing client (now threaded)
+* 
 
 # Alluvion 0.2 (07/05/2015)
 
