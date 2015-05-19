@@ -582,6 +582,7 @@ sub on_button_hash_clicked {
 
 				my (@file_names, @file_lengths) = ();
 				
+				# remove whitespace from start of string aswell...
 				for (@{$_->{file_names}}) { $_ =~ s/^\s+|\s+$//g; push @file_names, $_; }
 				for (@{$_->{file_lengths}}) { push @file_lengths, $_; }
 				
@@ -622,7 +623,23 @@ sub on_button_hash_clicked {
 			$textview->set_border_width(10);
 			$textview->set_editable(0);
 			$vbox->pack_start($textview, FALSE,FALSE,5);
-		
+			
+			my $button_clipboard = Gtk2::Button->new;
+			$button_clipboard->set_image(Gtk2::Image->new_from_stock("gtk-copy", 'button'));
+			$button_clipboard->set_label("Copy to clipboard");
+			$button_clipboard->signal_connect('clicked', 
+				sub { 
+					my $clipboard =  Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD);
+					
+					$clipboard->set_text($textview->get_buffer->get_text(
+						$textview->get_buffer->get_start_iter,
+						$textview->get_buffer->get_end_iter,
+						undef
+					));
+				}
+			);
+			$vbox->pack_start($button_clipboard, FALSE,FALSE,5);
+			
 	}
 
 	$vbox->show_all;
