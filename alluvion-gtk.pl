@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.3
+# Alluvion 0.2
 # Perl/Gtk2 torrent search utility (strike API)
 # --------------------------------------------------------------------
 # Usage:
@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = 0.3;
+my $VERSION = 0.2;
 use feature ":5.10";
 use strict;
 use warnings;
@@ -42,17 +42,6 @@ use LWP::Protocol::socks;
 use URI::Escape;
 use Gtk2 qw(-threads-init -init);
 use Glib qw(TRUE FALSE);
-
-# may be worth splitting up this huge script a little...
-# just makes it easier to find/change things
-#require $Bin . "/lib/interface.pm";
-#require $Bin . "/lib/common.pm";
-#require $Bin . "/lib/request.pm";
-#require $Bin . "/lib/proxy.pm";
-#require $Bin . "/lib/debug.pm";
-#require $Bin . "/lib/bookmarks.pm";
-#require $Bin . "/lib/searchquery.pm";
-#require $Bin . "/lib/hashlookup.pm";
 
 $|++;
 
@@ -807,24 +796,6 @@ sub add_separated_item($$$$$$) {
 	my ($vbox, $n, $torrent_title, $torrent_info, $magnet_uri, $hash) = @_;
 				
 	my $eventbox = Gtk2::EventBox->new;
-	#	$eventbox->signal_connect('enter-notify-event', 
-	#		sub { 
-	#			$eventbox->modify_bg(
-	#				"normal",
-	#				Gtk2::Gdk::Color->parse( "#662222" ) 
-	#			);
-	#		}
-	#	 );
-	#
-	#	$eventbox->signal_connect('leave-notify-event', 
-	#		sub { 
-	#			$eventbox->modify_bg(
-	#				"normal",
-	#				Gtk2::Gdk::Color->parse( "#000000" ) 
-	#			);
-	#		}
-	#	 );
-
 	
 	my $tooltip_title = Gtk2::Tooltips->new;
 		$tooltip_title->set_tip( $eventbox, $torrent_title );
