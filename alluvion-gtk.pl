@@ -184,6 +184,8 @@ sub main {
 		}
 	}
 	
+
+	
 	# add them to the interface
 	populate_bookmarks();
 	
@@ -819,8 +821,9 @@ sub add_separated_item($$$$$$) {
 	$label_title->set_markup("<span size='large'><b>".convert_special_char($torrent_title) ."</b></span>");
 	
 	
-	
-	$label_title->set_width_chars(70); # label character limit before truncated
+	my ($width, undef)  =  $window->get_size;
+	my $width_chars = int ($width * .09);
+	$label_title->set_width_chars($width_chars); # label character limit before truncated
 	$label_title->set_ellipsize("PANGO_ELLIPSIZE_END");
 	$label_title->set_alignment(0,.5);	
 	#$label_title->set_line_wrap(1);	
@@ -1165,6 +1168,8 @@ sub launch_magnet($) {
 sub convert_bytes($) {
 	my $bytes = shift;
 	
+	# return bytes as Bytes, KB, MB, GB from settings value
+	
 	no warnings;
 	given ($settings{"filesize_type"}) {
 		when (m/^KB/) {
@@ -1175,11 +1180,9 @@ sub convert_bytes($) {
 		}
 		when (m/^GB$/) {
 			return sprintf "%.2f GB",($bytes / (1024 * 1024 * 1024));	
-		}
-		
+		}	
 		return $bytes . " Bytes";
 	}
-
 	
 }
 
@@ -1222,11 +1225,11 @@ sub on_window_check_resize {
 			# only torrent_title labels have ellipsize set to 'end'
 			if ($child->get_ellipsize eq "end") {
 				# dynamically update truncation on window resize
-				$child->set_width_chars($width_chars);
+				$child->set_max_width_chars($width_chars);
 			}
 		}
 	}
-
+	$container->show_all;
 
 }
 
