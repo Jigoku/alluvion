@@ -6,6 +6,7 @@
 * reorganized preferences dialog
 * fix lockup for slow torrent clients when issuing xdgopen()
 * magnet_exec config option (path/program to torrent client)
+* filesize_type config option (display size as bytes,kb,mb,gb)
 * torrent title labels no longer dynamically truncate 
   (previous implementation caused segfaults)
 * fixed proxy setting when "cancelling" preferences
