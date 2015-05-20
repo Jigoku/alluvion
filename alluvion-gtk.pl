@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # --------------------------------------------------------------------
-# Alluvion 0.2
+# Alluvion 0.3
 # Perl/Gtk2 torrent search utility (strike API)
 # --------------------------------------------------------------------
 # Usage:
@@ -29,7 +29,7 @@
 # u should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-my $VERSION = 0.2;
+my $VERSION = 0.3;
 use feature ":5.10";
 use strict;
 use warnings;
@@ -71,7 +71,11 @@ my 	%settings = (
 	"socks5_proxy_addr"	=> "0.0.0.0",
 	"socks5_proxy_port" => 1080,
 	"statusbar"      	=> 1,
-	"category_filter" 	=> 1
+	"category_filter" 	=> 1,
+	"api_index"			=> "https://getstrike.net/api/v2/torrents/count/",
+	"api_hash"			=> "https://getstrike.net/api/v2/torrents/info/?hashes=",
+	"api_query"			=> "https://getstrike.net/api/v2/torrents/search/?phrase=",
+	"api_file"			=> "https://getstrike.net/torrents/api/download/",
 );
 
 my ($category_filter, $subcategory_filter) = ("","");
@@ -152,6 +156,10 @@ sub main {
 				when (m/^socks5_proxy_port=\"(\d+)\"/) { $settings{"socks5_proxy_port"} = $1; }
 				when (m/^statusbar=\"(.+)\"/) { $settings{"statusbar"} = $1; }
 				when (m/^category_filter=\"(.+)\"/) { $settings{"category_filter"} = $1; }
+				when (m/^api_index=\"(.+)\"/) { $settings{"api_index"} = $1; }
+				when (m/^api_hash=\"(.+)\"/) { $settings{"api_hash"} = $1; }
+				when (m/^api_query=\"(.+)\"/) { $settings{"api_query"} = $1; }
+				when (m/^api_file=\"(.+)\"/) { $settings{"api_file"} = $1; }
 			}
 		}
 	}
@@ -461,7 +469,7 @@ sub set_index_total {
 	$index_total->set_text("Updating index total...");
 	
 	# threaded request
-	my $data = json_request("https://getstrike.net/api/v2/torrents/count/");
+	my $data = json_request($settings{"api_index"});
 	if ($data eq "error") { 
 		$index_total->set_text("Could not set index total!");
 		$spinner->set_visible(0);
@@ -514,7 +522,7 @@ sub on_button_hash_clicked {
 	$vbox->show_all;
 	
 	# returns data from threaded request
-	my $data = json_request("https://getstrike.net/api/v2/torrents/info/?hashes=".$hash);
+	my $data = json_request($settings{"api_hash"}.$hash);
 	
 	$vbox_spinner->destroy;
 	$button->set_sensitive(TRUE);
@@ -694,7 +702,7 @@ sub on_button_query_clicked {
 	$spinner->set_visible(TRUE);
 	
 	# retrusn data from threaded request	
-	my $data = json_request("https://getstrike.net/api/v2/torrents/search/?phrase=".uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
+	my $data = json_request($settings{"api_query"}.uri_escape($query)."&category=".$category_filter."&subcategory=".$subcategory_filter);
 		
 	$pending->set_text("");
 	$button->set_sensitive(TRUE);
@@ -855,7 +863,7 @@ sub add_separated_item($$$$$$) {
 				apply_filefilter("*.torrent", "torrent files", $filechooser);
 				apply_filefilter("*", "all files", $filechooser);
 				$filechooser->set_current_name($torrent_title.".torrent");
-				$filechooser_get = "https://getstrike.net/torrents/api/download/".$hash .".torrent";
+				$filechooser_get = $settings{"api_file"}.$hash .".torrent";
 				$filechooser->run; 
 				$filechooser->hide; 
 			}
@@ -920,12 +928,15 @@ sub on_menu_edit_preferences_activate {
 
 	$builder->get_object( 'entry_http_proxy_addr' )->set_text($settings{"http_proxy_addr"});
 	$builder->get_object( 'entry_http_proxy_port' )->set_value($settings{"http_proxy_port"});
-	
 	$builder->get_object( 'entry_socks4_proxy_addr' )->set_text($settings{"socks4_proxy_addr"});
 	$builder->get_object( 'entry_socks4_proxy_port' )->set_value($settings{"socks4_proxy_port"});
-	
 	$builder->get_object( 'entry_socks5_proxy_addr' )->set_text($settings{"socks5_proxy_addr"});
 	$builder->get_object( 'entry_socks5_proxy_port' )->set_value($settings{"socks5_proxy_port"});
+	
+	$builder->get_object( 'entry_apiindex' )->set_text($settings{"api_index"});
+	$builder->get_object( 'entry_apihash' )->set_text($settings{"api_hash"});
+	$builder->get_object( 'entry_apiquery' )->set_text($settings{"api_query"});
+	$builder->get_object( 'entry_apifile' )->set_text($settings{"api_file"});
 	
 	$preferences->run; # loops here
 	$preferences->hide;
@@ -943,6 +954,11 @@ sub on_button_pref_ok_clicked {
 	$settings{"socks4_proxy_port"} = $builder->get_object( 'entry_socks4_proxy_port' )->get_value();
 	$settings{"socks5_proxy_addr"} = $builder->get_object( 'entry_socks5_proxy_addr' )->get_text();
 	$settings{"socks5_proxy_port"} = $builder->get_object( 'entry_socks5_proxy_port' )->get_value();
+	
+	$settings{"api_index"} = $builder->get_object( 'entry_apiindex' )->get_text();
+	$settings{"api_hash"} = $builder->get_object( 'entry_apihash' )->get_text();
+	$settings{"api_query"} = $builder->get_object( 'entry_apiquery' )->get_text();
+	$settings{"api_file"} = $builder->get_object( 'entry_apifile' )->get_text();
 	
 	if ($builder->get_object( 'radio_bytes'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "Bytes"; }
 	if ($builder->get_object( 'radio_kb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "KB"; }
@@ -1254,6 +1270,10 @@ sub write_config($) {
 	print FILE "socks5_proxy_port=\"".$settings{"socks5_proxy_port"}."\"\n";
 	print FILE "statusbar=\"".$settings{"statusbar"}."\"\n";
 	print FILE "category_filter=\"".$settings{"category_filter"}."\"\n";
+	print FILE "api_index=\"".$settings{"api_index"}."\"\n";
+	print FILE "api_hash=\"".$settings{"api_hash"}."\"\n";
+	print FILE "api_query=\"".$settings{"api_query"}."\"\n";
+	print FILE "api_file=\"".$settings{"api_file"}."\"\n";
 	close FILE;
 }
 
