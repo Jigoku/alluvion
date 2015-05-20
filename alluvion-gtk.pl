@@ -60,7 +60,7 @@ my $bookmarks = $confdir . "bookmarks";
 # default user settings
 my 	%settings = (
 	"timeout"			=> "10",
-	"filesize_type"  	=> "MB",
+	"filesize_type"  	=> "mb",
 	"magnet_exec"		=> "/usr/bin/xdg-open",
 	"proxy_enabled"  	=> 0,
 	"proxy_type"		=> "none",
@@ -925,13 +925,13 @@ sub on_menu_edit_preferences_activate {
 		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
 	}
 	
-	if ($settings{"filesize_type"} eq "Bytes") {
+	if ($settings{"filesize_type"} eq "bytes") {
 		$builder->get_object( 'radio_bytes'   )->set_active(TRUE);
-	} elsif ($settings{"filesize_type"} eq "KB") {
+	} elsif ($settings{"filesize_type"} eq "kb") {
 		$builder->get_object( 'radio_kb'   )->set_active(TRUE);
-	} elsif ($settings{"filesize_type"} eq "MB") {
+	} elsif ($settings{"filesize_type"} eq "mb") {
 		$builder->get_object( 'radio_mb'   )->set_active(TRUE);
-	} elsif ($settings{"filesize_type"} eq "GB") {
+	} elsif ($settings{"filesize_type"} eq "gb") {
 		$builder->get_object( 'radio_gb'   )->set_active(TRUE);
 	}
 
@@ -969,10 +969,10 @@ sub on_button_pref_ok_clicked {
 	$settings{"api_query"} = $builder->get_object( 'entry_apiquery' )->get_text();
 	$settings{"api_file"} = $builder->get_object( 'entry_apifile' )->get_text();
 	
-	if ($builder->get_object( 'radio_bytes'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "Bytes"; }
-	if ($builder->get_object( 'radio_kb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "KB"; }
-	if ($builder->get_object( 'radio_mb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "MB"; }
-	if ($builder->get_object( 'radio_gb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "GB"; }
+	if ($builder->get_object( 'radio_bytes'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "bytes"; }
+	if ($builder->get_object( 'radio_kb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "kb"; }
+	if ($builder->get_object( 'radio_mb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "mb"; }
+	if ($builder->get_object( 'radio_gb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "gb"; }
 	
 	
 	# check if we enabled/disabled the HTTP/HTTPS proxy option
@@ -1197,16 +1197,16 @@ sub convert_bytes($) {
 	
 	no warnings;
 	given ($settings{"filesize_type"}) {
-		when (m/^KB/) {
-			return sprintf "%.2f KB",($bytes / 1024);		
+		when (m/^kb/) {
+			return sprintf "%.2f kb",($bytes / 1000);		
 		}
-		when (m/^MB$/) {
-			return sprintf "%.2f MB",($bytes / (1024 * 1024));		
+		when (m/^mb$/) {
+			return sprintf "%.2f mb",($bytes / (1000 * 1000));		
 		}
-		when (m/^GB$/) {
-			return sprintf "%.2f GB",($bytes / (1024 * 1024 * 1024));	
+		when (m/^gb$/) {
+			return sprintf "%.2f gb",($bytes / (1000 * 1000 * 1000));	
 		}	
-		return $bytes . " Bytes";
+		return $bytes . " bytes";
 	}
 	
 }

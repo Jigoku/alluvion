@@ -1252,7 +1252,7 @@ http://github.com/jigoku/</property>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="radio_bytes">
-                        <property name="label" translatable="yes">Bytes</property>
+                        <property name="label" translatable="yes">bytes</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -1267,7 +1267,7 @@ http://github.com/jigoku/</property>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="radio_kb">
-                        <property name="label" translatable="yes">KB</property>
+                        <property name="label" translatable="yes">kb</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -1283,7 +1283,7 @@ http://github.com/jigoku/</property>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="radio_mb">
-                        <property name="label" translatable="yes">MB</property>
+                        <property name="label" translatable="yes">mb</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -1299,7 +1299,7 @@ http://github.com/jigoku/</property>
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="radio_gb">
-                        <property name="label" translatable="yes">GB</property>
+                        <property name="label" translatable="yes">gb</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>

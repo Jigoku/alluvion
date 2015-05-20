@@ -1,4 +1,4 @@
-# Alluvion 0.3 (master/unreleased)
+# Alluvion 0.3 (20/05/2015)
 
 * implement file_lengths / file_names for hash lookup tool
 * check for newer version of Alluvion (Help> Check for updates)
