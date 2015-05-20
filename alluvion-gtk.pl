@@ -925,6 +925,16 @@ sub on_menu_edit_preferences_activate {
 		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
 	}
 	
+	if ($settings{"filesize_type"} eq "Bytes") {
+		$builder->get_object( 'radio_bytes'   )->set_active(TRUE);
+	} elsif ($settings{"filesize_type"} eq "KB") {
+		$builder->get_object( 'radio_kb'   )->set_active(TRUE);
+	} elsif ($settings{"filesize_type"} eq "MB") {
+		$builder->get_object( 'radio_mb'   )->set_active(TRUE);
+	} elsif ($settings{"filesize_type"} eq "GB") {
+		$builder->get_object( 'radio_gb'   )->set_active(TRUE);
+	}
+
 	$builder->get_object( 'entry_http_proxy_addr' )->set_text($settings{"http_proxy_addr"});
 	$builder->get_object( 'entry_http_proxy_port' )->set_value($settings{"http_proxy_port"});
 	$builder->get_object( 'entry_socks4_proxy_addr' )->set_text($settings{"socks4_proxy_addr"});
