@@ -47,11 +47,8 @@ If you cannot find them in your distributions package repository, try installing
 # perl -MCPAN -e 'install JSON'
 ```
 
-## Screenshots
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7506729/a8541c4c-f45b-11e4-9d8b-0350284851f5.png)
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7506730/ac7809e6-f45b-11e4-86bc-a1465cfe8f5d.png)
-![sceeenshot](https://cloud.githubusercontent.com/assets/1535179/7506731/af112fe8-f45b-11e4-9afe-f6b39247b008.png)
-![screenshot](https://cloud.githubusercontent.com/assets/1535179/7506732/b135b46a-f45b-11e4-9285-c6dbc7c03d62.png)
+## Screenshot
+![screenshot13](https://cloud.githubusercontent.com/assets/1535179/7725147/c775ab7e-feef-11e4-8ed4-aeddeb868077.png)
 
 
 ## DISCLAIMER
