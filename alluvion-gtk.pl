@@ -60,7 +60,7 @@ my $bookmarks = $confdir . "bookmarks";
 # default user settings
 my 	%settings = (
 	"timeout"			=> "10",
-	#"filesize_type"  	=> "",
+	"filesize_type"  	=> "MB",
 	"magnet_exec"		=> "/usr/bin/xdg-open",
 	"proxy_enabled"  	=> 0,
 	"proxy_type"		=> "none",
@@ -141,7 +141,7 @@ sub main {
 			given($_) {
 				when (m/^timeout=\"(\d+)\"/) { $settings{"timeout"} = $1; } 
 				when (m/^magnet_exec=\"(.+)\"/) { $settings{"magnet_exec"} = $1; } 
-				#when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
+				when (m/^filesize_type=\"(.+)\"/) { $settings{"filesize_type"} = $1; } 
 				when (m/^proxy_enabled=\"(\d+)\"/) { $settings{"proxy_enabled"} = $1; }
 				when (m/^proxy_type=\"(.+)\"/) { $settings{"proxy_type"} = $1; }
 				when (m/^http_proxy_addr=\"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\"/) { $settings{"http_proxy_addr"} = $1; }
@@ -553,7 +553,7 @@ sub on_button_hash_clicked {
 			$vbox->pack_start(Gtk2::HSeparator->new, FALSE,FALSE,5);
 			
 			my $label_size= Gtk2::Label->new;
-			$label_size->set_markup("<b>Size</b>\n".commify(bytes2mb($_->{size}))."MB");
+			$label_size->set_markup("<b>Size</b>\n".commify(convert_bytes($_->{size})));
 			$label_size->set_alignment(0, 0.5);
 			$vbox->pack_start($label_size, FALSE,FALSE,5);
 			
@@ -590,7 +590,7 @@ sub on_button_hash_clicked {
 				
 				my $file_list;
 				for (my $i=0; $i<@file_names; $i++) {
-					$file_list .= "<i>".$file_names[$i]."</i>" . "\t(".commify(bytes2mb($file_lengths[$i]))."MB)\n";
+					$file_list .= "<i>".$file_names[$i]."</i>" . "\t(".commify(convert_bytes($file_lengths[$i])).")\n";
 				}
 	
 				my $label_fileinfo = Gtk2::Label->new;
@@ -753,7 +753,7 @@ sub on_button_query_clicked {
 			$vbox, # container to append result
 			$n,	# number of item result
 			$_->{torrent_title},
-			"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(bytes2mb($_->{size})) ."MB</b> | Uploaded: " . $_->{upload_date},
+			"Seeders: <span color='green'><b>". commify($_->{seeds}) ."</b></span> | Leechers: <span color='red'><b>". commify($_->{leeches}) ."</b></span> | Size: <b>" . commify(convert_bytes($_->{size})) ."</b> | Uploaded: " . $_->{upload_date},
 			$_->{magnet_uri},
 			uc $_->{torrent_hash}
 		);	
@@ -940,6 +940,11 @@ sub on_button_pref_ok_clicked {
 	$settings{"socks4_proxy_port"} = $builder->get_object( 'entry_socks4_proxy_port' )->get_value();
 	$settings{"socks5_proxy_addr"} = $builder->get_object( 'entry_socks5_proxy_addr' )->get_text();
 	$settings{"socks5_proxy_port"} = $builder->get_object( 'entry_socks5_proxy_port' )->get_value();
+	
+	if ($builder->get_object( 'radio_bytes'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "Bytes"; }
+	if ($builder->get_object( 'radio_kb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "KB"; }
+	if ($builder->get_object( 'radio_mb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "MB"; }
+	if ($builder->get_object( 'radio_gb'   )->get_active() == TRUE ) { $settings{"filesize_type"} = "GB"; }
 	
 	
 	# check if we enabled/disabled the HTTP/HTTPS proxy option
@@ -1157,10 +1162,25 @@ sub launch_magnet($) {
 	)->detach;
 }
 
-sub bytes2mb($) {
-	# convert bytes to megabytes
+sub convert_bytes($) {
 	my $bytes = shift;
-	return sprintf "%.0f",($bytes / (1024 * 1024));
+	
+	no warnings;
+	given ($settings{"filesize_type"}) {
+		when (m/^KB/) {
+			return sprintf "%.2f KB",($bytes / 1024);		
+		}
+		when (m/^MB$/) {
+			return sprintf "%.2f MB",($bytes / (1024 * 1024));		
+		}
+		when (m/^GB$/) {
+			return sprintf "%.2f GB",($bytes / (1024 * 1024 * 1024));	
+		}
+		
+		return $bytes . " Bytes";
+	}
+
+	
 }
 
 
@@ -1220,7 +1240,7 @@ sub write_config($) {
 	print FILE "# alluvion $VERSION - user settings\n";
 	print FILE "timeout=\"".$settings{"timeout"}."\"\n";
 	print FILE "magnet_exec=\"".$settings{"magnet_exec"}."\"\n";
-	#print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
+	print FILE "filesize_type=\"".$settings{"filesize_type"}."\"\n";
 	print FILE "proxy_enabled=\"".$settings{"proxy_enabled"}."\"\n";
 	print FILE "proxy_type=\"".$settings{"proxy_type"}."\"\n";
 	print FILE "http_proxy_addr=\"".$settings{"http_proxy_addr"}."\"\n";
