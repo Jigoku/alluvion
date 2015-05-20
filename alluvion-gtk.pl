@@ -925,7 +925,6 @@ sub on_menu_edit_preferences_activate {
 		$builder->get_object( 'checkbutton_proxy' )->set_active(0);
 	}
 	
-
 	$builder->get_object( 'entry_http_proxy_addr' )->set_text($settings{"http_proxy_addr"});
 	$builder->get_object( 'entry_http_proxy_port' )->set_value($settings{"http_proxy_port"});
 	$builder->get_object( 'entry_socks4_proxy_addr' )->set_text($settings{"socks4_proxy_addr"});

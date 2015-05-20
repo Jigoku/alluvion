@@ -1,4 +1,4 @@
-# master (development branch)
+# Alluvion 0.3 (25/05/2015)
 
 * implement file_lengths / file_names for hash lookup tool
 * check for newer version of Alluvion (Help> Check for updates)
@@ -12,6 +12,7 @@
 * fixed proxy setting when "cancelling" preferences
 * magnet_exec setting for choosing client (now threaded)
 * hash lookup interface reworked 
+* configurable API URI's (advanced)
 
 # Alluvion 0.2 (07/05/2015)
 
