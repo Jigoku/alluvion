@@ -1,3 +1,6 @@
+# NOTE
+This software doesn't work anymore as the strike API has been taken down
+
 # What is Alluvion?
 
 Alluvion is a GPLv3 licensed torrent search utility, giving you direct access to magnet links, info hashes, and the torrent files themselves. It uses the [strike API](https://getstrike.net/api/) to return results based on your keywords. 
